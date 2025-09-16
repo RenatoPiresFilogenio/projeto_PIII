@@ -1,0 +1,169 @@
+@import "./variables.css";
+
+
+ * {
+     margin: 0;
+     padding: 0;
+     box-sizing: border-box;
+     scroll-behavior: smooth;
+ }
+
+ body {
+     font-family: 'Arial', sans-serif;
+     line-height: 1.6;
+     color: #333;
+     overflow-x: hidden;
+ }
+
+ header {
+    background: linear-gradient(135deg, var(--azul-tecnologico) 0%, #3d8cdb 100%);
+     color: white;
+     padding: 1rem 0;
+     position: fixed;
+     width: 100%;
+     top: 0;
+     z-index: 1000;
+     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 1rem 5%;
+ }
+
+ .logo {
+     font-size: 1.8rem;
+     font-weight: bold;
+     background: var(--amarelo-solar);
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+     background-clip: text;
+ }
+
+ .menu-toggle {
+     display: none;
+     flex-direction: column;
+     cursor: pointer;
+     gap: 4px;
+ }
+
+ .menu-toggle span {
+     width: 25px;
+     height: 3px;
+     background: white;
+     transition: 0.3s;
+ }
+
+ #menu {
+     display: flex;
+ }
+
+ #menu ul {
+     display: flex;
+     list-style: none;
+     gap: 2rem;
+     align-items: center;
+ }
+
+ #menu a {
+     color: white;
+     text-decoration: none;
+     transition: color 0.3s ease;
+     padding: 0.5rem 1rem;
+     border-radius: 5px;
+ }
+
+ #menu a:hover {
+     color: #2ecc71;
+     background: rgba(255, 255, 255, 0.1);
+ }
+
+ .login-btn {
+     background: linear-gradient(135deg, var(--verde-sustentavel) 0%, #2980b9 100%) !important;
+     padding: 0.7rem 1.5rem !important;
+     border-radius: 25px !important;
+     font-weight: bold;
+ }
+
+ .login-btn:hover {
+     background: linear-gradient(135deg, #2980b9 0%, var(--verde-sustentavel) 100%) !important;
+     color: white !important;
+     transform: translateY(-2px);
+     box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+ }
+
+ /* Botão hamburguer - escondido em telas grandes */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+  }
+  
+  .menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+  
+  /* Menu responsivo escondido por padrão */
+  #menu_responsivo {
+    display: none;
+    background: linear-gradient(135deg, var(--azul-tecnologico) 0%, #3d8cdb 100%);
+    position: fixed;
+    top: 60px; /* ajuste conforme a altura do header */
+    left: 0;
+    width: 100%;
+    padding: 1rem 5%;
+    z-index: 9999;
+  }
+  
+  #menu_responsivo ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  #menu_responsivo a {
+    color: white;
+    text-decoration: none;
+    padding: 0.7rem 1rem;
+    border-radius: 5px;
+    display: block;
+    font-weight: normal;
+  }
+  
+  #menu_responsivo a:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Responsividade para telas menores */
+  @media (max-width: 768px) {
+    #menu {
+      display: none; /* esconde menu normal */
+    }
+  
+    .menu-toggle {
+      display: flex; /* mostra o botão hamburguer */
+    }
+  
+    /* mostra o menu responsivo quando ativo */
+    #menu_responsivo.active {
+      display: block;
+    }
+  }
+  
+  /* Animação do botão hamburguer para virar "X" */
+  .menu-toggle.open span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+  
+  .menu-toggle.open span:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .menu-toggle.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }

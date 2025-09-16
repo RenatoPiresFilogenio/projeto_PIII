@@ -1,0 +1,155 @@
+@import "./variables.css";
+    /* Reset básico */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: #fff;
+      width: 100%;
+      max-width: 520px;
+      border-radius: 10px;
+      padding: 28px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .card h1 {
+      font-size: 22px;
+      margin-bottom: 12px;
+      color: #111;
+      text-align: center;
+    }
+
+    .card p.subtitle {
+      color: #444;
+      font-size: 14px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    form .row {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .password-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* duas colunas iguais */
+        gap: 10px;
+        align-items: center; /* garante alinhamento vertical */
+      }
+      
+
+    .requisitos {
+      margin-top: 10px;
+      padding: 12px;
+      background: #fafafa;
+      border: 1px dashed #e5e5e5;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .requisitos ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+    }
+
+    .requisitos li {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .check {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      display: inline-block;
+      border: 1px solid #ccc;
+      text-align: center;
+      line-height: 16px;
+      font-size: 12px;
+      color: white;
+    }
+
+    .ok { background: #00c853; border-color: #00c853; }
+    .not-ok { background: #bbb; border-color: #bbb; }
+
+    .msg-error {
+      color: #c62828;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .actions {
+      margin-top: 18px;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background: #00c853;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background .2s ease;
+    }
+
+    button[disabled] {
+      background: #9fd8b5;
+      cursor: not-allowed;
+    }
+
+    .links {
+      margin-top: 12px;
+      display:flex;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+
+    .links a { color: #00c853; text-decoration: none; }
+
+    /* Toggle senha */
+    .toggle-pass {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    /* Responsivo */
+    @media (max-width: 520px) {
+      .password-row { grid-template-columns: 1fr; }
+      .requisitos ul { grid-template-columns: 1fr; }
+    }
+  
