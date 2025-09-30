@@ -1,3 +1,8 @@
+// Validação da sessão (impedir acesso sem login)
+<?php
+require(__DIR__ . '/../../../backend/login-cadastro/sessao_protegida.php');
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -12,7 +17,8 @@
         <div class="container">
             <h1 class="logo">☀️ Solar System</h1>
             <nav class="nav">
-                <a href="../../index.html">Sair =teste=</a>
+                <?php require_once '../../../backend/config.php'; ?>
+                <a href="<?php echo BASE_URL; ?>/backend/login-cadastro/sessao_destroy.php">Sair</a>
                 <a href="#" class="nav-link active">Meus Imóveis</a>
                 <a href="Orcamentos.html" class="nav-link" id="nav-orcamentos">Orçamentos</a>
             </nav>
