@@ -3,7 +3,7 @@ $host = "localhost";
 $port = "5432";
 $dbname = "SolarSmart";
 $usuario = "postgres";
-$senha = "=====";
+$senha = "=======";
 
 try {
     $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $usuario, $senha);
