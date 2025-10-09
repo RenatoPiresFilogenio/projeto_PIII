@@ -1,14 +1,16 @@
 <?php
 require("../../DB/database.php");
 
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nome        = trim($_POST['name'] ?? '');
     $email       = trim($_POST['email'] ?? '');
     $telefone    = trim($_POST['telefone'] ?? '');
-    $totalvendas = $_POST['totalvendas'] ?? '';
+    $total_vendas = 0;
 
-    if (!$nome || !$email || !$telefone || !$totalvendas) {
+    if (!$nome || !$email || !$telefone) {
         header("Location: ../../../frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html?status_cadastro_fornecedor=bad_request");
         exit();
     }
@@ -26,14 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        $sql = 'INSERT INTO fornecedores (nome, email, telefone, totalvendas)
-                VALUES (:nome, :email, :telefone, :totalvendas)';
+        $sql = 'INSERT INTO fornecedores (nome, email, telefone, total_vendas)
+                VALUES (:nome, :email, :telefone, :total_vendas)';
         $stmt = $pdo->prepare($sql);
         $success = $stmt->execute([
-            ':nome'        => $nome,
-            ':email'       => $email,
-            ':telefone'    => $telefone,
-            ':totalvendas' => $totalvendas
+            ':nome'         => $nome,
+            ':email'        => $email,
+            ':telefone'     => $telefone,
+            ':total_vendas' => $total_vendas
         ]);
 
         if ($success) {
@@ -46,9 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     } catch (Exception $e) {
         $pdo->rollBack();
-        
-        error_log("Erro ao cadastrar fornecedor: " . $e->getMessage());
-        header("Location: ../../../frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html?status_cadastro_fornecedor=erro_ao_cadastrar");
+        echo "Erro ao cadastrar fornecedor: " . $e->getMessage();
         exit();
     }
 }
+?>
