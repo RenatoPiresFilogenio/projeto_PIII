@@ -37,12 +37,12 @@ function mostrarTab(tab) {
 // =========================
 // CARREGAR FORNECEDORES
 // =========================
-async function carregarFornecedores() {
+document.addEventListener('DOMContentLoaded', async () => {
     const container = document.getElementById("fornecedoresList");
     container.innerHTML = "<p>Carregando...</p>";
 
     try {
-        const response = await fetch("/PI_2025_2222/backend/Admin/CadastrarFornecedor/ListarFornecedor.php");
+        const response = await fetch("../../../../backend/Admin/Fornecedor/ListarFornecedor.php");
         const fornecedores = await response.json();
 
         if (!fornecedores || fornecedores.length === 0) {
@@ -63,20 +63,24 @@ async function carregarFornecedores() {
 
     } catch (error) {
         container.innerHTML = `<div class="empty-state"><h3>Erro ao carregar fornecedores</h3></div>`;
-        console.error(error);
+        console.log(error);
     }
-}
+})
+
 
 // =========================
 // CARREGAR PRODUTOS
 // =========================
-async function carregarProdutos() {
+
+document.addEventListener('DOMContentLoaded', async () => {
     const container = document.getElementById("produtosList");
     container.innerHTML = "<p>Carregando...</p>";
 
     try {
-        const response = await fetch("/PI_2025_2222/backend/Admin/CadastrarProduto/ListarProduto.php");
-        const produtos = await response.json();
+        const response = await fetch("../../../../backend/Admin/CadastrarProduto/ListarProduto.php");
+        const responseData = await response.json();
+
+        const produtos = responseData.produtos;
 
         if (!produtos || produtos.length === 0) {
             container.innerHTML = `<div class="empty-state"><h3>Nenhum produto cadastrado</h3></div>`;
@@ -84,21 +88,91 @@ async function carregarProdutos() {
         }
 
         container.innerHTML = produtos.map(p => `
-            <div class="produto-card">
-                <h3>📦 ${p.nome}</h3>
-                <p><strong>Modelo:</strong> ${p.modelo}</p>
-                <p><strong>Valor Unitário:</strong> R$ ${p.valor_unitario}</p>
-                <p><strong>Tipo:</strong> ${p.tipo_produto}</p>
-                <p><strong>Marca:</strong> ${p.marca_nome}</p>
-            </div>`).join("");
+            <div class="fornecedor-card">
+        <h2>☀️ ${p.nome}</h2>
+       
+        <div class="details">
+            <p><strong>Modelo:</strong> ${p.modelo}</p>
+            <p><strong>Tipo:</strong> ${p.tipo_produto}</p>
+        </div>
+
+        <hr>
+
+        <div class="details">
+            <h3>Informações da Marca</h3>
+            <p><strong>Marca:</strong> ${p.nome_marca}</p>
+            <p><strong>Série/Modelo:</strong> ${p.modelo_marca}</p>
+            <p><strong>País de Origem:</strong> ${p.pais_origem}</p>
+        </div>
+        
+        <a href="${p.site_oficial}" target="_blank" class="brand-link">
+            Visitar Site Oficial
+        </a>
+    </div>`).join("");
 
     } catch (error) {
         container.innerHTML = `<div class="empty-state"><h3>Erro ao carregar produtos</h3></div>`;
         console.error(error);
     }
-}
+})
 
 // =========================
 // CARREGAR MARCAS
 // =========================
-async
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('marcasList');
+    container.innerHTML = "<p>Carregando...</p>";
+
+    try {
+
+        const response = await fetch('../../../../backend/Admin/Marcas/ListarMarcas.php');
+        const responseData = await response.json();
+
+        const marcas = responseData.marcas;
+
+        if (!marcas || marcas.length === 0) {
+            container.innerHTML = `<div class="empty-state"><h3>Nenhuma marca cadastrada</h3></div>`;
+            return;
+        }
+
+        container.innerHTML = marcas.map(m => `
+            <div class="fornecedor-card">
+                <h3>Informações da Marca</h3>
+                <p><strong>Marca:</strong> ${m.nome}</p>
+                <p><strong>Pais de origem:</strong> ${m.pais_origem}</p>
+                <p><strong>Site oficial:</strong> ${m.site_oficial}</p>
+                 <p><strong>Data de cadastro:</strong> ${m.data_cadastro}</p>
+            </div>`
+        ).join("");
+
+    } catch (error) {
+        container.innerHTML = `<div class="empty-state"><h3>Erro ao carregar marcas</h3></div>`;
+        console.error(error);
+    }
+});
+
+// ===========================
+// CARREGAR MARCAS PARA CADASTRAR PRODUTO
+// ===========================  
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('id_marca');
+
+    try {
+
+        const response = await fetch('../../../../backend/Admin/Marcas/ListarMarcas.php');
+        const responseData = await response.json();
+
+        const marca = responseData.marcas;
+        console.log(marca)
+        container.innerHTML = marca.map(m => `
+             <option value="${m.id_marca}" required>${m.nome}</option>
+             `)
+
+    } catch (error) {
+        container.innerHTML = `<div class="empty-state"><h3>Erro ao carregar marcas</h3></div>`;
+        console.error(error);
+    }
+
+})

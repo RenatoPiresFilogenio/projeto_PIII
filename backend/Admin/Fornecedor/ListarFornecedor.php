@@ -1,5 +1,5 @@
 <?php
-require("../../DB/database.php"); // ajuste conforme sua estrutura
+require("../../DB/database.php"); 
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Consulta

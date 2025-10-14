@@ -5,9 +5,10 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $nome        = trim($_POST['name'] ?? '');
-    $email       = trim($_POST['email'] ?? '');
-    $telefone    = trim($_POST['telefone'] ?? '');
+    $nome        = trim($_POST['name'] ?? null);
+    $email       = trim($_POST['email'] ?? null);
+    $telefone    = trim($_POST['telefone'] ?? null);
+    $marca = array($_POST['produtos'] ?? null);
     $total_vendas = 0;
 
     if (!$nome || !$email || !$telefone) {
