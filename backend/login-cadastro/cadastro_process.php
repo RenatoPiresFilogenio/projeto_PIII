@@ -1,5 +1,5 @@
 <?php
-require("../DB/database.php"); // conecta e define $pdo
+require("../DB/database.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -35,13 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'senha' => $senhaHash,
             'tipo_usuario' => 0
         ]);
-
+   
         header("Location: ../../frontend/login.html?status_cadastro=ok");
         exit;
         // cadastro bem-sucedido
 
     } catch (PDOException $e) {
-         header("Location: ../../frontend/cadastroUsuario.html?status_cadastro=falha");
+        header("Location: ../../frontend/cadastroUsuario.html?status_cadastro=falha");
     }
 }
 

@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $pdo->prepare($sql);
     $stmt->execute([":email" => $email]);
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
     if (!$usuario || !password_verify($senha, $usuario['senha'])) {
         header("Location: ../../frontend/login.html?status_login=erro");
         exit();

@@ -13,40 +13,27 @@
 
     <div class="app-container">
 
-        <div class="left-panel">
-            <div class="intro-text">
-                <h2>Bem-vindo à Solar Smart!</h2>   
-                <p>Sua energia, suas regras. Faça login para gerenciar seu consumo e otimizar sua economia.<br>O futuro
-                    da energia começa aqui.</p>
-            </div>
-        </div>
-
         <div class="right-panel">
             <div class="login-container">
-                <h3>Acesse sua Conta</h3>
+                <h3>Edite sua senha</h3>
 
-                <form action="../backend/login-cadastro/session_start.php" method="POST">
+                <form action="../../backend/login-cadastro/login_editar_senha/editar_senha.php" method="POST">
                     <div class="input-group">
                         <label for="email">E-mail</label>
                         <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
                     </div>
 
                     <div class="input-group">
-                        <label for="password">Senha</label>
+                        <label for="password">Nova Senha</label>
                         <input type="password" id="password" name="senha" placeholder="Digite sua senha" required>
                     </div>
 
-                    <div class="lembrar">
-                        <input type="checkbox" id="lembrar-me">
-                        <label for="lembrar-me">Lembrar-me</label>
-                    </div>
-
-                    <button type="submit">Entrar</button>
+                    <button type="submit">Alterar Senha</button>
 
                     <div class="links">
                         <a href="../frontend/index.html">Voltar</a>
-                        <a href="../frontend/editar_senha.html">Esqueceu sua senha?</a>
                         <a href="../frontend/cadastroUsuario.html">Criar uma conta</a>
+                        <a href="../frontend/login.html">Login</a>
                     </div>
 
                 </form>
