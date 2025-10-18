@@ -10,54 +10,58 @@
 
 <body>
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>🏭 Gestão de Fornecedores</h1>
+        <header class="header">
+            <h1><span aria-hidden="true">🏭</span> Gestão de Fornecedores</h1>
             <div class="header-actions">
-                <a href="../dashboardAdmin.html" class="btn btn-secondary">← Dashboard</a>
+                <a href="../dashboardAdmin.html" class="btn btn-secondary">
+                    <span aria-hidden="true">←</span> Dashboard
+                </a>
             </div>
-        </div>
+        </header>
 
-        <!-- Bloco de Tabs -->
-        <div class="block">
-            <div class="tabs">
-                <button class="tab active" onclick="mostrarTab('fornecedores')">🏭 Fornecedores</button>
-                <button class="tab" onclick="mostrarTab('placas')">Produtos</button>
-                <button class="tab" onclick="mostrarTab('marcas')">Marcas</button>
+        <main class="block">
+            <div class="tabs" role="tablist">
+                <button class="tab active" role="tab" id="tab-btn-fornecedores" aria-controls="tab-fornecedores"
+                    aria-selected="true" onclick="mostrarTab('fornecedores')">
+                    <span aria-hidden="true">🏭</span> Fornecedores
+                </button>
+                <button class="tab" role="tab" id="tab-btn-placas" aria-controls="tab-placas" aria-selected="false"
+                    onclick="mostrarTab('placas')">
+                    <span aria-hidden="true">📦</span> Produtos
+                </button>
+                <button class="tab" role="tab" id="tab-btn-marcas" aria-controls="tab-marcas" aria-selected="false"
+                    onclick="mostrarTab('marcas')">
+                    <span aria-hidden="true">🏷️</span> Marcas
+                </button>
             </div>
 
-            <!-- Tab Fornecedores -->
-            <div id="tab-fornecedores" class="tab-content active">
+            <section id="tab-fornecedores" class="tab-content active" role="tabpanel"
+                aria-labelledby="tab-btn-fornecedores">
                 <div class="block-title">
-                    <span>📊 Fornecedores Cadastrados</span>
+                    <span><span aria-hidden="true">📊</span> Fornecedores Cadastrados</span>
                     <div class="filters">
                         <button class="btn btn-primary" type="button" onclick="abrirModalFornecedor()">
-                            ➕ Novo Fornecedor
+                            <span aria-hidden="true">➕</span> Novo Fornecedor
                         </button>
                         <input type="text" class="filter-input" placeholder="🔍 Buscar fornecedor..."
                             id="buscaFornecedor">
                         <select class="filter-input" id="filtroRegiaoFornecedor" style="min-width: 150px;">
                             <option value="">Todas as Regiões</option>
                             <option value="sul">Sul</option>
-                            <option value="sudeste">Sudeste</option>
-                            <option value="centro-oeste">Centro-Oeste</option>
-                            <option value="nordeste">Nordeste</option>
-                            <option value="norte">Norte</option>
                         </select>
                     </div>
                 </div>
                 <div id="fornecedoresList" class="cards-grid">
-                    <!-- Será preenchido via JavaScript -->
                 </div>
-            </div>
+            </section>
 
-            <!-- Tab Produtos -->
-            <div id="tab-placas" class="tab-content">
+            <section id="tab-placas" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-placas">
                 <div class="block-title">
-                    <span>📦 Produtos Cadastrados</span>
+                    <span><span aria-hidden="true">📦</span> Produtos Cadastrados</span>
                     <div class="filters">
-                        <button class="btn btn-primary" type="button" onclick="abrirModalProduto()">➕ Novo
-                            Produto</button>
+                        <button class="btn btn-primary" type="button" onclick="abrirModalProduto()">
+                            <span aria-hidden="true">➕</span> Novo Produto
+                        </button>
                         <input type="text" class="filter-input" placeholder="🔍 Buscar produto..." id="buscaProduto">
                         <select class="filter-input" id="filtroTipoProduto" style="min-width: 150px;">
                             <option value="">Todos os Tipos</option>
@@ -65,50 +69,49 @@
                     </div>
                 </div>
                 <div id="produtosList" class="cards-grid">
-                    <!-- Será preenchido via JavaScript -->
                 </div>
-            </div>
+            </section>
 
-            <!-- Tab Marcas -->
-            <div id="tab-marcas" class="tab-content">
+            <section id="tab-marcas" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-marcas">
                 <div class="block-title">
-                    <span>🏷️ Marcas Cadastradas</span>
+                    <span><span aria-hidden="true">🏷️</span> Marcas Cadastradas</span>
                     <div class="filters">
-                        <button class="btn btn-primary" type="button" onclick="abrirModalMarca()">➕ Nova Marca</button>
+                        <button class="btn btn-primary" type="button" onclick="abrirModalMarca()">
+                            <span aria-hidden="true">➕</span> Nova Marca
+                        </button>
                         <input type="text" class="filter-input" placeholder="🔍 Buscar marca..." id="buscaMarca">
                     </div>
                 </div>
                 <div id="marcasList" class="cards-grid">
-                    <!-- Será preenchido via JavaScript -->
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
 
-    <!-- Modais -->
-    <!-- Modal Fornecedor -->
-    <div id="modalFornecedor" class="modal">
+    <div id="modalFornecedor" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalFornecedorTitle">
         <div class="modal-content">
-            <h3>Cadastrar Novo Fornecedor</h3>
+            <h3 id="modalFornecedorTitle">Cadastrar Novo Fornecedor</h3>
             <form id="formFornecedor" action="../../../../backend/Admin/Fornecedor/CadastroFornecedor.php"
                 method="POST">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Nome do fornecedor *</label>
-                        <input type="text" class="form-input" name="name" required>
+                        <label class="form-label" for="fornecedor_nome">Nome do fornecedor *</label>
+                        <input type="text" class="form-input" name="name" id="fornecedor_nome" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Email *</label>
-                        <input type="email" class="form-input" name="email" required>
+                        <label class="form-label" for="fornecedor_email">Email *</label>
+                        <input type="email" class="form-input" name="email" id="fornecedor_email" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Telefone *</label>
-                        <input type="tel" class="form-input" name="telefone" required>
+                        <label class="form-label" for="fornecedor_telefone">Telefone *</label>
+                        <input type="tel" class="form-input" name="telefone" id="fornecedor_telefone" required>
                     </div>
+
                     <div class="form-group">
-                        <label class="form-label">Produtos *</label>
-                        <select class="form-input" name="id_marca">
-                            <!-- Opções preenchidas via JS -->
+                        <label class="form-label" for="fornecedor_id_marca">Produtos *</label>
+
+                        <select class="form-input" name="id_marca" id="fornecedor_id_marca" required>
+                            <option value="" disabled selected>Selecione um produto</option>
                         </select>
                     </div>
                 </div>
@@ -120,34 +123,79 @@
         </div>
     </div>
 
-    <!-- Modal Produto -->
-    <div id="modalProduto" class="modal">
+    <div id="modalFornecedorEditaar" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalEditarTitle">
         <div class="modal-content">
-            <h3>Cadastrar Novo Produto</h3>
+            <h3 id="modalEditarTitle">Editar Fornecedor</h3>
+
+            <form id="formEditarFornecedor" action="../../../../backend/Admin/Fornecedor/AtualizarFornecedor.php"
+                method="POST">
+
+                <input type="hidden" id="edit_fornecedor_id" name="id_fornecedor">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="edit_fornecedor_nome">Nome do fornecedor
+                            *</label>
+                        <input type="text" class="form-input" name="name" id="edit_fornecedor_nome" required>
+                                       
+                    </div>
+                                   <div class="form-group">
+                                           <label class="form-label" for="edit_fornecedor_email">Email *</label>
+                                           <input type="email" class="form-input" name="email"
+                            id="edit_fornecedor_email" required>
+                                       </div>
+                                   <div class="form-group">
+                                           <label class="form-label" for="edit_fornecedor_telefone">Telefone *</label>
+                                           <input type="tel" class="form-input" name="telefone"
+                            id="edit_fornecedor_telefone" required>
+                                       </div>
+
+                                   <div class="form-group">
+                                           <label class="form-label" for="edit_fornecedor_id_marca">Produtos *</label>
+                                           <select class="form-input" name="id_marca" id="edit_fornecedor_id_marca"
+                            required>
+                                                   <option value="" disabled selected>Selecione um produto</option>
+                                               </select>
+                                       </div>
+                               
+                </div>
+                           <div class="modal-actions">
+                                   <button type="button" class="btn btn-secondary"
+                        onclick="fecharModal(modalFornecedorEditaar)">Cancelar</button>
+                                   <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                               </div>
+                       
+            </form>
+               
+        </div>
+    </div>
+
+    <div id="modalProduto" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalProdutoTitle">
+        <div class="modal-content">
+            <h3 id="modalProdutoTitle">Cadastrar Novo Produto</h3>
             <form id="formProduto">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Nome do Produto *</label>
-                        <input type="text" class="form-input" name="nome_produto" required>
+                        <label class="form-label" for="produto_nome">Nome do Produto *</label>
+                        <input type="text" class="form-input" name="nome_produto" id="produto_nome" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Modelo *</label>
-                        <input type="text" class="form-input" name="modelo_produto" required>
+                        <label class="form-label" for="produto_modelo">Modelo *</label>
+                        <input type="text" class="form-input" name="modelo_produto" id="produto_modelo" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Valor Unitário *</label>
-                        <input type="number" class="form-input" name="valor_unitario" required>
+                        <label class="form-label" for="produto_valor">Valor Unitário *</label>
+                        <input type="number" class="form-input" name="valor_unitario" id="produto_valor" step="0.01"
+                            required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Tipo de Produto *</label>
-                        <input type="text" class="form-input" name="tipo_produto" required>
+                        <label class="form-label" for="produto_tipo">Tipo de Produto *</label>
+                        <input type="text" class="form-input" name="tipo_produto" id="produto_tipo" required>
                     </div>
-                    <div class="form-group" name="id_marca">
-                        <label class="form-label">Marca*</label>
-                        <select id="id_marca">
-                            <!-- Opções preenchidas via JS -->
+                    <div class="form-group">
+                        <label class="form-label" for="id_marca">Marca*</label>
+                        <select id="id_marca" name="id_marca" class="form-input" required>
                         </select>
-                        
                     </div>
                 </div>
                 <div class="modal-actions">
@@ -158,27 +206,26 @@
         </div>
     </div>
 
-    <!-- Modal Marca -->
-    <div id="modalMarca" class="modal">
+    <div id="modalMarca" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalMarcaTitle">
         <div class="modal-content">
-            <h3>Cadastrar Nova Marca</h3>
+            <h3 id="modalMarcaTitle">Cadastrar Nova Marca</h3>
             <form id="formMarca">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Nome da Marca *</label>
-                        <input type="text" class="form-input" name="nome" required>
+                        <label class="form-label" for="marca_nome">Nome da Marca *</label>
+                        <input type="text" class="form-input" name="nome" id="marca_nome" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Modelo *</label>
-                        <input type="text" class="form-input" name="modelo" required>
+                        <label class="form-label" for="marca_modelo">Modelo *</label>
+                        <input type="text" class="form-input" name="modelo" id="marca_modelo" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Site Oficial</label>
-                        <input type="text" class="form-input" name="site_oficial">
+                        <label class="form-label" for="marca_site">Site Oficial</label>
+                        <input type="text" class="form-input" name="site_oficial" id="marca_site">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">País de Origem</label>
-                        <input type="text" class="form-input" name="pais_origem">
+                        <label class="form-label" for="marca_pais">País de Origem</label>
+                        <input type="text" class="form-input" name="pais_origem" id="marca_pais">
                     </div>
                 </div>
                 <div class="modal-actions">
