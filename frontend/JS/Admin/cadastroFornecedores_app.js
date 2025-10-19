@@ -30,10 +30,10 @@ function fecharModal(modalElement) {
 
 // ----- Funções Específicas-----
 function abrirModalFornecedor() { abrirModal(modalFornecedor); }
-function abrirModalFornecedorEditar() { abrirModal(modalFornecedorEditar); }
 function abrirModalProduto() { abrirModal(modalProduto); }
 function abrirModalMarca() { abrirModal(modalMarca); }
 
+// --- fechar modal
 function fecharModalFornecedor() { fecharModal(modalFornecedor); }
 function fecharModalProduto() { fecharModal(modalProduto); }
 function fecharModalMarca() { fecharModal(modalMarca); }
@@ -64,16 +64,10 @@ function mostrarTab(tab) {
 // =========================
 
 document.addEventListener('DOMContentLoaded', () => {
-
     carregarFornecedores();
     carregarProdutos();
-
     carregarMarcasEPreencherSelect();
 });
-
-function abrirModalFornecedorEditar() {
-
-}
 
 // =========================
 // CARREGAR FORNECEDORES
@@ -100,9 +94,15 @@ async function carregarFornecedores() {
                 <h3>🏭 ${f.nome}</h3>
                 <p><strong>Email:</strong> ${f.email}</p>
                 <p><strong>Telefone:</strong> ${f.telefone}</p>
-
+                <p><strong>Total de vendas:</strong> ${f.total_vendas}</p>
                 <div>
-                    <button class="btn-success " onclick="abrirModalFornecedorEditar(${f.id_fornecedor})">Editar</button>
+                   
+                    <a class="btn-success" 
+                    href="../../../../frontend/dashboards/Admin/editar_fornecedor/editar_fornecedor.html?id=${f.id_fornecedor}">
+                        <button class="btn-success">
+                            Editar
+                        </button>
+                    </a>
                     <button class="btn-danger " onclick="ExcluirFornecedor(${f.id_fornecedor})">Excluir</button>
                 </div>
 
@@ -150,7 +150,7 @@ async function carregarProdutos() {
                 </a>
 
                 <div>
-                    <button class="btn-success " onclick="abrirModalFornecedorEditar(${p.id_produto})">Editar</button>
+                    <button class="btn-success " onclick="abrirModalFornecedorEditar()">Editar</button>
                     <button class="btn-danger " onclick="ExcluirFornecedor(${p.id_produto})">Excluir</button>
                 </div>
 
@@ -174,7 +174,7 @@ async function carregarMarcasEPreencherSelect() {
     try {
         const response = await fetch('../../../../backend/Admin/Marcas/ListarMarcas.php');
         const responseData = await response.json();
-        const marcas = responseData.marcas; // Assumindo { marcas: [...] }
+        const marcas = responseData.marcas;
 
         if (!marcas || marcas.length === 0) {
             listContainer.innerHTML = `<div class="empty-state"><h3>Nenhuma marca cadastrada</h3></div>`;

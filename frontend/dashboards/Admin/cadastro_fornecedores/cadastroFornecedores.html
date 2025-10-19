@@ -45,10 +45,6 @@
                         </button>
                         <input type="text" class="filter-input" placeholder="🔍 Buscar fornecedor..."
                             id="buscaFornecedor">
-                        <select class="filter-input" id="filtroRegiaoFornecedor" style="min-width: 150px;">
-                            <option value="">Todas as Regiões</option>
-                            <option value="sul">Sul</option>
-                        </select>
                     </div>
                 </div>
                 <div id="fornecedoresList" class="cards-grid">
@@ -120,53 +116,6 @@
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <div id="modalFornecedorEditaar" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalEditarTitle">
-        <div class="modal-content">
-            <h3 id="modalEditarTitle">Editar Fornecedor</h3>
-
-            <form id="formEditarFornecedor" action="../../../../backend/Admin/Fornecedor/AtualizarFornecedor.php"
-                method="POST">
-
-                <input type="hidden" id="edit_fornecedor_id" name="id_fornecedor">
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label" for="edit_fornecedor_nome">Nome do fornecedor
-                            *</label>
-                        <input type="text" class="form-input" name="name" id="edit_fornecedor_nome" required>
-                                       
-                    </div>
-                                   <div class="form-group">
-                                           <label class="form-label" for="edit_fornecedor_email">Email *</label>
-                                           <input type="email" class="form-input" name="email"
-                            id="edit_fornecedor_email" required>
-                                       </div>
-                                   <div class="form-group">
-                                           <label class="form-label" for="edit_fornecedor_telefone">Telefone *</label>
-                                           <input type="tel" class="form-input" name="telefone"
-                            id="edit_fornecedor_telefone" required>
-                                       </div>
-
-                                   <div class="form-group">
-                                           <label class="form-label" for="edit_fornecedor_id_marca">Produtos *</label>
-                                           <select class="form-input" name="id_marca" id="edit_fornecedor_id_marca"
-                            required>
-                                                   <option value="" disabled selected>Selecione um produto</option>
-                                               </select>
-                                       </div>
-                               
-                </div>
-                           <div class="modal-actions">
-                                   <button type="button" class="btn btn-secondary"
-                        onclick="fecharModal(modalFornecedorEditaar)">Cancelar</button>
-                                   <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                               </div>
-                       
-            </form>
-               
         </div>
     </div>
 
