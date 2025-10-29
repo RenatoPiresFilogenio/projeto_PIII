@@ -1,33 +1,31 @@
 <?php
 
-// Inicia a sessão e verifica se os dados de login são válidos
-
+// inicia sessão e verifica se usuário é válido
 
 session_start();
+require "../DB/database.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $senha = $_POST['senha'] ?? '';
 
-    // Carrega usuários temporários
-    $usuarios = require('usuario_temporario.php');
-
-    $usuarioValido = null;
-
-    foreach ($usuarios as $u) {
-        if ($u['email'] === $email && password_verify($senha, $u['senha'])) {
-            $usuarioValido = $u;
-            break;
-        }
-    }
-
-    if ($usuarioValido) {
-        $_SESSION['usuario_logado'] = $usuarioValido['nome'];
-        $_SESSION['tipo_usuario'] = $usuarioValido['tipo_usuario'];
-        header('Location: ../../frontend/dashboards/Cliente/cadastrarImoveis.php');
+    $sql = "SELECT * FROM usuarios WHERE email = :email";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([":email" => $email]);
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$usuario || !password_verify($senha, $usuario['senha'])) {
+        header("Location: ../../frontend/login.html?status_login=erro");
         exit();
-    } else {
-        echo "Email ou senha incorretos!";
     }
+
+    $_SESSION['usuario_logado'] = $usuario['nome'];
+    $_SESSION['tipo_usuario'] = $usuario['tipo_usuario'];
+
+    if ($usuario['tipo_usuario'] == 0) {
+        header('Location: ../../frontend/dashboards/Cliente/cadastrarImoveis.php');
+    } else {
+        header('Location: ../../frontend/dashboards/Admin/dashboardAdmin.html');
+    }
+    exit();
 }
-?>

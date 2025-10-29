@@ -1,0 +1,82 @@
+.btn-primary,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.btn-secondary {
+    color: white;
+}
+
+button {
+    all: unset;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    transition: 0.2s ease;
+    border: 2px solid black;
+}
+
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--raio-borda-input, 8px);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background: var(--cor-primaria, #4299e1);
+}
+
+.btn-primary:hover {
+    background: var(--cor-primaria-hover, #3182ce);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: var(--cor-sucesso, #38a169);
+}
+
+.btn-success:hover {
+    background: var(--cor-sucesso-hover, #2f855a);
+}
+
+.btn-danger {
+    background: var(--cor-perigo, #e53e3e);
+}
+
+.btn-danger:hover {
+    background: var(--cor-perigo-hover, #c53030);
+}
+
+.btn-warning {
+    background: var(--cor-aviso, #d69e2e);
+}
+
+.btn-warning:hover {
+    background: var(--cor-aviso-hover, #b7791f);
+}
+
+.btn-secondary {
+    background: var(--cor-secundaria, #718096);
+}
+
+.btn-secondary:hover {
+    background: var(--cor-secundaria-hover, #4a5568);
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
