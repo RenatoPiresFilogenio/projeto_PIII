@@ -6,8 +6,9 @@
 const modalFornecedor = document.getElementById("modalFornecedor");
 const modalProduto = document.getElementById("modalProduto");
 const modalMarca = document.getElementById("modalMarca");
-const modalFornecedorEditar = document.getElementById('modalFornecedorEditar');
+const modalKit = document.getElementById('modalKit');
 
+const modalFornecedorEditar = document.getElementById('modalFornecedorEditar');
 /**
  * Função genérica para abrir um modal
  * @param {HTMLElement} modalElement - O elemento do modal a ser aberto
@@ -32,17 +33,21 @@ function fecharModal(modalElement) {
 function abrirModalFornecedor() { abrirModal(modalFornecedor); }
 function abrirModalProduto() { abrirModal(modalProduto); }
 function abrirModalMarca() { abrirModal(modalMarca); }
+function abrirModalKit() { abrirModal(modalKit) }
 
 // --- fechar modal
 function fecharModalFornecedor() { fecharModal(modalFornecedor); }
 function fecharModalProduto() { fecharModal(modalProduto); }
 function fecharModalMarca() { fecharModal(modalMarca); }
+function fecharModalKit() { fecharModal(modalKit) }
+
 
 // ----- FECHAR MODAL AO CLICAR FORA -----
 window.addEventListener("click", (event) => {
     if (event.target === modalFornecedor) fecharModal(modalFornecedor);
     if (event.target === modalProduto) fecharModal(modalProduto);
     if (event.target === modalMarca) fecharModal(modalMarca);
+    if (event.target === modalKit) fecharModal(modalKit);
 });
 
 // =========================

@@ -25,6 +25,10 @@
                     aria-selected="true" onclick="mostrarTab('fornecedores')">
                     <span aria-hidden="true">🏭</span> Fornecedores
                 </button>
+                <button class="tab" role="tab" id="tab-btn-kits" aria-controls="tab-kits" aria-selected="false"
+                    onclick="mostrarTab('kits')">
+                    <span aria-hidden="true">📦</span> Kits
+                </button>
                 <button class="tab" role="tab" id="tab-btn-placas" aria-controls="tab-placas" aria-selected="false"
                     onclick="mostrarTab('placas')">
                     <span aria-hidden="true">📦</span> Produtos
@@ -35,6 +39,7 @@
                 </button>
             </div>
 
+            <!-- ===================== ABA FORNECEDORES ===================== -->
             <section id="tab-fornecedores" class="tab-content active" role="tabpanel"
                 aria-labelledby="tab-btn-fornecedores">
                 <div class="block-title">
@@ -47,10 +52,24 @@
                             id="buscaFornecedor">
                     </div>
                 </div>
-                <div id="fornecedoresList" class="cards-grid">
-                </div>
+                <div id="fornecedoresList" class="cards-grid"></div>
             </section>
 
+            <!-- ===================== ABA KITS ===================== -->
+            <section id="tab-kits" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-kits">
+                <div class="block-title">
+                    <span><span aria-hidden="true">📦</span> Kits Cadastrados</span>
+                    <div class="filters">
+                        <button class="btn btn-primary" type="button" onclick="abrirModalKit()">
+                            <span aria-hidden="true">➕</span> Novo Kit
+                        </button>
+                        <input type="text" class="filter-input" placeholder="🔍 Buscar kit..." id="buscaKit">
+                    </div>
+                </div>
+                <div id="kitsList" class="cards-grid"></div>
+            </section>
+
+            <!-- ===================== ABA PRODUTOS ===================== -->
             <section id="tab-placas" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-placas">
                 <div class="block-title">
                     <span><span aria-hidden="true">📦</span> Produtos Cadastrados</span>
@@ -64,10 +83,10 @@
                         </select>
                     </div>
                 </div>
-                <div id="produtosList" class="cards-grid">
-                </div>
+                <div id="produtosList" class="cards-grid"></div>
             </section>
 
+            <!-- ===================== ABA MARCAS ===================== -->
             <section id="tab-marcas" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-marcas">
                 <div class="block-title">
                     <span><span aria-hidden="true">🏷️</span> Marcas Cadastradas</span>
@@ -78,10 +97,32 @@
                         <input type="text" class="filter-input" placeholder="🔍 Buscar marca..." id="buscaMarca">
                     </div>
                 </div>
-                <div id="marcasList" class="cards-grid">
-                </div>
+                <div id="marcasList" class="cards-grid"></div>
             </section>
         </main>
+    </div>
+
+    <!-- ===================== MODAIS ===================== -->
+    <div id="modalKit" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalKitTitle">
+        <div class="modal-content">
+            <h3 id="modalKitTitle">Cadastrar Novo Kit</h3>
+            <form id="formKit">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="kit_nome">Nome do Kit *</label>
+                        <input type="text" class="form-input" name="kit_nome" id="kit_nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="kit_modelo">Produtos *</label>
+                        <input type="text" class="form-input" name="kit_modelo" id="kit_modelo" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModalKit()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <div id="modalFornecedor" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalFornecedorTitle">
@@ -102,11 +143,9 @@
                         <label class="form-label" for="fornecedor_telefone">Telefone *</label>
                         <input type="tel" class="form-input" name="telefone" id="fornecedor_telefone" required>
                     </div>
-
                     <div class="form-group">
                         <label class="form-label" for="fornecedor_id_marca">Produtos *</label>
-
-                        <select class="form-input" name="id_marca" id="fornecedor_id_marca" required>
+                        <select class="form-input" name="id_marca" id="fornecedor_id_marca">
                             <option value="" disabled selected>Selecione um produto</option>
                         </select>
                     </div>
@@ -143,8 +182,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="id_marca">Marca*</label>
-                        <select id="id_marca" name="id_marca" class="form-input" required>
-                        </select>
+                        <select id="id_marca" name="id_marca" class="form-input" required></select>
                     </div>
                 </div>
                 <div class="modal-actions">
