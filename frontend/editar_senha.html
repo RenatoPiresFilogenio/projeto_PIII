@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Solar Smart</title>
+
+    <link rel="stylesheet" href="../frontend/css/LandPage/login.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <div class="right-panel">
+            <div class="login-container">
+                <h3>Edite sua senha</h3>
+
+                <form action="../../backend/login-cadastro/login_editar_senha/editar_senha.php" method="POST">
+                    <div class="input-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Nova Senha</label>
+                        <input type="password" id="password" name="senha" placeholder="Digite sua senha" required>
+                    </div>
+
+                    <button type="submit">Alterar Senha</button>
+
+                    <div class="links">
+                        <a href="../frontend/index.html">Voltar</a>
+                        <a href="../frontend/cadastroUsuario.html">Criar uma conta</a>
+                        <a href="../frontend/login.html">Login</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

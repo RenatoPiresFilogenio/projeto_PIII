@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Fornecedores - Administração</title>
+    <link rel="stylesheet" href="../../../css/Dashboards/cadastro_fornecedores/cadastro_fornecedores.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><span aria-hidden="true">🏭</span> Gestão de Fornecedores</h1>
+            <div class="header-actions">
+                <a href="../dashboardAdmin.html" class="btn btn-secondary">
+                    <span aria-hidden="true">←</span> Dashboard
+                </a>
+            </div>
+        </header>
+
+        <main class="block">
+            <div class="tabs" role="tablist">
+                <button class="tab active" role="tab" id="tab-btn-fornecedores" aria-controls="tab-fornecedores"
+                    aria-selected="true" onclick="mostrarTab('fornecedores')">
+                    <span aria-hidden="true">🏭</span> Fornecedores
+                </button>
+                <button class="tab" role="tab" id="tab-btn-kits" aria-controls="tab-kits" aria-selected="false"
+                    onclick="mostrarTab('kits')">
+                    <span aria-hidden="true">📦</span> Kits
+                </button>
+                <button class="tab" role="tab" id="tab-btn-placas" aria-controls="tab-placas" aria-selected="false"
+                    onclick="mostrarTab('placas')">
+                    <span aria-hidden="true">📦</span> Produtos
+                </button>
+                <button class="tab" role="tab" id="tab-btn-marcas" aria-controls="tab-marcas" aria-selected="false"
+                    onclick="mostrarTab('marcas')">
+                    <span aria-hidden="true">🏷️</span> Marcas
+                </button>
+            </div>
+
+            <!-- ===================== ABA FORNECEDORES ===================== -->
+            <section id="tab-fornecedores" class="tab-content active" role="tabpanel"
+                aria-labelledby="tab-btn-fornecedores">
+                <div class="block-title">
+                    <span><span aria-hidden="true">📊</span> Fornecedores Cadastrados</span>
+                    <div class="filters">
+                        <button class="btn btn-primary" type="button" onclick="abrirModalFornecedor()">
+                            <span aria-hidden="true">➕</span> Novo Fornecedor
+                        </button>
+                        <input type="text" class="filter-input" placeholder="🔍 Buscar fornecedor..."
+                            id="buscaFornecedor">
+                    </div>
+                </div>
+                <div id="fornecedoresList" class="cards-grid"></div>
+            </section>
+
+            <!-- ===================== ABA KITS ===================== -->
+            <section id="tab-kits" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-kits">
+                <div class="block-title">
+                    <span><span aria-hidden="true">📦</span> Kits Cadastrados</span>
+                    <div class="filters">
+                        <button class="btn btn-primary" type="button" onclick="abrirModalKit()">
+                            <span aria-hidden="true">➕</span> Novo Kit
+                        </button>
+                        <input type="text" class="filter-input" placeholder="🔍 Buscar kit..." id="buscaKit">
+                    </div>
+                </div>
+                <div id="kitsList" class="cards-grid"></div>
+            </section>
+
+            <!-- ===================== ABA PRODUTOS ===================== -->
+            <section id="tab-placas" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-placas">
+                <div class="block-title">
+                    <span><span aria-hidden="true">📦</span> Produtos Cadastrados</span>
+                    <div class="filters">
+                        <button class="btn btn-primary" type="button" onclick="abrirModalProduto()">
+                            <span aria-hidden="true">➕</span> Novo Produto
+                        </button>
+                        <input type="text" class="filter-input" placeholder="🔍 Buscar produto..." id="buscaProduto">
+                        <select class="filter-input" id="filtroTipoProduto" style="min-width: 150px;">
+                            <option value="">Todos os Tipos</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="produtosList" class="cards-grid"></div>
+            </section>
+
+            <!-- ===================== ABA MARCAS ===================== -->
+            <section id="tab-marcas" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-marcas">
+                <div class="block-title">
+                    <span><span aria-hidden="true">🏷️</span> Marcas Cadastradas</span>
+                    <div class="filters">
+                        <button class="btn btn-primary" type="button" onclick="abrirModalMarca()">
+                            <span aria-hidden="true">➕</span> Nova Marca
+                        </button>
+                        <input type="text" class="filter-input" placeholder="🔍 Buscar marca..." id="buscaMarca">
+                    </div>
+                </div>
+                <div id="marcasList" class="cards-grid"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ===================== MODAIS ===================== -->
+    <div id="modalKit" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalKitTitle">
+        <div class="modal-content">
+            <h3 id="modalKitTitle">Cadastrar Novo Kit</h3>
+            <form id="formKit" action="../../../../backend/Admin/Marcas/CriarMarca.php" method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="kit_nome">Nome do Kit *</label>
+                        <input type="text" class="form-input" name="kit_nome" id="kit_nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="kit_modelo">descricao *</label>
+                        <input type="text" class="form-input" name="kit_modelo" id="kit_modelo" required>
+                    </div>
+                    <div class="form-group">
+                    <label class="form-label" for="fornecedor_id">Fornecedor *</label>
+                    <select class="form-input" name="id_fornecedor" id="id_fornecedor_select">
+
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="produto_id">Produtos *</label>
+                    <select class="form-input" name="id_produto" id="id_produto_select">
+
+                    </select>
+                </div>
+        </div>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" onclick="fecharModalKit()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+        </form>
+    </div>
+    </div>
+
+    <div id="modalFornecedor" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalFornecedorTitle">
+        <div class="modal-content">
+            <h3 id="modalFornecedorTitle">Cadastrar Novo Fornecedor</h3>
+            <form id="formFornecedor" action="../../../../backend/Admin/Fornecedor/CadastroFornecedor.php"
+                method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="fornecedor_nome">Nome do fornecedor *</label>
+                        <input type="text" class="form-input" name="name" id="fornecedor_nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="fornecedor_email">Email *</label>
+                        <input type="email" class="form-input" name="email" id="fornecedor_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="fornecedor_telefone">Telefone *</label>
+                        <input type="tel" class="form-input" name="telefone" id="fornecedor_telefone" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModalFornecedor()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalProduto" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalProdutoTitle">
+        <div class="modal-content">
+            <h3 id="modalProdutoTitle">Cadastrar Novo Produto</h3>
+            <form id="formProduto" action="../../../../backend/Admin/CadastrarProduto/CadastrarProduto.php"
+                method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="produto_nome">Nome do Produto *</label>
+                        <input type="text" class="form-input" name="nome_produto" id="produto_nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="produto_modelo">Modelo *</label>
+                        <input type="text" class="form-input" name="modelo_produto" id="produto_modelo" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="produto_valor">Valor Unitário *</label>
+                        <input type="number" class="form-input" name="valor_unitario" id="produto_valor" step="0.01"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="produto_tipo">Tipo de Produto *</label>
+                        <input type="text" class="form-input" name="tipo_produto" id="produto_tipo" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="id_marca">Marca*</label>
+                        <select id="id_marca" name="id_marca" class="form-input" required></select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModalProduto()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalMarca" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalMarcaTitle">
+        <div class="modal-content">
+            <h3 id="modalMarcaTitle">Cadastrar Nova Marca</h3>
+            <form id="formMarca" action="../../../../backend/Admin/Marcas/CriarMarca.php" method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="marca_nome">Nome da Marca *</label>
+                        <input type="text" class="form-input" name="nome" id="marca_nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="marca_modelo">Modelo *</label>
+                        <input type="text" class="form-input" name="modelo" id="marca_modelo" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="marca_site">Site Oficial</label>
+                        <input type="text" class="form-input" name="site_oficial" id="marca_site">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="marca_pais">País de Origem</label>
+                        <input type="text" class="form-input" name="pais_origem" id="marca_pais">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="fecharModalMarca()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../../JS/Admin/cadastroFornecedores_app.js"></script>
+</body>
+
+</html>
