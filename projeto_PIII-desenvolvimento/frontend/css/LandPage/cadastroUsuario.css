@@ -1,0 +1,198 @@
+@import "./variables.css";
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--azul-tecnologico);
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    min-height: 100vh;
+}
+
+.card {
+    width: 100%;
+    max-width: 520px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
+.card h1 {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: #111;
+    text-align: center;
+}
+
+.card p.subtitle {
+    color: #444;
+    font-size: 14px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+form .row {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: var(--azul-tecnologico);
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+    outline: none;
+}
+
+.password-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.requisitos {
+    margin-top: 10px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #333;
+}
+
+.requisitos ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+}
+
+.requisitos li {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.check {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    font-size: 12px;
+    color: white;
+    transition: background-color 0.2s ease;
+}
+
+
+.ok {
+    background: var(--verde-sustentavel);
+    border-color: var(--verde-sustentavel);
+}
+
+.not-ok {
+    background: #ccc;
+    border-color: #ccc;
+}
+
+.msg-error {
+    color: #c62828;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+.actions {
+    margin-top: 20px;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg, var(--azul-tecnologico), #3c91e6);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+button[type="submit"]:hover:not([disabled]) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+button[disabled] {
+    background: #a1c4e4;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.links {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.links a {
+    color: var(--azul-tecnologico);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.links a:hover {
+    color: var(--verde-sustentavel);
+}
+
+@media (max-width: 520px) {
+    body {
+        padding: 15px;
+    }
+
+    .password-row {
+        grid-template-columns: 1fr;
+    }
+
+    .requisitos ul {
+        grid-template-columns: 1fr;
+    }
+}
