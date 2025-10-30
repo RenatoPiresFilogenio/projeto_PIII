@@ -72,7 +72,33 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarFornecedores();
     carregarProdutos();
     carregarMarcasEPreencherSelect();
+    PreencherProdutoSelect();
 });
+
+async function PreencherProdutoSelect() {
+
+    const container = document.getElementById('id_produto_select');
+    container.innerHTML =  `<option value="">carregando....</option>`;
+
+    try {
+        const response = await fetch('../../../../backend/Admin/CadastrarProduto/ListarProduto.php');
+        const data = await response.json();
+        const produto = data.produtos;
+
+        if (!produto || produto.length === 0) {
+            container.innerHTML = `<option value="">Não tem produtos cadastrados</option>`
+        }
+
+        container.innerHTML = produto.map(produto => `
+        <option value="${produto.id_produto}">${produto.nome}</option>
+        `).join("");
+
+    } catch (error) {
+        container.innerHTML = `<div class="empty-state"><h3>Erro ao carregar produtos</h3></div>`;
+        console.error("Erro ao carregar produtos:", error);
+    }
+}
+
 
 // =========================
 // CARREGAR FORNECEDORES
@@ -167,6 +193,9 @@ async function carregarProdutos() {
     }
 }
 
+
+
+
 // =========================
 // CARREGAR MARCAS (PARA A LISTA E PARA O SELECT)
 // =========================
@@ -180,7 +209,7 @@ async function carregarMarcasEPreencherSelect() {
         const response = await fetch('../../../../backend/Admin/Marcas/ListarMarcas.php');
         const responseData = await response.json();
         const marcas = responseData.marcas;
-
+        console.log(marcas);
         if (!marcas || marcas.length === 0) {
             listContainer.innerHTML = `<div class="empty-state"><h3>Nenhuma marca cadastrada</h3></div>`;
         } else {

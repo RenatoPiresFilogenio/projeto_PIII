@@ -1,21 +1,18 @@
 <?php
 require("../../DB/database.php");
 
-header('Content-Type: application/json');
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $data = json_decode(file_get_contents("php://input"), true);
 
-    $nome_produto   = trim($data['nome_produto'] ?? '');
-    $modelo_produto = trim($data['modelo_produto'] ?? '');
-    $valor_unitario = $data['valor_unitario'] ?? 0;
-    $tipo_produto   = trim($data['tipo_produto'] ?? '');
-    $id_marca       = $data['id_marca'] ?? '';
+    $nome_produto   = trim($_POST['nome_produto'] ?? '');
+    $modelo_produto = trim($_POST['modelo_produto'] ?? '');
+    $valor_unitario = $_POST['valor_unitario'] ?? 0;
+    $tipo_produto   = trim($_POST['tipo_produto'] ?? '');
+    $id_marca       = $_POST['id_marca'] ?? '';
 
     if (!$nome_produto || !$modelo_produto || !$tipo_produto || !$id_marca || !$valor_unitario) {
         http_response_code(400);
-        echo json_encode([
+        json_encode([
             'status' => 'error',
             'message' => 'Campos obrigatórios não preenchidos.'
         ]);
@@ -28,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verifica se o produto já existe (mesmo modelo e marca)
         $sqlCheck = "SELECT id_produto 
                      FROM produtos 
-                     WHERE modelo = :modelo AND fk_marcas_id = :marca";
+                     WHERE modelo = :modelo AND fk_marcas_id_marca = :marca";
         $stmtCheck = $pdo->prepare($sqlCheck);
         $stmtCheck->execute([
             ':modelo' => $modelo_produto,
@@ -39,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($produtoExistente) {
             $pdo->rollBack();
             http_response_code(409); // Conflito
-            echo json_encode([
+            json_encode([
                 'status' => 'error',
                 'message' => 'Produto já cadastrado para esta marca.',
                 'id_produto_existente' => $produtoExistente['id_produto']
@@ -48,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Inserção do produto
-        $sql = "INSERT INTO produtos (nome, modelo, valor_unitario, tipo_produto, fk_marcas_id)
+        $sql = "INSERT INTO produtos (nome, modelo, valor_unitario, tipo_produto, fk_marcas_id_marca)
                 VALUES (:nome, :modelo, :valor, :tipo, :marca)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -62,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id_produto = $pdo->lastInsertId();
         $pdo->commit();
 
-        echo json_encode([
+       json_encode([
             'status' => 'success',
             'message' => 'Produto cadastrado com sucesso!',
             'produto' => [
@@ -81,15 +78,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log("Erro ao cadastrar produto: " . $e->getMessage());
 
         http_response_code(500);
-        echo json_encode([
+       json_encode([
             'status' => 'error',
-            'message' => 'Erro no banco de dados.'
+            'message' => 'Erro no banco de dados: ' . $e->getMessage()
         ]);
         exit();
     }
 } else {
     http_response_code(405);
-    echo json_encode([
+   json_encode([
         'status' => 'error',
         'message' => 'Método não permitido. Use POST.'
     ]);

@@ -106,23 +106,35 @@
     <div id="modalKit" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalKitTitle">
         <div class="modal-content">
             <h3 id="modalKitTitle">Cadastrar Novo Kit</h3>
-            <form id="formKit">
+            <form id="formKit" action="../../../../backend/Admin/Marcas/CriarMarca.php" method="POST">
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label" for="kit_nome">Nome do Kit *</label>
                         <input type="text" class="form-input" name="kit_nome" id="kit_nome" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="kit_modelo">Produtos *</label>
+                        <label class="form-label" for="kit_modelo">descricao *</label>
                         <input type="text" class="form-input" name="kit_modelo" id="kit_modelo" required>
                     </div>
+                    <div class="form-group">
+                    <label class="form-label" for="fornecedor_id">Fornecedor *</label>
+                    <select class="form-input" name="id_fornecedor" id="id_fornecedor_select">
+
+                    </select>
                 </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="fecharModalKit()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
+                <div class="form-group">
+                    <label class="form-label" for="produto_id">Produtos *</label>
+                    <select class="form-input" name="id_produto" id="id_produto_select">
+
+                    </select>
                 </div>
-            </form>
         </div>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" onclick="fecharModalKit()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+        </form>
+    </div>
     </div>
 
     <div id="modalFornecedor" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalFornecedorTitle">
@@ -143,12 +155,6 @@
                         <label class="form-label" for="fornecedor_telefone">Telefone *</label>
                         <input type="tel" class="form-input" name="telefone" id="fornecedor_telefone" required>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="fornecedor_id_marca">Produtos *</label>
-                        <select class="form-input" name="id_marca" id="fornecedor_id_marca">
-                            <option value="" disabled selected>Selecione um produto</option>
-                        </select>
-                    </div>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="fecharModalFornecedor()">Cancelar</button>
@@ -161,7 +167,8 @@
     <div id="modalProduto" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalProdutoTitle">
         <div class="modal-content">
             <h3 id="modalProdutoTitle">Cadastrar Novo Produto</h3>
-            <form id="formProduto">
+            <form id="formProduto" action="../../../../backend/Admin/CadastrarProduto/CadastrarProduto.php"
+                method="POST">
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label" for="produto_nome">Nome do Produto *</label>
@@ -196,7 +203,7 @@
     <div id="modalMarca" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalMarcaTitle">
         <div class="modal-content">
             <h3 id="modalMarcaTitle">Cadastrar Nova Marca</h3>
-            <form id="formMarca">
+            <form id="formMarca" action="../../../../backend/Admin/Marcas/CriarMarca.php" method="POST">
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label" for="marca_nome">Nome da Marca *</label>
