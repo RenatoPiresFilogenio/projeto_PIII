@@ -5,15 +5,13 @@ header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $data = json_decode(file_get_contents("php://input"), true);
-
-    $site_oficial   = trim($data['site_oficial'] ?? '');
-    $pais_origem    = trim($data['pais_origem'] ?? '');
-    $nome           = trim($data['nome'] ?? '');
-    $modelo         = trim($data['modelo'] ?? '');
-    $id_fornecedor  = trim($data['id_fornecedor'] ?? '');
-
-    if (empty($site_oficial) || empty($pais_origem) || empty($nome) || empty($modelo) || empty($id_fornecedor)) {
+    $site_oficial   = trim($_POST['site_oficial'] ?? '');
+    $pais_origem    = trim($_POST['pais_origem'] ?? '');
+    $nome           = trim($_POST['nome'] ?? '');
+    $modelo         = trim($_POST['modelo'] ?? '');
+    $lista_produtos = trim($_POST['id_produto'] ?? '');
+    
+    if (empty($site_oficial) || empty($pais_origem) || empty($nome) || empty($modelo)) {
         http_response_code(400);
         echo json_encode([
             'status' => 'error',
@@ -28,13 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "SELECT id_marca 
                 FROM marcas 
                 WHERE nome = :nome 
-                  AND modelo = :modelo 
-                  AND fk_fornecedores_id = :fornecedor";
+                  AND modelo = :modelo";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':nome'       => $nome,
             ':modelo'     => $modelo,
-            ':fornecedor' => $id_fornecedor
         ]);
         $marca = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -47,14 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
         exit();
         } else {
-            $sql = "INSERT INTO marcas (nome, modelo, fk_fornecedores_id, data_cadastro, site_oficial, pais_origem)
-                    VALUES (:nome, :modelo, :fornecedor, CURRENT_DATE, :site, :pais)";
+            $sql = "INSERT INTO marcas (nome, modelo, data_cadastro, site_oficial, pais_origem)
+                    VALUES (:nome, :modelo, CURRENT_DATE, :site_oficial, :pais)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ':nome'       => $nome,
                 ':modelo'     => $modelo,
-                ':fornecedor' => $id_fornecedor,
-                ':site'       => $site_oficial,
+                ':site_oficial' => $site_oficial,
                 ':pais'       => $pais_origem
             ]);
             $id_marca = $pdo->lastInsertId();
@@ -62,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $pdo->commit();
 
-        echo json_encode([
+       json_encode([
             'status' => 'success',
             'message' => 'Produto/marca cadastrado com sucesso!',
             'id_marca' => $id_marca
@@ -74,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log("Erro ao cadastrar produto/marca: " . $e->getMessage());
 
         http_response_code(500);
-        echo json_encode([
+        json_encode([
             'status' => 'error',
             'message' => 'Erro no banco de dados.'
         ]);
@@ -82,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     http_response_code(405);
-    echo json_encode([
+    json_encode([
         'status' => 'error',
         'message' => 'Método não permitido. Use POST.'
     ]);
