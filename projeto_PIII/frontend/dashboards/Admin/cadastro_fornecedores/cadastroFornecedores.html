@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Fornecedores - Administração</title>
+    <link rel="stylesheet" href="../../../css/Dashboards/cadastro_fornecedores/cadastro_fornecedores.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🏭 Gestão de Fornecedores</h1>
+            <div class="header-actions">
+                <a href="../dashboardAdmin.html" class="btn btn-secondary">← Dashboard</a>
+                <button class="btn btn-primary" onclick="abrirModalFornecedor()">
+                    ➕ Novo Fornecedor
+                </button>
+                <button class="btn btn-success" onclick="abrirModalPlaca()">
+                    ⚡ Nova Placa Solar
+                </button>
+                <button class="btn btn-secondary" onclick="">
+                    ⚡ Novo Inversor 
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="block">
+            <div class="tabs">
+                <button class="tab active" onclick="mostrarTab('fornecedores')">
+                    🏭 Fornecedores
+                </button>
+                <button class="tab" onclick="mostrarTab('placas')">
+                    ⚡ Placas Solares
+                </button>
+            </div>
+
+            <!-- Tab Fornecedores -->
+            <div id="tab-fornecedores" class="tab-content active">
+                <div class="block-title">
+                    <span>📊 Fornecedores Cadastrados</span>
+                    <div class="filters">
+                        <input type="text" class="filter-input" placeholder="🔍 Buscar fornecedor..."
+                            id="buscaFornecedor">
+                        <select class="filter-input" id="filtroRegiaoFornecedor" style="min-width: 150px;">
+                            <option value="">Todas as Regiões</option>
+                            <option value="sul">Sul</option>
+                            <option value="sudeste">Sudeste</option>
+                            <option value="centro-oeste">Centro-Oeste</option>
+                            <option value="nordeste">Nordeste</option>
+                            <option value="norte">Norte</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="fornecedoresList" class="cards-grid">
+                    <!-- Será preenchido via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Tab Placas -->
+            <div id="tab-placas" class="tab-content">
+                <div class="block-title">
+                    <span>⚡ Modelos de Placas Solares</span>
+                    <div class="filters">
+                        <input type="text" class="filter-input" placeholder="🔍 Buscar placa..." id="buscaPlaca">
+                        <select class="filter-input" id="filtroFornecedorPlaca" style="min-width: 150px;">
+                            <option value="">Todos os Fornecedores</option>
+                            <!-- Será preenchido via JavaScript -->
+                        </select>
+                        <select class="filter-input" id="filtroPotenciaPlaca" style="min-width: 150px;">
+                            <option value="">Todas as Potências</option>
+                            <option value="100-300">100W - 300W</option>
+                            <option value="300-500">300W - 500W</option>
+                            <option value="500+">500W+</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="placasList">
+                    <!-- Será preenchido via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Fornecedor -->
+    <div id="modalFornecedor" class="modal">
+        <div class="modal-content">
+            <h3 id="modalFornecedorTitle">Cadastrar Novo Fornecedor</h3>
+            <form id="formFornecedor">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Nome da Empresa *</label>
+                        <input type="text" class="form-input" id="fornecedorNome" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">CNPJ *</label>
+                        <input type="text" class="form-input" id="fornecedorCnpj" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Email *</label>
+                        <input type="email" class="form-input" id="fornecedorEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Telefone *</label>
+                        <input type="tel" class="form-input" id="fornecedorTelefone" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Região *</label>
+                        <select class="form-input" id="fornecedorRegiao" required>
+                            <option value="">Selecione...</option>
+                            <option value="sul">Sul</option>
+                            <option value="sudeste">Sudeste</option>
+                            <option value="centro-oeste">Centro-Oeste</option>
+                            <option value="nordeste">Nordeste</option>
+                            <option value="norte">Norte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cidade *</label>
+                        <input type="text" class="form-input" id="fornecedorCidade" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Endereço Completo</label>
+                    <input type="text" class="form-input" id="fornecedorEndereco">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Observações</label>
+                    <textarea class="form-input form-textarea" id="fornecedorObservacoes"></textarea>
+                </div>
+            </form>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="fecharModalFornecedor()">Cancelar</button>
+                <button class="btn btn-primary" onclick="salvarFornecedor()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Placa Solar -->
+    <div id="modalPlaca" class="modal">
+        <div class="modal-content">
+            <h3 id="modalPlacaTitle">Cadastrar Nova Placa Solar</h3>
+            <form id="formPlaca">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Modelo da Placa *</label>
+                        <input type="text" class="form-input" id="placaModelo" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fornecedor *</label>
+                        <select class="form-input" id="placaFornecedor" required>
+                            <option value="">Selecione...</option>
+                            <!-- Será preenchido via JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Potência (W) *</label>
+                        <input type="number" class="form-input" id="placaPotencia" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Eficiência (%) *</label>
+                        <input type="number" step="0.1" class="form-input" id="placaEficiencia" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Preço (R$) *</label>
+                        <input type="number" step="0.01" class="form-input" id="placaPreco" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Garantia (anos) *</label>
+                        <input type="number" class="form-input" id="placaGarantia" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Dimensões (cm)</label>
+                        <input type="text" class="form-input" id="placaDimensoes" placeholder="Ex: 200 x 100 x 4">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Peso (kg)</label>
+                        <input type="number" step="0.1" class="form-input" id="placaPeso">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Especificações Técnicas</label>
+                    <textarea class="form-input form-textarea" id="placaEspecificacoes"></textarea>
+                </div>
+            </form>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="fecharModalPlaca()">Cancelar</button>
+                <button class="btn btn-success" onclick="salvarPlaca()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../JS/cadastroFornecedores_app.js">
+    </script>
+</body>
+
+</html>

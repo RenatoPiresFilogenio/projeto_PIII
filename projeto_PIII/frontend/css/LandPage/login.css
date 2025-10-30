@@ -1,0 +1,117 @@
+@import "./variables.css";
+
+
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  /* Container do login */
+  .login-container {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  /* Título */
+  .login-container h2 {
+    margin-bottom: 20px;
+    color: #111;
+    font-size: 22px;
+  }
+  
+  /* Grupos de input */
+  .input-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .input-group label {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .input-group input {
+    width: 100%;              /* Agora ocupa toda a largura */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;    /* Garante que padding não estoure o tamanho */
+  }
+  
+  /* Lembrar-me */
+  .lembrar {
+    text-align: left;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  /* Botão */
+  button {
+    width: 100%;
+    padding: 10px;
+    background: #00c853; /* verde */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+  }
+  
+  button:hover {
+    background: #009624; /* verde mais escuro */
+  }
+  
+  /* Links extras */
+  .links {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  
+  .links a {
+    color: #00c853;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .links a:hover {
+    text-decoration: underline;
+    color: #009624;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 480px) {
+    .login-container {
+      padding: 20px;
+      max-width: 90%;
+    }
+  
+    .links {
+      flex-direction: column;
+      text-align: center;
+      gap: 8px;
+    }
+  }
+  
