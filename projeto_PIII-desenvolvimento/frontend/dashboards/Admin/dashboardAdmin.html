@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema de Orçamentos</title>
+    <link rel="stylesheet" href="../../css/Dashboards/cssAdmin.css">
+</head>
+
+<body>
+    <div class="container">
+    
+        <div class="header">
+            <h1>📊 Dashboard de Orçamentos</h1>
+            <a href="aprovar_orcamento.html" class="btn-novo">
+                ✨ Orçamentos em aprovação
+            </a>
+            <a href="./cadastro_fornecedores/cadastroFornecedores.html" class="btn-fornecedor">
+                ✨ Cadastrar Fornecedores
+            </a>
+            <a href="../../index.html" class="btn-sair">
+                ✨ Desconectar  
+            </a>
+        </div>
+
+        
+        <div class="block">
+            <div class="block-title">
+                🎯 Orçamentos Escolhidos
+            </div>
+            <div class="filters">
+                <select class="filter-select" id="filtroStatus">
+                    <option value="">Todos os Status</option>
+                    <option value="aprovado">Aprovados</option>
+                    <option value="recusado">Recusados</option>
+                    <option value="nao-liberado">Não Liberados</option>
+                </select>
+                <select class="filter-select" id="filtroRegiao">
+                    <option value="">Todas as Regiões</option>
+                    <option value="sul">Sul</option>
+                    <option value="sudeste">Sudeste</option>
+                    <option value="centro-oeste">Centro-Oeste</option>
+                    <option value="nordeste">Nordeste</option>
+                    <option value="norte">Norte</option>
+                </select>
+            </div>
+            <div id="orcamentosEscolhidos">
+               
+            </div>
+        </div>
+
+        
+        <div class="block">
+            <div class="block-title">
+                📈 Resumo Geral
+            </div>
+            <div class="stats-grid" id="estatisticasGerais">
+                
+            </div>
+        </div>
+
+        
+        <div class="block">
+            <div class="block-title">
+                👥 Clientes por Região
+            </div>
+            <div class="clientes-grid" id="clientesPorRegiao">
+               
+            </div>
+        </div>
+
+       
+        <div class="block">
+            <div class="block-title">
+                🏆 Insights e Rankings
+            </div>
+            <div class="insights-grid">
+                <div class="insight-block">
+                    <h3>Região com Maior Aprovação</h3>
+                    <div id="regiaoMaiorAprovacao">
+                       
+                    </div>
+                </div>
+                <div class="insight-block">
+                    <h3>Top Fornecedores por Região</h3>
+                    <div id="fornecedoresTop">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../JS/Admin/dashboardAdmin_app.js">
+    </script>
+</body>
+
+</html>

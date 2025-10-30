@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Orçamentos Aprovados</title>
+    <link rel="stylesheet" href="../../css/Dashboards/aprovar_orcamento.css">
+</head>
+<body>
+    <div class="container">
+       
+        <div class="header">
+            <h1>✅ Orçamentos Aprovados - Aguardando Confirmação</h1>
+            <a href="dashboardAdmin.html" class="btn-voltar">
+                ← Voltar ao Dashboard
+            </a>
+        </div>
+
+        <div class="block">
+            <div class="block-title">
+                📊 Resumo de Aprovações
+            </div>
+            <div class="stats-bar" id="statsBar">
+            </div>
+        </div>
+
+        
+        <div class="block">
+            <div class="block-title">
+                🎯 Orçamentos Aguardando Confirmação
+            </div>
+            <div class="filters">
+                <select class="filter-select" id="filtroRegiao">
+                    <option value="">Todas as Regiões</option>
+                    <option value="sul">Sul</option>
+                    <option value="sudeste">Sudeste</option>
+                    <option value="centro-oeste">Centro-Oeste</option>
+                    <option value="nordeste">Nordeste</option>
+                    <option value="norte">Norte</option>
+                </select>
+                <select class="filter-select" id="filtroFornecedor">
+                    <option value="">Todos os Fornecedores</option>
+                    <option value="Tech Solutions">Tech Solutions</option>
+                    <option value="Digital Works">Digital Works</option>
+                    <option value="Code Masters">Code Masters</option>
+                    <option value="Web Pro">Web Pro</option>
+                </select>
+                <input type="text" class="filter-select" placeholder="Buscar cliente..." id="buscaCliente" style="min-width: 200px;">
+            </div>
+            <div id="orcamentosAprovados">
+            </div>
+        </div>
+    </div>
+
+   
+    <div id="modalObservacoes" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Confirmar Orçamento</h3>
+            <textarea id="observacoes" placeholder="Adicione observações sobre a confirmação (opcional)..."></textarea>
+            <div class="modal-actions">
+                <button class="btn" onclick="fecharModal()">Cancelar</button>
+                <button class="btn btn-confirmar" id="btnConfirmarModal">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../JS/Admin/orcamentoAdmin_app.js">
+    </script>
+</body>
+</html>

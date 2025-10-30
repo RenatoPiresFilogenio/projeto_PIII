@@ -1,0 +1,60 @@
+@import "./variables.css";
+
+.dashboard-demo {
+      padding: 80px 5%;
+      background: white;
+    }
+
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .dashboard-image img {
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .dashboard-text h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      color: #2c3e50;
+    }
+
+    .dashboard-text p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      color: #555;
+    }
+
+    .dashboard-text ul {
+      list-style: none;
+      margin-bottom: 2rem;
+    }
+
+    .dashboard-text li {
+      padding: 0.8rem 0;
+      font-size: 1.1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .btn-demo {
+      display: inline-block;
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      color: white;
+      padding: 12px 30px;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .btn-demo:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+    }
