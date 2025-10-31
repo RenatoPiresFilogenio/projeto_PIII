@@ -9,7 +9,6 @@
     .beneficios h2 {
       font-size: 2.5rem;
       margin-bottom: 3rem;
-      color: white;
     }
 
     .benefits-grid {
@@ -26,6 +25,11 @@
       border-radius: 15px;
       border: 1px solid rgba(255,255,255,0.2);
       transition: transform 0.3s ease;
+    }
+
+    .benefit:hover {
+      transform: translateY(-10px);
+      background: rgba(255,255,255,0.15);
     }
 
     .benefit img {

@@ -4,56 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
     <title>Login - Solar Smart</title>
-
-    <link rel="stylesheet" href="../frontend/css/LandPage/login.css">
+    <link rel="stylesheet" href="css/LandPage/login.css">
 </head>
 
 <body>
 
-    <div class="app-container">
+    <section class="login-container">
 
-        <div class="left-panel">
-            <div class="intro-text">
-                <h2>Bem-vindo à Solar Smart!</h2>   
-                <p>Sua energia, suas regras. Faça login para gerenciar seu consumo e otimizar sua economia.<br>O futuro
-                    da energia começa aqui.</p>
-            </div>
+        <div class="login-box">
+            <h2>Solar Smart</h2>
+            <form action="../backend/login-cadastro/session_start.php" method="POST">
+                <div class="input-group">
+                    <label for="email">Email ou Usuário</label>
+                    <input type="text" id="email" name="email" placeholder="Digite seu email">
+                </div>
+
+                <div class="input-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" placeholder="Digite sua senha">
+                </div>
+
+                <div class="lembrar">
+                    <input type="checkbox" id="lembrar">
+                    <label for="lembrar">Lembrar-me</label>
+                </div>
+
+                <button type="submit">Entrar</button>
+
+                <div class="links">
+                    <a href="#">Esqueceu sua senha?</a>
+                    <a href="cadastroUsuario.html">Criar conta</a>
+                </div>
+            </form>
         </div>
-
-        <div class="right-panel">
-            <div class="login-container">
-                <h3>Acesse sua Conta</h3>
-
-                <form action="../backend/login-cadastro/session_start.php" method="POST">
-                    <div class="input-group">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="password">Senha</label>
-                        <input type="password" id="password" name="senha" placeholder="Digite sua senha" required>
-                    </div>
-
-                    <div class="lembrar">
-                        <input type="checkbox" id="lembrar-me">
-                        <label for="lembrar-me">Lembrar-me</label>
-                    </div>
-
-                    <button type="submit">Entrar</button>
-
-                    <div class="links">
-                        <a href="../frontend/index.html">Voltar</a>
-                        <a href="../frontend/editar_senha.html">Esqueceu sua senha?</a>
-                        <a href="../frontend/cadastroUsuario.html">Criar uma conta</a>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-
-    </div>
+    </section>
 
 </body>
 

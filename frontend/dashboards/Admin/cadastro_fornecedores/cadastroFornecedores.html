@@ -10,227 +10,201 @@
 
 <body>
     <div class="container">
-        <header class="header">
-            <h1><span aria-hidden="true">🏭</span> Gestão de Fornecedores</h1>
+        <!-- Header -->
+        <div class="header">
+            <h1>🏭 Gestão de Fornecedores</h1>
             <div class="header-actions">
-                <a href="../dashboardAdmin.html" class="btn btn-secondary">
-                    <span aria-hidden="true">←</span> Dashboard
-                </a>
+                <a href="../dashboardAdmin.html" class="btn btn-secondary">← Dashboard</a>
+                <button class="btn btn-primary" onclick="abrirModalFornecedor()">
+                    ➕ Novo Fornecedor
+                </button>
+                <button class="btn btn-success" onclick="abrirModalPlaca()">
+                    ⚡ Nova Placa Solar
+                </button>
+                <button class="btn btn-secondary" onclick="">
+                    ⚡ Novo Inversor 
+                </button>
             </div>
-        </header>
+        </div>
 
-        <main class="block">
-            <div class="tabs" role="tablist">
-                <button class="tab active" role="tab" id="tab-btn-fornecedores" aria-controls="tab-fornecedores"
-                    aria-selected="true" onclick="mostrarTab('fornecedores')">
-                    <span aria-hidden="true">🏭</span> Fornecedores
+        <!-- Tabs -->
+        <div class="block">
+            <div class="tabs">
+                <button class="tab active" onclick="mostrarTab('fornecedores')">
+                    🏭 Fornecedores
                 </button>
-                <button class="tab" role="tab" id="tab-btn-kits" aria-controls="tab-kits" aria-selected="false"
-                    onclick="mostrarTab('kits')">
-                    <span aria-hidden="true">📦</span> Kits
-                </button>
-                <button class="tab" role="tab" id="tab-btn-placas" aria-controls="tab-placas" aria-selected="false"
-                    onclick="mostrarTab('placas')">
-                    <span aria-hidden="true">📦</span> Produtos
-                </button>
-                <button class="tab" role="tab" id="tab-btn-marcas" aria-controls="tab-marcas" aria-selected="false"
-                    onclick="mostrarTab('marcas')">
-                    <span aria-hidden="true">🏷️</span> Marcas
+                <button class="tab" onclick="mostrarTab('placas')">
+                    ⚡ Placas Solares
                 </button>
             </div>
 
-            <!-- ===================== ABA FORNECEDORES ===================== -->
-            <section id="tab-fornecedores" class="tab-content active" role="tabpanel"
-                aria-labelledby="tab-btn-fornecedores">
+            <!-- Tab Fornecedores -->
+            <div id="tab-fornecedores" class="tab-content active">
                 <div class="block-title">
-                    <span><span aria-hidden="true">📊</span> Fornecedores Cadastrados</span>
+                    <span>📊 Fornecedores Cadastrados</span>
                     <div class="filters">
-                        <button class="btn btn-primary" type="button" onclick="abrirModalFornecedor()">
-                            <span aria-hidden="true">➕</span> Novo Fornecedor
-                        </button>
                         <input type="text" class="filter-input" placeholder="🔍 Buscar fornecedor..."
                             id="buscaFornecedor">
-                    </div>
-                </div>
-                <div id="fornecedoresList" class="cards-grid"></div>
-            </section>
-
-            <!-- ===================== ABA KITS ===================== -->
-            <section id="tab-kits" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-kits">
-                <div class="block-title">
-                    <span><span aria-hidden="true">📦</span> Kits Cadastrados</span>
-                    <div class="filters">
-                        <button class="btn btn-primary" type="button" onclick="abrirModalKit()">
-                            <span aria-hidden="true">➕</span> Novo Kit
-                        </button>
-                        <input type="text" class="filter-input" placeholder="🔍 Buscar kit..." id="buscaKit">
-                    </div>
-                </div>
-                <div id="kitsList" class="cards-grid"></div>
-            </section>
-
-            <!-- ===================== ABA PRODUTOS ===================== -->
-            <section id="tab-placas" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-placas">
-                <div class="block-title">
-                    <span><span aria-hidden="true">📦</span> Produtos Cadastrados</span>
-                    <div class="filters">
-                        <button class="btn btn-primary" type="button" onclick="abrirModalProduto()">
-                            <span aria-hidden="true">➕</span> Novo Produto
-                        </button>
-                        <input type="text" class="filter-input" placeholder="🔍 Buscar produto..." id="buscaProduto">
-                        <select class="filter-input" id="filtroTipoProduto" style="min-width: 150px;">
-                            <option value="">Todos os Tipos</option>
+                        <select class="filter-input" id="filtroRegiaoFornecedor" style="min-width: 150px;">
+                            <option value="">Todas as Regiões</option>
+                            <option value="sul">Sul</option>
+                            <option value="sudeste">Sudeste</option>
+                            <option value="centro-oeste">Centro-Oeste</option>
+                            <option value="nordeste">Nordeste</option>
+                            <option value="norte">Norte</option>
                         </select>
                     </div>
                 </div>
-                <div id="produtosList" class="cards-grid"></div>
-            </section>
+                <div id="fornecedoresList" class="cards-grid">
+                    <!-- Será preenchido via JavaScript -->
+                </div>
+            </div>
 
-            <!-- ===================== ABA MARCAS ===================== -->
-            <section id="tab-marcas" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-marcas">
+            <!-- Tab Placas -->
+            <div id="tab-placas" class="tab-content">
                 <div class="block-title">
-                    <span><span aria-hidden="true">🏷️</span> Marcas Cadastradas</span>
+                    <span>⚡ Modelos de Placas Solares</span>
                     <div class="filters">
-                        <button class="btn btn-primary" type="button" onclick="abrirModalMarca()">
-                            <span aria-hidden="true">➕</span> Nova Marca
-                        </button>
-                        <input type="text" class="filter-input" placeholder="🔍 Buscar marca..." id="buscaMarca">
+                        <input type="text" class="filter-input" placeholder="🔍 Buscar placa..." id="buscaPlaca">
+                        <select class="filter-input" id="filtroFornecedorPlaca" style="min-width: 150px;">
+                            <option value="">Todos os Fornecedores</option>
+                            <!-- Será preenchido via JavaScript -->
+                        </select>
+                        <select class="filter-input" id="filtroPotenciaPlaca" style="min-width: 150px;">
+                            <option value="">Todas as Potências</option>
+                            <option value="100-300">100W - 300W</option>
+                            <option value="300-500">300W - 500W</option>
+                            <option value="500+">500W+</option>
+                        </select>
                     </div>
                 </div>
-                <div id="marcasList" class="cards-grid"></div>
-            </section>
-        </main>
-    </div>
-
-    <!-- ===================== MODAIS ===================== -->
-    <div id="modalKit" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalKitTitle">
-        <div class="modal-content">
-            <h3 id="modalKitTitle">Cadastrar Novo Kit</h3>
-            <form id="formKit" action="../../../../backend/Admin/Marcas/CriarMarca.php" method="POST">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label" for="kit_nome">Nome do Kit *</label>
-                        <input type="text" class="form-input" name="kit_nome" id="kit_nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="kit_modelo">descricao *</label>
-                        <input type="text" class="form-input" name="kit_modelo" id="kit_modelo" required>
-                    </div>
-                    <div class="form-group">
-                    <label class="form-label" for="fornecedor_id">Fornecedor *</label>
-                    <select class="form-input" name="id_fornecedor" id="id_fornecedor_select">
-
-                    </select>
+                <div id="placasList">
+                    <!-- Será preenchido via JavaScript -->
                 </div>
-                <div class="form-group">
-                    <label class="form-label" for="produto_id">Produtos *</label>
-                    <select class="form-input" name="id_produto" id="id_produto_select">
-
-                    </select>
-                </div>
+            </div>
         </div>
-        <div class="modal-actions">
-            <button type="button" class="btn btn-secondary" onclick="fecharModalKit()">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Salvar</button>
-        </div>
-        </form>
-    </div>
     </div>
 
-    <div id="modalFornecedor" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalFornecedorTitle">
+    <!-- Modal Fornecedor -->
+    <div id="modalFornecedor" class="modal">
         <div class="modal-content">
             <h3 id="modalFornecedorTitle">Cadastrar Novo Fornecedor</h3>
-            <form id="formFornecedor" action="../../../../backend/Admin/Fornecedor/CadastroFornecedor.php"
-                method="POST">
+            <form id="formFornecedor">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label" for="fornecedor_nome">Nome do fornecedor *</label>
-                        <input type="text" class="form-input" name="name" id="fornecedor_nome" required>
+                        <label class="form-label">Nome da Empresa *</label>
+                        <input type="text" class="form-input" id="fornecedorNome" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="fornecedor_email">Email *</label>
-                        <input type="email" class="form-input" name="email" id="fornecedor_email" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="fornecedor_telefone">Telefone *</label>
-                        <input type="tel" class="form-input" name="telefone" id="fornecedor_telefone" required>
+                        <label class="form-label">CNPJ *</label>
+                        <input type="text" class="form-input" id="fornecedorCnpj" required>
                     </div>
                 </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="fecharModalFornecedor()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Email *</label>
+                        <input type="email" class="form-input" id="fornecedorEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Telefone *</label>
+                        <input type="tel" class="form-input" id="fornecedorTelefone" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Região *</label>
+                        <select class="form-input" id="fornecedorRegiao" required>
+                            <option value="">Selecione...</option>
+                            <option value="sul">Sul</option>
+                            <option value="sudeste">Sudeste</option>
+                            <option value="centro-oeste">Centro-Oeste</option>
+                            <option value="nordeste">Nordeste</option>
+                            <option value="norte">Norte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cidade *</label>
+                        <input type="text" class="form-input" id="fornecedorCidade" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Endereço Completo</label>
+                    <input type="text" class="form-input" id="fornecedorEndereco">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Observações</label>
+                    <textarea class="form-input form-textarea" id="fornecedorObservacoes"></textarea>
                 </div>
             </form>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="fecharModalFornecedor()">Cancelar</button>
+                <button class="btn btn-primary" onclick="salvarFornecedor()">Salvar</button>
+            </div>
         </div>
     </div>
 
-    <div id="modalProduto" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalProdutoTitle">
+    <!-- Modal Placa Solar -->
+    <div id="modalPlaca" class="modal">
         <div class="modal-content">
-            <h3 id="modalProdutoTitle">Cadastrar Novo Produto</h3>
-            <form id="formProduto" action="../../../../backend/Admin/CadastrarProduto/CadastrarProduto.php"
-                method="POST">
+            <h3 id="modalPlacaTitle">Cadastrar Nova Placa Solar</h3>
+            <form id="formPlaca">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label" for="produto_nome">Nome do Produto *</label>
-                        <input type="text" class="form-input" name="nome_produto" id="produto_nome" required>
+                        <label class="form-label">Modelo da Placa *</label>
+                        <input type="text" class="form-input" id="placaModelo" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="produto_modelo">Modelo *</label>
-                        <input type="text" class="form-input" name="modelo_produto" id="produto_modelo" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="produto_valor">Valor Unitário *</label>
-                        <input type="number" class="form-input" name="valor_unitario" id="produto_valor" step="0.01"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="produto_tipo">Tipo de Produto *</label>
-                        <input type="text" class="form-input" name="tipo_produto" id="produto_tipo" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="id_marca">Marca*</label>
-                        <select id="id_marca" name="id_marca" class="form-input" required></select>
+                        <label class="form-label">Fornecedor *</label>
+                        <select class="form-input" id="placaFornecedor" required>
+                            <option value="">Selecione...</option>
+                            <!-- Será preenchido via JavaScript -->
+                        </select>
                     </div>
                 </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="fecharModalProduto()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Potência (W) *</label>
+                        <input type="number" class="form-input" id="placaPotencia" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Eficiência (%) *</label>
+                        <input type="number" step="0.1" class="form-input" id="placaEficiencia" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Preço (R$) *</label>
+                        <input type="number" step="0.01" class="form-input" id="placaPreco" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Garantia (anos) *</label>
+                        <input type="number" class="form-input" id="placaGarantia" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Dimensões (cm)</label>
+                        <input type="text" class="form-input" id="placaDimensoes" placeholder="Ex: 200 x 100 x 4">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Peso (kg)</label>
+                        <input type="number" step="0.1" class="form-input" id="placaPeso">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Especificações Técnicas</label>
+                    <textarea class="form-input form-textarea" id="placaEspecificacoes"></textarea>
                 </div>
             </form>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="fecharModalPlaca()">Cancelar</button>
+                <button class="btn btn-success" onclick="salvarPlaca()">Salvar</button>
+            </div>
         </div>
     </div>
 
-    <div id="modalMarca" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalMarcaTitle">
-        <div class="modal-content">
-            <h3 id="modalMarcaTitle">Cadastrar Nova Marca</h3>
-            <form id="formMarca" action="../../../../backend/Admin/Marcas/CriarMarca.php" method="POST">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label" for="marca_nome">Nome da Marca *</label>
-                        <input type="text" class="form-input" name="nome" id="marca_nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="marca_modelo">Modelo *</label>
-                        <input type="text" class="form-input" name="modelo" id="marca_modelo" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="marca_site">Site Oficial</label>
-                        <input type="text" class="form-input" name="site_oficial" id="marca_site">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="marca_pais">País de Origem</label>
-                        <input type="text" class="form-input" name="pais_origem" id="marca_pais">
-                    </div>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="fecharModalMarca()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="../../../JS/Admin/cadastroFornecedores_app.js"></script>
+    <script src="../../../JS/cadastroFornecedores_app.js">
+    </script>
 </body>
 
 </html>

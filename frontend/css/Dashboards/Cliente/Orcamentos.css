@@ -1,5 +1,28 @@
-@import url(../../variables.css);
-@import url(../../page-default.css);
+:root {
+  --amarelo-solar: #FDC500;
+  --verde-sustentavel: #4CAF50;
+  --azul-tecnologico: #1976D2;
+  --preto: #000000;
+  --branco: #FFFFFF;
+  --cinza-claro: #f4fdf7;
+  --cinza-medio: #e0e0e0;
+  --cinza-escuro: #666666;
+  --vermelho-erro: #f44336;
+  --verde-sucesso: #4CAF50;
+  --laranja-aviso: #ff9800;
+  --roxo-premium: #9c27b0;
+  --sombra: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --sombra-hover: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --sombra-intensa: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --border-radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -189,15 +212,8 @@ body {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Selection Card */
@@ -823,13 +839,8 @@ body {
 }
 
 @keyframes spin {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 /* Responsive Design */
@@ -837,71 +848,71 @@ body {
   .container {
     padding: 0 15px;
   }
-
+  
   .header .container {
     flex-direction: column;
     height: auto;
     padding: 1rem 15px;
     gap: 1rem;
   }
-
+  
   .nav {
     gap: 1rem;
   }
-
+  
   .page-header h2 {
     font-size: 2rem;
   }
-
+  
   .progress-steps {
     flex-direction: column;
     gap: 1rem;
   }
-
+  
   .progress-steps::before {
     display: none;
   }
-
+  
   .step {
     flex-direction: row;
     justify-content: center;
     background: transparent;
   }
-
+  
   .properties-selector {
     grid-template-columns: 1fr;
   }
-
+  
   .property-details {
     grid-template-columns: 1fr;
   }
-
+  
   .warning-actions {
     flex-direction: column;
   }
-
+  
   .budgets-grid {
     grid-template-columns: 1fr;
   }
-
+  
   .budget-actions {
     flex-direction: column;
   }
-
+  
   .step-actions {
     flex-direction: column;
   }
-
+  
   .timeline-item {
     flex-direction: column;
     text-align: center;
   }
-
+  
   .modal {
     width: 95%;
     margin: 1rem;
   }
-
+  
   .modal-actions {
     flex-direction: column-reverse;
   }
@@ -911,31 +922,31 @@ body {
   .main {
     padding: 1rem 0;
   }
-
+  
   .selection-card,
   .approved-budget-info {
     padding: 1.5rem;
   }
-
+  
   .budget-body {
     padding: 1.5rem;
   }
-
+  
   .page-header h2 {
     font-size: 1.75rem;
   }
-
+  
   .price-value {
     font-size: 2rem;
   }
-
+  
   .toast {
     right: 10px;
     left: 10px;
     max-width: none;
     transform: translateY(-100px);
   }
-
+  
   .toast.show {
     transform: translateY(0);
   }
