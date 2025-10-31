@@ -1,0 +1,64 @@
+@import "./variables.css";
+
+.rodape {
+      background: #2c3e50;
+      color: white;
+      padding: 60px 5% 20px 5%;
+    }
+
+    .rodape-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .rodape-col h3,
+    .rodape-col h4 {
+      margin-bottom: 1rem;
+      color: #3498db;
+    }
+
+    .rodape-col ul {
+      list-style: none;
+    }
+
+    .rodape-col ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .rodape-col a {
+      color: #bdc3c7;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .rodape-col a:hover {
+      color: #3498db;
+    }
+
+    .redes-sociais {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .redes-sociais img {
+      width: 30px;
+      height: 30px;
+      transition: transform 0.3s ease;
+    }
+
+    .redes-sociais img:hover {
+      transform: scale(1.1);
+    }
+
+    .rodape-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid #34495e;
+      color: #bdc3c7;
+    }
+
+    #icones_rodape{
+      scale: 2.0;
+    }
