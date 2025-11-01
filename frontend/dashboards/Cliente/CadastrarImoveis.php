@@ -37,102 +37,118 @@ require(__DIR__ . '/../../../backend/login-cadastro/sessao_protegida.php');
                 <p>Cadastre e gerencie seus imóveis para simulações de energia solar</p>
             </div>
 
-            <!-- Formulário -->
-            <section class="form-section">
-                <div class="form-card">
-                    <h3 id="form-title">Cadastrar Novo Imóvel</h3>
-                    <form id="imovel-form">
-                        <div class="form-group">
-                            <label for="nome">Nome do Imóvel *</label>
-                            <input type="text" id="nome" name="nome" placeholder="Ex: Casa Principal, Apartamento Centro" required>
-                            <span class="error-message" id="error-nome"></span>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="rua">Rua/Avenida *</label>
-                                <input type="text" id="rua" name="rua" placeholder="Rua das Flores, 123" required>
-                                <span class="error-message" id="error-rua"></span>
-                            </div>
-                            <div class="form-group">
-                                <label for="bairro">Bairro *</label>
-                                <input type="text" id="bairro" name="bairro" placeholder="Centro" required>
-                                <span class="error-message" id="error-bairro"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="cidade">Cidade *</label>
-                                <input type="text" id="cidade" name="cidade" placeholder="São Paulo" required>
-                                <span class="error-message" id="error-cidade"></span>
-                            </div>
-                            <div class="form-group">
-                                <label for="estado">Estado *</label>
-                                <select id="estado" name="estado" required>
-                                    <option value="">Selecione o estado</option>
-                                    <option value="AC">Acre</option>
-                                    <option value="AL">Alagoas</option>
-                                    <option value="AP">Amapá</option>
-                                    <option value="AM">Amazonas</option>
-                                    <option value="BA">Bahia</option>
-                                    <option value="CE">Ceará</option>
-                                    <option value="DF">Distrito Federal</option>
-                                    <option value="ES">Espírito Santo</option>
-                                    <option value="GO">Goiás</option>
-                                    <option value="MA">Maranhão</option>
-                                    <option value="MT">Mato Grosso</option>
-                                    <option value="MS">Mato Grosso do Sul</option>
-                                    <option value="MG">Minas Gerais</option>
-                                    <option value="PA">Pará</option>
-                                    <option value="PB">Paraíba</option>
-                                    <option value="PR">Paraná</option>
-                                    <option value="PE">Pernambuco</option>
-                                    <option value="PI">Piauí</option>
-                                    <option value="RJ">Rio de Janeiro</option>
-                                    <option value="RN">Rio Grande do Norte</option>
-                                    <option value="RS">Rio Grande do Sul</option>
-                                    <option value="RO">Rondônia</option>
-                                    <option value="RR">Roraima</option>
-                                    <option value="SC">Santa Catarina</option>
-                                    <option value="SP">São Paulo</option>
-                                    <option value="SE">Sergipe</option>
-                                    <option value="TO">Tocantins</option>
-                                </select>
-                                <span class="error-message" id="error-estado"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="regiao">Região *</label>
-                                <select id="regiao" name="regiao" required>
-                                    <option value="">Selecione a região</option>
-                                    <option value="Norte">Norte</option>
-                                    <option value="Nordeste">Nordeste</option>
-                                    <option value="Centro-Oeste">Centro-Oeste</option>
-                                    <option value="Sudeste">Sudeste</option>
-                                    <option value="Sul">Sul</option>
-                                </select>
-                                <span class="error-message" id="error-regiao"></span>
-                            </div>
-                            <div class="form-group">
-                                <label for="consumo">Consumo Mensal (kWh) *</label>
-                                <input type="number" id="consumo" name="consumo" placeholder="350" min="1" required>
-                                <span class="error-message" id="error-consumo"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" id="btn-cancelar" class="btn btn-secondary" style="display: none;">Cancelar</button>
-                            <button type="submit" id="btn-submit" class="btn btn-primary">
-                                <span class="btn-text">Cadastrar Imóvel</span>
-                                <span class="btn-loading" style="display: none;">Salvando...</span>
-                            </button>
-                        </div>
-                    </form>
+            <form id="imovel-form" action="../../../backend/ClienteBackend/cadastrarimoveis.php" method="POST">
+    <!-- Formulário -->
+    <section class="form-section">
+        <div class="form-card">
+            <h3 id="form-title">Cadastrar Novo Imóvel</h3>
+            <form id="imovel-form">
+                <div class="form-group">
+                    <label for="nome">Nome do Imóvel *</label>
+                    <input type="text" id="nome" name="nome" placeholder="Ex: Casa Principal, Apartamento Centro" required>
+                    <span class="error-message" id="error-nome"></span>
                 </div>
-            </section>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="rua">Rua/Avenida *</label>
+                        <input type="text" id="rua" name="rua" placeholder="Rua das Flores" required>
+                        <span class="error-message" id="error-rua"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="numero">Número *</label>
+                        <input type="number" id="numero" name="numero" placeholder="123" min="1" required>
+                        <span class="error-message" id="error-numero"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bairro">Bairro *</label>
+                        <input type="text" id="bairro" name="bairro" placeholder="Centro" required>
+                        <span class="error-message" id="error-bairro"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="cep">CEP *</label>
+                        <input type="text" id="cep" name="cep" placeholder="12345-678" maxlength="9" required>
+                        <span class="error-message" id="error-cep"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cidade">Cidade *</label>
+                        <input type="text" id="cidade" name="cidade" placeholder="São Paulo" required>
+                        <span class="error-message" id="error-cidade"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="estado">Estado *</label>
+                        <select id="estado" name="estado" required>
+                            <option value="">Selecione o estado</option>
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espírito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MT">Mato Grosso</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
+                        </select>
+                        <span class="error-message" id="error-estado"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="regiao">Região *</label>
+                        <select id="regiao" name="regiao" required>
+                            <option value="">Selecione a região</option>
+                            <option value="Norte">Norte</option>
+                            <option value="Nordeste">Nordeste</option>
+                            <option value="Centro-Oeste">Centro-Oeste</option>
+                            <option value="Sudeste">Sudeste</option>
+                            <option value="Sul">Sul</option>
+                        </select>
+                        <span class="error-message" id="error-regiao"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="consumo">Consumo Mensal (kWh) *</label>
+                        <input type="number" id="consumo" name="consumo" placeholder="350" min="1" required>
+                        <span class="error-message" id="error-consumo"></span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="btn-cancelar" class="btn btn-secondary" style="display: none;">Cancelar</button>
+                    <button type="submit" id="btn-submit" class="btn btn-primary">
+                        <span class="btn-text">Cadastrar Imóvel</span>
+                        <span class="btn-loading" style="display: none;">Salvando...</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</form>
+
 
             <!-- Lista de imóveis -->
             <section class="properties-section">
@@ -173,6 +189,16 @@ require(__DIR__ . '/../../../backend/login-cadastro/sessao_protegida.php');
         </div>
     </div>
 
-    <script src="../../JS/Cliente/cadastroUsuario.js"></script>
+    <script>
+document.getElementById('cep').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 5) {
+        value = value.slice(0, 5) + '-' + value.slice(5, 8);
+    }
+    e.target.value = value;
+});
+</script>
+
+    <script src="../../JS/Cliente/exibirImoveis.js"></script>
 </body>
 </html>
