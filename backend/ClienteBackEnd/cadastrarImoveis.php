@@ -11,7 +11,7 @@ if (!isset($_SESSION['id_usuario'])) {
 $id_usuario = $_SESSION['id_usuario'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_imovel  = $_POST['id'] ?? null; // se vier, é edição
+    $id_imovel  = $_POST['id'] ?? null; 
     $name       = trim($_POST['nome'] ?? '');
     $numero     = trim($_POST['numero'] ?? '');
     $cep        = trim($_POST['cep'] ?? '');

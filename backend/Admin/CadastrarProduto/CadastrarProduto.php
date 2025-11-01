@@ -1,8 +1,8 @@
 <?php
+
 require("../../DB/database.php");
-
+ob_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
 
     $nome_produto   = trim($_POST['nome_produto'] ?? '');
     $modelo_produto = trim($_POST['modelo_produto'] ?? '');
@@ -11,11 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_marca       = $_POST['id_marca'] ?? '';
 
     if (!$nome_produto || !$modelo_produto || !$tipo_produto || !$id_marca || !$valor_unitario) {
-        http_response_code(400);
-        json_encode([
-            'status' => 'error',
-            'message' => 'Campos obrigatórios não preenchidos.'
-        ]);
+        header("Location: /projeto_PIII/frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html");
         exit();
     }
 
@@ -35,12 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($produtoExistente) {
             $pdo->rollBack();
-            http_response_code(409); // Conflito
-            json_encode([
-                'status' => 'error',
-                'message' => 'Produto já cadastrado para esta marca.',
-                'id_produto_existente' => $produtoExistente['id_produto']
-            ]);
+            header("Location: /projeto_PIII/frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html");
             exit();
         }
 
@@ -59,36 +50,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id_produto = $pdo->lastInsertId();
         $pdo->commit();
 
-       json_encode([
-            'status' => 'success',
-            'message' => 'Produto cadastrado com sucesso!',
-            'produto' => [
-                'id_produto' => $id_produto,
-                'nome_produto' => $nome_produto,
-                'modelo_produto' => $modelo_produto,
-                'valor_unitario' => $valor_unitario,
-                'tipo_produto' => $tipo_produto,
-                'id_marca' => $id_marca
-            ]
-        ]);
+        header("Location: /projeto_PIII/frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html");
         exit();
-
     } catch (Exception $e) {
         $pdo->rollBack();
         error_log("Erro ao cadastrar produto: " . $e->getMessage());
 
-        http_response_code(500);
-       json_encode([
-            'status' => 'error',
-            'message' => 'Erro no banco de dados: ' . $e->getMessage()
-        ]);
+        header("Location: /projeto_PIII/frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html");
         exit();
     }
 } else {
-    http_response_code(405);
-   json_encode([
-        'status' => 'error',
-        'message' => 'Método não permitido. Use POST.'
-    ]);
+    header("Location: /projeto_PIII/frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html");
     exit();
 }
+
+ob_end_flush();

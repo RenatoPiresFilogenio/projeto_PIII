@@ -6,9 +6,9 @@
 const modalFornecedor = document.getElementById("modalFornecedor");
 const modalProduto = document.getElementById("modalProduto");
 const modalMarca = document.getElementById("modalMarca");
-const modalKit = document.getElementById('modalKit');
-
 const modalFornecedorEditar = document.getElementById('modalFornecedorEditar');
+const modalKit = document.getElementById('modalKit')
+
 /**
  * Função genérica para abrir um modal
  * @param {HTMLElement} modalElement - O elemento do modal a ser aberto
@@ -34,7 +34,6 @@ function abrirModalFornecedor() { abrirModal(modalFornecedor); }
 function abrirModalProduto() { abrirModal(modalProduto); }
 function abrirModalMarca() { abrirModal(modalMarca); }
 function abrirModalKit() { abrirModal(modalKit) }
-
 // --- fechar modal
 function fecharModalFornecedor() { fecharModal(modalFornecedor); }
 function fecharModalProduto() { fecharModal(modalProduto); }
@@ -47,7 +46,6 @@ window.addEventListener("click", (event) => {
     if (event.target === modalFornecedor) fecharModal(modalFornecedor);
     if (event.target === modalProduto) fecharModal(modalProduto);
     if (event.target === modalMarca) fecharModal(modalMarca);
-    if (event.target === modalKit) fecharModal(modalKit);
 });
 
 // =========================
@@ -72,34 +70,250 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarFornecedores();
     carregarProdutos();
     carregarMarcasEPreencherSelect();
-    PreencherProdutoSelect();
+    carregarListKits();
+    carregarKitsCadastrados();
 });
 
-async function PreencherProdutoSelect() {
+async function carregarKitsCadastrados(){
 
-    const container = document.getElementById('id_produto_select');
-    container.innerHTML =  `<option value="">carregando....</option>`;
+    const container = document.getElementById("kitList");
 
     try {
-        const response = await fetch('../../../../backend/Admin/CadastrarProduto/ListarProduto.php');
-        const data = await response.json();
-        const produto = data.produtos;
+        
 
-        if (!produto || produto.length === 0) {
-            container.innerHTML = `<option value="">Não tem produtos cadastrados</option>`
+    } catch (e) {
+        
+    }
+
+}
+
+async function carregarListKits() {
+
+    const list_fornecedor = document.getElementById("fornecedor_list_kit_id");
+    const list_product = document.getElementById("produtos_list_kit_id");
+
+    list_fornecedor.innerHTML = "<option value=''>Carregando fornecedores...</option>";
+    list_fornecedor.disabled = true; 
+    list_product.innerHTML = "<option value=''>Aguardando...</option>";
+    list_product.disabled = true; 
+
+    try {
+        let responseFornecedor = await fetch("../../../../backend/Admin/Fornecedor/ListarFornecedor.php");
+
+        if (!responseFornecedor.ok) {
+            throw new Error(`Erro HTTP (Fornecedores): ${responseFornecedor.status} - ${responseFornecedor.statusText}`);
         }
 
-        container.innerHTML = produto.map(produto => `
-        <option value="${produto.id_produto}">${produto.nome}</option>
-        `).join("");
+        const fornecedores = await responseFornecedor.json();
+
+        if (!fornecedores || fornecedores.length === 0) {
+            list_fornecedor.innerHTML = `<option value="">Nenhum fornecedor encontrado</option>`;
+            list_product.innerHTML = `<option value="">Nenhum fornecedor disponível</option>`;
+        } else {
+            const optionsHTML = fornecedores.map(fornecedor =>
+                `<option value="${fornecedor.id_fornecedor}">${fornecedor.nome}</option>`
+            );
+
+            list_fornecedor.innerHTML = optionsHTML.join('');
+            list_fornecedor.insertAdjacentHTML('afterbegin', `
+                <option value="" selected disabled>Selecione um fornecedor</option>
+            `);
+            list_fornecedor.disabled = false; 
+        }
+
+
+        let responseProdutos = await fetch("../../../../backend/Admin/CadastrarProduto/ListarProduto.php");
+        if (!responseProdutos.ok) {
+            throw new Error(`Erro HTTP (Produtos): ${responseProdutos.status} - ${responseProdutos.statusText}`);
+        }
+
+        const responseData = await responseProdutos.json();
+
+        
+        const produtos = responseData.produtos;
+
+        if (produtos && produtos.length > 0) {
+
+            const optionsHTML_product = produtos.map(produto =>
+                `<option value="${produto.id_produto}">${produto.nome}</option>`
+            );
+
+            const optionsString_product = optionsHTML_product.join('');
+
+            list_product.innerHTML = optionsString_product;
+            list_product.insertAdjacentHTML('afterbegin', `
+                <option value="" selected disabled>Selecione um Produto</option>
+            `);
+
+            list_product.disabled = false; 
+
+        } else {
+            list_product.innerHTML = `<option value="">Nenhum produto encontrado</option>`;
+        }
 
     } catch (error) {
-        container.innerHTML = `<div class="empty-state"><h3>Erro ao carregar produtos</h3></div>`;
-        console.error("Erro ao carregar produtos:", error);
+        console.error("Falha ao carregar listas:", error);
+        list_fornecedor.innerHTML = `<option value="">Falha ao carregar</option>`;
+        list_product.innerHTML = `<option value="">Falha ao carregar dados</option>`;
     }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
 
+    const list_fornecedor = document.getElementById('fornecedor_list_kit_id');
+    const list_product_select = document.getElementById('produtos_list_kit_id');
+    const btn_conf_product = document.getElementById('conf_product_list');
+    const lista_produto_ul = document.getElementById('lista_produto');
+    const formKit = document.getElementById('formKit'); // Adicionei o formulário
+
+
+    async function carregarListKits() {
+        if (!list_fornecedor || !list_product_select) {
+             console.error("Erro fatal: Elementos do formulário não encontrados.");
+             return;
+        }
+
+        list_fornecedor.innerHTML = "<option value=''>Carregando fornecedores...</option>";
+        list_fornecedor.disabled = true;
+        list_product_select.innerHTML = "<option value=''>Aguardando...</option>";
+        list_product_select.disabled = true;
+
+        try {
+            let responseFornecedor = await fetch("../../../../backend/Admin/Fornecedor/ListarFornecedor.php");
+            if (!responseFornecedor.ok) {
+                throw new Error(`Erro HTTP (Fornecedores): ${responseFornecedor.status}`);
+            }
+            const fornecedores = await responseFornecedor.json();
+
+            if (!fornecedores || fornecedores.length === 0) {
+                list_fornecedor.innerHTML = `<option value="">Nenhum fornecedor encontrado</option>`;
+                list_product_select.innerHTML = `<option value="">Nenhum fornecedor disponível</option>`;
+            } else {
+                const optionsHTML = fornecedores.map(fornecedor =>
+                    `<option value="${fornecedor.id_fornecedor}">${fornecedor.nome}</option>`
+                );
+                list_fornecedor.innerHTML = optionsHTML.join('');
+                list_fornecedor.insertAdjacentHTML('afterbegin', `
+                    <option value="" selected disabled>Selecione um fornecedor</option>
+                `);
+                list_fornecedor.disabled = false;
+            }
+
+            let responseProdutos = await fetch("../../../../backend/Admin/CadastrarProduto/ListarProduto.php");
+            if (!responseProdutos.ok) {
+                throw new Error(`Erro HTTP (Produtos): ${responseProdutos.status}`);
+            }
+            const responseData = await responseProdutos.json();
+            const produtos = responseData.produtos; // Correção que fizemos
+
+            if (produtos && produtos.length > 0) {
+                const optionsHTML_product = produtos.map(produto =>
+                    `<option value="${produto.id_produto}">${produto.nome}</option>`
+                );
+                list_product_select.innerHTML = optionsHTML_product.join('');
+                list_product_select.insertAdjacentHTML('afterbegin', `
+                    <option value="" selected disabled>Selecione um Produto</option>
+                `);
+                list_product_select.disabled = false;
+            } else {
+                list_product_select.innerHTML = `<option value="">Nenhum produto encontrado</option>`;
+            }
+
+        } catch (error) {
+            console.error("Falha ao carregar listas:", error);
+            list_fornecedor.innerHTML = `<option value="">Falha ao carregar</option>`;
+            list_product_select.innerHTML = `<option value="">Falha ao carregar dados</option>`;
+        }
+    }
+
+    function adicionarProdutoNaLista() {
+        const selectedOption = list_product_select.options[list_product_select.selectedIndex];
+        const produtoId = selectedOption.value;
+        const produtoNome = selectedOption.text;
+
+        if (!produtoId) {
+            alert("Por favor, selecione um produto válido.");
+            return;
+        }
+
+        const jaExiste = lista_produto_ul.querySelector(`input[name="produto_ids[]"][value="${produtoId}"]`);
+        if (jaExiste) {
+            alert("Este produto já foi adicionado ao kit.");
+            return;
+        }
+
+        const li = document.createElement('li');
+        li.className = 'list_produto_item';
+        const inputIdQtd = `qtd_prod_${produtoId}`;
+        const inputIdVal = `val_prod_${produtoId}`;
+
+        // ================================================================
+        // AQUI ESTÁ A VERSÃO CORRIGIDA (com os 3 inputs)
+        // ================================================================
+        li.innerHTML = `
+            <strong>${produtoNome}</strong>
+            
+            <div class="controles-produto"> 
+
+                <div class="controle-item">
+                    <label for="${inputIdQtd}">Qtd *</label>
+                    <input 
+                        type="number" 
+                        class="input_number" 
+                        name="quantidades[]" 
+                        id="${inputIdQtd}" 
+                        value="1" 
+                        min="1" 
+                        required>
+                </div>
+
+                <div class="controle-item">
+                    <label for="${inputIdVal}">Valor Unit. *</label>
+                    <input 
+                        type="text" 
+                        class="input_valor" 
+                        name="valores_unitarios[]" 
+                        id="${inputIdVal}" 
+                        placeholder="0,00" 
+                        required>
+                </div>
+
+                <input type="hidden" name="produto_ids[]" value="${produtoId}">
+            </div>
+            <button type="button" class="btn-remover" aria-label="Remover ${produtoNome}">×</button>
+        `;
+        // ================================================================
+        // FIM DA CORREÇÃO
+        // ================================================================
+
+        lista_produto_ul.appendChild(li);
+        list_product_select.selectedIndex = 0; 
+    }
+
+ 
+    function gerenciarCliquesLista(event) {
+        if (event.target.classList.contains('btn-remover')) {
+            event.target.closest('li.list_produto_item').remove();
+        }
+    }
+
+    carregarListKits();
+
+    btn_conf_product.addEventListener('click', adicionarProdutoNaLista);
+
+    lista_produto_ul.addEventListener('click', gerenciarCliquesLista);
+    
+    if (formKit) {
+        formKit.addEventListener('submit', function(event) {
+            const produtosNaLista = lista_produto_ul.querySelectorAll('li.list_produto_item');
+            if (produtosNaLista.length === 0) {
+                event.preventDefault(); // Para o envio
+                alert("Você deve adicionar pelo menos um produto ao kit antes de salvar.");
+            }
+        });
+    }
+
+});
 // =========================
 // CARREGAR FORNECEDORES
 // =========================
@@ -193,9 +407,6 @@ async function carregarProdutos() {
     }
 }
 
-
-
-
 // =========================
 // CARREGAR MARCAS (PARA A LISTA E PARA O SELECT)
 // =========================
@@ -209,7 +420,7 @@ async function carregarMarcasEPreencherSelect() {
         const response = await fetch('../../../../backend/Admin/Marcas/ListarMarcas.php');
         const responseData = await response.json();
         const marcas = responseData.marcas;
-        console.log(marcas);
+
         if (!marcas || marcas.length === 0) {
             listContainer.innerHTML = `<div class="empty-state"><h3>Nenhuma marca cadastrada</h3></div>`;
         } else {

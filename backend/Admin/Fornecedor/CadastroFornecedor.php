@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $total_vendas = 0;
 
     if (!$nome || !$email || !$telefone) {
-        header("Location: ../../../frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html?status_cadastro_fornecedor=bad_request");
+        header("Location: /projeto_PIII/frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html");
         exit();
     }
 
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->rowCount() > 0) {
             $pdo->rollBack();
-            header("Location: ../../../frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html?status_cadastro_fornecedor=email_ja_cadastrado");
+            header("Location: /projeto_PIII/frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html");
             exit();
         }
 
@@ -41,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($success) {
             $pdo->commit();
-            header("Location: ../../../frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html?status_cadastro_fornecedor=sucesso_ao_cadastrar");
+            header("Location: /projeto_PIII/frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html");
         } else {
             $pdo->rollBack();
-            header("Location: ../../../frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html?status_cadastro_fornecedor=erro_ao_cadastrar");
+            header("Location: /projeto_PIII/frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html");
         }
         exit();
     } catch (Exception $e) {
@@ -53,4 +53,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
-?>
