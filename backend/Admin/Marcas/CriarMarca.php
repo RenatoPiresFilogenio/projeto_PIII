@@ -10,11 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $lista_produtos = trim($_POST['id_produto'] ?? '');
 
     if (empty($site_oficial) || empty($pais_origem) || empty($nome) || empty($modelo)) {
-        http_response_code(400);
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Campos obrigatórios não preenchidos.'
-        ]);
         header("Location: /projeto_PIII/frontend/dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html");
         exit();
     }

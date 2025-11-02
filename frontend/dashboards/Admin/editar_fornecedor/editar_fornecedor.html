@@ -5,19 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../../../css/Dashboards/editarFornecedor/style.css">
+    <link rel="stylesheet" href="../../../css/Dashboards/editarPages/style.css">
 </head>
 
 <body>
     <div class="container">
         <h1>Edite o fornecedor</h1>
         <div class="container-form">
-            <form action="" class="form_editar_fornecedor" method="POST">
+            <form action="../../../../backend/Admin/Fornecedor/EditarFornecedor.php" class="form_editar_fornecedor" method="POST">
+
+                <input type="hidden" name="id_fornecedor" id="id_fornecedor">
 
                 <div class="container-input">
                     <div class="div_input">
                         <span>Nome do Fornecedor</span>
-                        <input type="text" id="nome_fornecedor" class="input" name="name">
+                        <input type="text" id="nome_fornecedor" class="input" name="nome_fornecedor">
                     </div>
 
 
@@ -33,46 +35,30 @@
                     </div>
                 </div>
 
-                <div class="container_option">
-                    <div class="div_option">
-                        <span>Adicionar Produto</span>
-                        <select value="">
-                            <option name="" id="">produto 1</option>
-                            <option name="" id="">produto 1</option>
-                        </select>
-                    </div>
-
-                    <div class="div_option">
-                        <span>Marca</span>
-                        <select value="">
-                            <option name="" id="">marca 1</option>
-                            <option name="" id="">marca 1</option>
-                        </select>
-                    </div>
+                <div class="div_option">
+                    <span>Kit</span>
+                    <select value="" id="kits" name="kits">
+                    </select>
                 </div>
-                <div class="btns">
+        </div>
+        <div class="btns">
 
-                    <a href="../../Admin/cadastro_fornecedores/cadastroFornecedores.html">
-                        <button type="button" class="btn-danger">
-                            Fechar
-                        </button>
-                    </a>
+            <a href="../../Admin/cadastro_fornecedores/cadastroFornecedores.html">
+                <button type="button" class="btn-danger">
+                    Fechar
+                </button>
+            </a>
 
-                    <a href="">
-                        <button class="btn-primary" type="submit">
-                            Salvar
-                        </button>
-                    </a>
-
+            <button class="btn-primary" type="submit">
+                Salvar
+            </button>
 
             </form>
         </div>
     </div>
 
-    <div class="div_produtos">
-        <ul id="lista_produtos">
+    <div class="div_kit" id="Fornecedor_view">
 
-        </ul>
     </div>
     </div>
 

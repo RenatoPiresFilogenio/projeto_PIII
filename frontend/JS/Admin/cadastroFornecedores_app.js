@@ -74,15 +74,15 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarKitsCadastrados();
 });
 
-async function carregarKitsCadastrados(){
+async function carregarKitsCadastrados() {
 
     const container = document.getElementById("kitList");
 
     try {
-        
+
 
     } catch (e) {
-        
+
     }
 
 }
@@ -93,9 +93,9 @@ async function carregarListKits() {
     const list_product = document.getElementById("produtos_list_kit_id");
 
     list_fornecedor.innerHTML = "<option value=''>Carregando fornecedores...</option>";
-    list_fornecedor.disabled = true; 
+    list_fornecedor.disabled = true;
     list_product.innerHTML = "<option value=''>Aguardando...</option>";
-    list_product.disabled = true; 
+    list_product.disabled = true;
 
     try {
         let responseFornecedor = await fetch("../../../../backend/Admin/Fornecedor/ListarFornecedor.php");
@@ -118,7 +118,7 @@ async function carregarListKits() {
             list_fornecedor.insertAdjacentHTML('afterbegin', `
                 <option value="" selected disabled>Selecione um fornecedor</option>
             `);
-            list_fornecedor.disabled = false; 
+            list_fornecedor.disabled = false;
         }
 
 
@@ -129,7 +129,7 @@ async function carregarListKits() {
 
         const responseData = await responseProdutos.json();
 
-        
+
         const produtos = responseData.produtos;
 
         if (produtos && produtos.length > 0) {
@@ -145,7 +145,7 @@ async function carregarListKits() {
                 <option value="" selected disabled>Selecione um Produto</option>
             `);
 
-            list_product.disabled = false; 
+            list_product.disabled = false;
 
         } else {
             list_product.innerHTML = `<option value="">Nenhum produto encontrado</option>`;
@@ -158,19 +158,19 @@ async function carregarListKits() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     const list_fornecedor = document.getElementById('fornecedor_list_kit_id');
     const list_product_select = document.getElementById('produtos_list_kit_id');
     const btn_conf_product = document.getElementById('conf_product_list');
     const lista_produto_ul = document.getElementById('lista_produto');
-    const formKit = document.getElementById('formKit'); // Adicionei o formulário
+    const formKit = document.getElementById('formKit');
 
 
     async function carregarListKits() {
         if (!list_fornecedor || !list_product_select) {
-             console.error("Erro fatal: Elementos do formulário não encontrados.");
-             return;
+            console.error("Erro fatal: Elementos do formulário não encontrados.");
+            return;
         }
 
         list_fornecedor.innerHTML = "<option value=''>Carregando fornecedores...</option>";
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(`Erro HTTP (Produtos): ${responseProdutos.status}`);
             }
             const responseData = await responseProdutos.json();
-            const produtos = responseData.produtos; // Correção que fizemos
+            const produtos = responseData.produtos;
 
             if (produtos && produtos.length > 0) {
                 const optionsHTML_product = produtos.map(produto =>
@@ -247,9 +247,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const inputIdQtd = `qtd_prod_${produtoId}`;
         const inputIdVal = `val_prod_${produtoId}`;
 
-        // ================================================================
-        // AQUI ESTÁ A VERSÃO CORRIGIDA (com os 3 inputs)
-        // ================================================================
         li.innerHTML = `
             <strong>${produtoNome}</strong>
             
@@ -282,15 +279,12 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <button type="button" class="btn-remover" aria-label="Remover ${produtoNome}">×</button>
         `;
-        // ================================================================
-        // FIM DA CORREÇÃO
-        // ================================================================
 
         lista_produto_ul.appendChild(li);
-        list_product_select.selectedIndex = 0; 
+        list_product_select.selectedIndex = 0;
     }
 
- 
+
     function gerenciarCliquesLista(event) {
         if (event.target.classList.contains('btn-remover')) {
             event.target.closest('li.list_produto_item').remove();
@@ -302,9 +296,9 @@ document.addEventListener('DOMContentLoaded', function() {
     btn_conf_product.addEventListener('click', adicionarProdutoNaLista);
 
     lista_produto_ul.addEventListener('click', gerenciarCliquesLista);
-    
+
     if (formKit) {
-        formKit.addEventListener('submit', function(event) {
+        formKit.addEventListener('submit', function (event) {
             const produtosNaLista = lista_produto_ul.querySelectorAll('li.list_produto_item');
             if (produtosNaLista.length === 0) {
                 event.preventDefault(); // Para o envio
@@ -395,7 +389,7 @@ async function carregarProdutos() {
                 </a>
 
                 <div>
-                    <button class="btn-success " onclick="abrirModalFornecedorEditar()">Editar</button>
+                    <button class="btn-success " onclick="abrirModalFornecedorEditar(${id_fornecedor})">Editar</button>
                     <button class="btn-danger " onclick="ExcluirFornecedor(${p.id_produto})">Excluir</button>
                 </div>
 
@@ -433,7 +427,7 @@ async function carregarMarcasEPreencherSelect() {
                     <p><strong>Data de cadastro:</strong> ${m.data_cadastro}</p>
 
                     <div>
-                        <button class="btn-success " onclick="abrirModalFornecedorEditar(${m.id_marca})">Editar</button>
+                        <button class="btn-success " onclick="AbrirEditorMarca(${m.id_marca})">Editar</button>
                         <button class="btn-danger " onclick="ExcluirFornecedor(${m.id_marca})">Excluir</button>
                      </div>
                 </div>`
@@ -459,4 +453,14 @@ async function carregarMarcasEPreencherSelect() {
         selectContainer.innerHTML = `<option value="" disabled>Erro ao carregar</option>`;
         console.error("Erro ao carregar marcas:", error);
     }
+}
+
+function abrirModalFornecedorEditar(id_fornecedor) {
+    const urlComId = `../../../dashboards/Admin/editar_fornecedor/editar_fornecedor.html?id=${id_fornecedor}`;
+    window.location.href = urlComId;
+}
+
+function AbrirEditorMarca(id_marca) {
+    const urlComId = `../../../dashboards/Admin/editar_marca/editar_marca.html?id=${id_marca}`;
+    window.location.href = urlComId;
 }

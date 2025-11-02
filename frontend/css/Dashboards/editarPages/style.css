@@ -1,8 +1,8 @@
 @import url(../../btn-default.css);
 @import url(../../page-default.css);
 @import url(../../variables.css);
-
-
+@import url(./marca.css);
+@import url(./fornecedor.css);
 body {
     background-color: var(--cinza-claro);
     font-family: Arial, sans-serif;

@@ -21,25 +21,25 @@
 
         <main class="block">
             <div class="tabs" role="tablist">
-                <button class="tab" role="tab" id="tab-btn-marcas" aria-controls="tab-marcas" aria-selected="false"
-                    onclick="mostrarTab('marcas')">
+                <button class="tab active" role="tab" id="tab-btn-marcas" aria-controls="tab-marcas"
+                    aria-selected="true" onclick="mostrarTab('marcas')">
                     <span aria-hidden="true">🏷️</span> Marcas
                 </button>
                 <button class="tab" role="tab" id="tab-btn-placas" aria-controls="tab-placas" aria-selected="false"
                     onclick="mostrarTab('placas')">
                     <span aria-hidden="true">📦</span> Produtos
                 </button>
+                <button class="tab" role="tab" id="tab-btn-fornecedores" aria-controls="tab-fornecedores"
+                    aria-selected="false" onclick="mostrarTab('fornecedores')">
+                    <span aria-hidden="true">🏭</span> Fornecedores
+                </button>
                 <button class="tab" role="tab" id="tab-btn-kits" aria-controls="tab-kits" aria-selected="false"
                     onclick="mostrarTab('kits')">
                     <span aria-hidden="true">🏷️</span> Kits
                 </button>
-                <button class="tab active" role="tab" id="tab-btn-fornecedores" aria-controls="tab-fornecedores"
-                    aria-selected="true" onclick="mostrarTab('fornecedores')">
-                    <span aria-hidden="true">🏭</span> Fornecedores
-                </button>
             </div>
-
-            <section id="tab-fornecedores" class="tab-content active" role="tabpanel"
+            
+            <section id="tab-fornecedores" class="tab-content" role="tabpanel"
                 aria-labelledby="tab-btn-fornecedores">
                 <div class="block-title">
                     <span><span aria-hidden="true">📊</span> Fornecedores Cadastrados</span>
@@ -72,7 +72,7 @@
                 </div>
             </section>
 
-            <section id="tab-marcas" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-marcas">
+            <section id="tab-marcas" class="tab-content active" role="tabpanel" aria-labelledby="tab-btn-marcas">
                 <div class="block-title">
                     <span><span aria-hidden="true">🏷️</span> Marcas Cadastradas</span>
                     <div class="filters">

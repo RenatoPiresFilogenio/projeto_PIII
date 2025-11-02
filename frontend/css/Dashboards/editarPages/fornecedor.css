@@ -1,0 +1,42 @@
+.card-fornecedor {
+    background-color: #f8f9fa; /* Um branco acinzentado, ligeiramente diferente do fundo branco principal para dar profundidade */
+    border: 1px solid #dee2e6; /* Borda sutil */
+    border-radius: 8px; /* Cantos arredondados para um visual suave */
+    padding: 20px; /* Espaçamento interno */
+    margin-top: 30px; /* Margem superior para separar do formulário */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Sombra suave para levantar o card */
+    max-width: 600px; /* Limita a largura para não ficar muito esticado em telas grandes */
+    margin-left: auto; /* Centraliza o card */
+    margin-right: auto; /* Centraliza o card */
+    text-align: left; /* Alinha o texto à esquerda dentro do card */
+}
+
+.card-fornecedor-titulo {
+    font-size: 1.8em; /* Título maior */
+    color: #007bff; /* Cor azul primária para destaque (pode ajustar para combinar com seus botões) */
+    margin-bottom: 15px; /* Espaçamento abaixo do título */
+    border-bottom: 2px solid #e9ecef; /* Linha de separação abaixo do título */
+    padding-bottom: 10px; /* Espaçamento entre o título e a linha */
+}
+
+.card-fornecedor-info {
+    font-size: 1.1em; /* Texto da informação um pouco maior */
+    color: #495057; /* Cor de texto mais escura para boa legibilidade */
+    margin-bottom: 8px; /* Espaçamento entre as linhas de informação */
+    line-height: 1.5; /* Altura da linha para melhor leitura */
+}
+
+/* Opcional: Estilo ao passar o mouse para indicar interatividade */
+.card-fornecedor:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Sombra um pouco maior no hover */
+    transform: translateY(-2px); /* Efeito sutil de levantar */
+    transition: all 0.3s ease-in-out; /* Transição suave */
+}
+
+/* Opcional: Se você quiser um estilo para o div que envolve este card, caso haja. */
+/* No seu HTML, esta div tem a classe 'div_kit' e o id 'Fornecedor_view' */
+.div_kit#Fornecedor_view {
+    display: flex; /* Para centralizar o card dentro dela, se necessário */
+    justify-content: center; /* Centraliza horizontalmente */
+    padding: 20px; /* Espaçamento geral */
+}
