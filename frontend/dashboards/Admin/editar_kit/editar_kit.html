@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../../css/Dashboards/editarPages/style.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="container-form">
+
+            <form action="../../../../backend/Admin/Marcas/EditarMarca.php" class="form_editar_fornecedor"
+                method="POST">
+
+                <h1 id="titulo_marca">Editar marca</h1>
+                <input type="hidden" id="id_marca" name="id_marca">
+                <div class="container-input">
+                    <div class="div_input">
+                        <span>Nome do kit</span>
+                        <input type="text" id="nome_kit" class="input" name="nome_kit">
+                    </div>
+
+                    <div class="div_input">
+                        <span>Modelo</span>
+                        <input type="text" id="Modelo" class="input" name="Modelo">
+                    </div>
+
+                    <div class="div_input">
+                        <span>Produtos</span>
+                        <input type="text" id="Produtos" class="input" name="Produtos">
+                    </div>
+
+                </div>
+
+                <div class="btns">
+
+                    <a href="../../Admin/cadastro_fornecedores/cadastroFornecedores.html">
+                        <button type="button" class="btn-danger">
+                            Fechar
+                        </button>
+                    </a>
+
+                    <a href="">
+                        <button class="btn-primary" type="submit">
+                            Salvar
+                        </button>
+                    </a>
+
+
+            </form>
+        </div>
+
+        <div id="Marca_view">
+
+
+
+        </div>
+
+    </div>
+
+
+    <script src=""></script>
+</body>
+
+</html>

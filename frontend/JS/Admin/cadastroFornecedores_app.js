@@ -80,6 +80,35 @@ async function carregarKitsCadastrados() {
 
     try {
 
+        const responseKits = await fetch("../../../../backend/Admin/Kits/ListarKits.php");
+        const data = await responseKits.json(); 
+        console.log(data.produtos); 
+
+        const kits = data.produtos; 
+
+        if (!kits || kits.length === 0) { 
+            container.innerHTML = `
+                <div class="empty-state">
+                    <h3>Nenhum kit cadastrado</h3>
+                    <p>Adicione kits clicando em "Novo kit".</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = kits.map(kit => `
+            <div class="fornecedor-card">
+                <h3>Nome ${kit.nome}</h3>
+                <p><strong>Descrição:</strong> ${kit.descricao}</p>
+                    <a class="btn-success" 
+                    href="../../../../frontend/dashboards/Admin/editar_kit/editar_kit.html?id=${kit.id_kit}">
+                        <button class="btn-success">
+                            Editar
+                        </button>
+                    </a>
+                    <button class="btn-danger " onclick="ExcluirFornecedor(${kit.id_kit})">Excluir</button>
+                </div>
+
+            </div>`).join("");
 
     } catch (e) {
 
@@ -362,10 +391,20 @@ async function carregarProdutos() {
 
     try {
         const response = await fetch("../../../../backend/Admin/CadastrarProduto/ListarProduto.php");
+
+        if (!response.ok) {
+            throw new Error(`Erro de servidor: ${response.status} ${response.statusText}`);
+        }
+
         const responseData = await response.json();
+
+        if (responseData.status === 'error') {
+            throw new Error(`Erro na API: ${responseData.message}`);
+        }
+
         const produtos = responseData.produtos;
 
-        if (!produtos || produtos.length === 0) {
+        if (!produtos || !Array.isArray(produtos) || produtos.length === 0) {
             container.innerHTML = `<div class="empty-state"><h3>Nenhum produto cadastrado</h3></div>`;
             return;
         }
@@ -373,31 +412,15 @@ async function carregarProdutos() {
         container.innerHTML = produtos.map(p => `
             <div class="fornecedor-card">
                 <h2>☀️ ${p.nome}</h2>
-                <div class="details">
-                    <p><strong>Modelo:</strong> ${p.modelo}</p>
-                    <p><strong>Tipo:</strong> ${p.tipo_produto}</p>
-                </div>
-                <hr>
-                <div class="details">
-                    <h3>Informações da Marca</h3>
-                    <p><strong>Marca:</strong> ${p.nome_marca}</p>
-                    <p><strong>Série/Modelo:</strong> ${p.modelo_marca}</p>
-                    <p><strong>País de Origem:</strong> ${p.pais_origem}</p>
-                </div>
-                <a href="${p.site_oficial}" target="_blank" class="brand-link">
-                    Visitar Site Oficial
-                </a>
-
                 <div>
-                    <button class="btn-success " onclick="abrirModalFornecedorEditar(${id_fornecedor})">Editar</button>
-                    <button class="btn-danger " onclick="ExcluirFornecedor(${p.id_produto})">Excluir</button>
+                    <button class="btn-success" onclick="abrirModalProdutoEditar(${p.id_produto})">Editar</button>
+                    <button class="btn-danger" onclick="ExcluirFornecedor(${p.id_produto})">Excluir</button>
                 </div>
-
             </div>`).join("");
 
     } catch (error) {
-        container.innerHTML = `<div class="empty-state"><h3>Erro ao carregar produtos</h3></div>`;
         console.error("Erro ao carregar produtos:", error);
+        container.innerHTML = `<div class="empty-state"><h3>Erro ao carregar produtos.</h3><p>Detalhes: ${error.message}</p></div>`;
     }
 }
 
@@ -462,5 +485,10 @@ function abrirModalFornecedorEditar(id_fornecedor) {
 
 function AbrirEditorMarca(id_marca) {
     const urlComId = `../../../dashboards/Admin/editar_marca/editar_marca.html?id=${id_marca}`;
+    window.location.href = urlComId;
+}
+
+function abrirModalProdutoEditar(id_produto) {
+    const urlComId = `../../../dashboards/Admin/editar_produto/editar_produto.html?id=${id_produto}`;
     window.location.href = urlComId;
 }
