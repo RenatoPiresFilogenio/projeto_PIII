@@ -72,6 +72,7 @@ async function fetchProperties(){
         const data = await res.json();
         console.log('Imóveis:', data); // Debug
         properties = data;
+        console.log("error" + properties);
         renderProperties();
     } catch(e){
         console.error(e);
@@ -131,6 +132,7 @@ function renderProperties() {
                     ${p.rua || '-'}, ${p.numero || '-'} - ${p.bairro || '-'}, ${p.cidade || '-'} / ${p.estado || '-'} - CEP: ${p.cep || '-'},
                 </div>
             </div>
+            <input type="hidden" id="${p.id}" name="${p.id}">
             <div class="property-actions">
                 <button class="btn btn-primary btn-icon" onclick="editProperty('${p.id}')" title="Editar">✏️</button>
                 <button class="btn btn-danger btn-icon" onclick="confirmDeleteProperty('${p.id}')" title="Excluir">🗑️</button>

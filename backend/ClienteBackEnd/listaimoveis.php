@@ -19,15 +19,16 @@ $stmt = $pdo->prepare("
             i.logradouro AS rua,
             i.numero,
             i.cep,
+            i.consumo,
             b.nm_bairro AS bairro,
             c.nm_cidade AS cidade,
             COALESCE(e.sg_estado, e.nm_estado) AS estado,
-            r.nome_ AS regiao
+            r.nome AS regiao
         FROM imoveis i
         INNER JOIN bairros b ON i.fk_bairros_id_bairro = b.id_bairro
         INNER JOIN cidades c ON b.fk_cidades_id_cidade = c.id_cidade
         INNER JOIN estados e ON c.fk_estados_id_estado = e.id_estado
-        LEFT JOIN regiao r ON e.fk_regiao_id_regiao = r.id_regiao_
+        LEFT JOIN regiao r ON e.fk_regiao_id_regiao = r.id_regiao
         WHERE i.fk_usuarios_id_usuario = :id_usuario
         ORDER BY i.id DESC
     ");

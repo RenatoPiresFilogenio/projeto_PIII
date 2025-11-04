@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $_SESSION['usuario_logado'] = $usuario['nome'];
     $_SESSION['tipo_usuario'] = $usuario['tipo_usuario'];
+    $_SESSION['id_usuario'] = $usuario['id_usuario'];
 
     if ($usuario['tipo_usuario'] == 0) {
         header('Location: ../../frontend/dashboards/Cliente/cadastrarImoveis.php');

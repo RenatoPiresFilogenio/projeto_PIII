@@ -11,16 +11,16 @@ if (!isset($_SESSION['id_usuario'])) {
 $id_usuario = $_SESSION['id_usuario'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_imovel  = $_POST['id'] ?? null; 
     $name       = trim($_POST['nome'] ?? '');
     $numero     = trim($_POST['numero'] ?? '');
     $cep        = trim($_POST['cep'] ?? '');
     $rua        = trim($_POST['rua'] ?? '');
     $bairro     = trim($_POST['bairro'] ?? '');
-    $cidade     = $_POST['cidade'] ?? '';
-    $estado     = $_POST['estado'] ?? '';
-    $regiao     = $_POST['regiao'] ?? '';
-    $consumo    = $_POST['consumo'] ?? '';
+    $cidade     = trim($_POST['cidade'] ?? '');
+    $estado     = trim($_POST['estado'] ?? '');
+    $regiao     = trim($_POST['regiao'] ?? '');
+    $consumo    = trim($_POST['consumo'] ?? '');
+    $id_imovel  = trim($_POST['id'] ?? '');
 
     if (empty($name) || empty($rua) || empty($bairro) || empty($cidade) || 
         empty($estado) || empty($regiao) || empty($consumo)) {
@@ -32,14 +32,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->beginTransaction();
 
         // ---------------------------
-        // 1. REGIAO - buscar ou inserir
+        // 1. REGIÃO - buscar ou inserir
         // ---------------------------
-        $stmt = $pdo->prepare("SELECT ID_REGIAO_ FROM REGIAO WHERE UPPER(TRIM(NOME_)) = UPPER(TRIM(:regiao))");
+        $stmt = $pdo->prepare("
+            SELECT id_regiao 
+            FROM regiao 
+            WHERE UPPER(TRIM(nome)) = UPPER(TRIM(:regiao))
+        ");
         $stmt->execute(['regiao' => $regiao]);
         $id_regiao = $stmt->fetchColumn();
 
         if (!$id_regiao) {
-            $stmt = $pdo->prepare("INSERT INTO REGIAO (NOME_) VALUES (:regiao) RETURNING ID_REGIAO_");
+            $stmt = $pdo->prepare("
+                INSERT INTO regiao (nome) 
+                VALUES (:regiao) 
+                RETURNING id_regiao
+            ");
             $stmt->execute(['regiao' => $regiao]);
             $id_regiao = $stmt->fetchColumn();
         }
@@ -48,19 +56,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 2. ESTADO - buscar ou inserir
         // ---------------------------
         $stmt = $pdo->prepare("
-            SELECT ID_ESTADO 
-            FROM ESTADOS 
-            WHERE UPPER(TRIM(NM_ESTADO)) = UPPER(TRIM(:estado)) 
-              AND FK_REGIAO_ID_REGIAO = :id_regiao
+            SELECT id_estado 
+            FROM estados 
+            WHERE UPPER(TRIM(nm_estado)) = UPPER(TRIM(:estado)) 
+              AND fk_regiao_id_regiao = :id_regiao
         ");
         $stmt->execute(['estado' => $estado, 'id_regiao' => $id_regiao]);
         $id_estado = $stmt->fetchColumn();
 
         if (!$id_estado) {
             $stmt = $pdo->prepare("
-                INSERT INTO ESTADOS (NM_ESTADO, FK_REGIAO_ID_REGIAO) 
+                INSERT INTO estados (nm_estado, fk_regiao_id_regiao) 
                 VALUES (:estado, :id_regiao)
-                RETURNING ID_ESTADO
+                RETURNING id_estado
             ");
             $stmt->execute(['estado' => $estado, 'id_regiao' => $id_regiao]);
             $id_estado = $stmt->fetchColumn();
@@ -70,19 +78,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 3. CIDADE - buscar ou inserir
         // ---------------------------
         $stmt = $pdo->prepare("
-            SELECT ID_CIDADE 
-            FROM CIDADES 
-            WHERE UPPER(TRIM(NM_CIDADE)) = UPPER(TRIM(:cidade)) 
-              AND FK_ESTADOS_ID_ESTADO = :id_estado
+            SELECT id_cidade 
+            FROM cidades 
+            WHERE UPPER(TRIM(nm_cidade)) = UPPER(TRIM(:cidade)) 
+              AND fk_estados_id_estado = :id_estado
         ");
         $stmt->execute(['cidade' => $cidade, 'id_estado' => $id_estado]);
         $id_cidade = $stmt->fetchColumn();
 
         if (!$id_cidade) {
             $stmt = $pdo->prepare("
-                INSERT INTO CIDADES (NM_CIDADE, FK_ESTADOS_ID_ESTADO) 
+                INSERT INTO cidades (nm_cidade, fk_estados_id_estado) 
                 VALUES (:cidade, :id_estado)
-                RETURNING ID_CIDADE
+                RETURNING id_cidade
             ");
             $stmt->execute(['cidade' => $cidade, 'id_estado' => $id_estado]);
             $id_cidade = $stmt->fetchColumn();
@@ -92,47 +100,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 4. BAIRRO - buscar ou inserir
         // ---------------------------
         $stmt = $pdo->prepare("
-            SELECT ID_BAIRRO 
-            FROM BAIRROS 
-            WHERE UPPER(TRIM(NM_BAIRRO)) = UPPER(TRIM(:bairro)) 
-              AND FK_CIDADES_ID_CIDADE = :id_cidade
+            SELECT id_bairro 
+            FROM bairros 
+            WHERE UPPER(TRIM(nm_bairro)) = UPPER(TRIM(:bairro)) 
+              AND fk_cidades_id_cidade = :id_cidade
         ");
         $stmt->execute(['bairro' => $bairro, 'id_cidade' => $id_cidade]);
         $id_bairro = $stmt->fetchColumn();
 
         if (!$id_bairro) {
             $stmt = $pdo->prepare("
-                INSERT INTO BAIRROS (NM_BAIRRO, FK_CIDADES_ID_CIDADE) 
+                INSERT INTO bairros (nm_bairro, fk_cidades_id_cidade) 
                 VALUES (:bairro, :id_cidade)
-                RETURNING ID_BAIRRO
+                RETURNING id_bairro
             ");
             $stmt->execute(['bairro' => $bairro, 'id_cidade' => $id_cidade]);
             $id_bairro = $stmt->fetchColumn();
         }
 
         // ---------------------------
-        // 5. IMOVEL - inserir ou atualizar
+        // 5. IMÓVEL - inserir ou atualizar
         // ---------------------------
         if ($id_imovel) {
             // EDITAR
             $stmt = $pdo->prepare("
-                UPDATE IMOVEIS
-                SET LOGRADOURO = :logradouro,
-                    NUMERO = :numero,
-                    CEP = :cep,
-                    IDENTIFICADOR = :identificador,
-                    FK_BAIRROS_ID_BAIRRO = :id_bairro
-                WHERE ID = :id_imovel
-                  AND FK_USUARIOS_ID_USUARIO = :id_usuario
+                UPDATE imoveis
+                SET logradouro = :logradouro,
+                    numero = :numero,
+                    cep = :cep,
+                    identificador = :identificador,
+                    consumo = :consumo,
+                    fk_bairros_id_bairro = :id_bairro
+                    WHERE id = :id_imovel
+                  AND fk_usuarios_id_usuario = :id_usuario
             ");
             $stmt->execute([
                 'logradouro'   => $rua,
                 'numero'       => $numero,
                 'cep'          => $cep,
                 'identificador'=> $name,
+                'consumo'      => $consumo,
                 'id_bairro'    => $id_bairro,
-                'id_imovel'    => $id_imovel,
-                'id_usuario'   => $id_usuario
+                'id_usuario'   => $id_usuario,
+                'id_imovel'    => $id_imovel
             ]);
 
             $pdo->commit();
@@ -140,15 +150,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // CADASTRAR
             $stmt = $pdo->prepare("
-                INSERT INTO IMOVEIS (LOGRADOURO, NUMERO, CEP, IDENTIFICADOR, FK_USUARIOS_ID_USUARIO, FK_BAIRROS_ID_BAIRRO)
-                VALUES (:logradouro, :numero, :cep, :identificador, :id_usuario, :id_bairro)
-                RETURNING ID
+                INSERT INTO imoveis (
+                    logradouro, numero, cep, identificador, consumo, 
+                    fk_usuarios_id_usuario, fk_bairros_id_bairro
+                )
+                VALUES (:logradouro, :numero, :cep, :identificador, :consumo, :id_usuario, :id_bairro)
+                RETURNING id
             ");
             $stmt->execute([
                 'logradouro'   => $rua,
                 'numero'       => $numero,
                 'cep'          => $cep,
                 'identificador'=> $name,
+                'consumo'      => $consumo,
                 'id_usuario'   => $id_usuario,
                 'id_bairro'    => $id_bairro
             ]);

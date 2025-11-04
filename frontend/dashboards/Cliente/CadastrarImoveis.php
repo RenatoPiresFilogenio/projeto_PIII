@@ -37,7 +37,7 @@ require(__DIR__ . '/../../../backend/login-cadastro/sessao_protegida.php');
                 <p>Cadastre e gerencie seus imóveis para simulações de energia solar</p>
             </div>
 
-            <form id="imovel-form" action="../../../backend/ClienteBackend/cadastrarimoveis.php" method="POST">
+            <form id="imovel-form" action="../../../backend/ClienteBackEnd/cadastrarimoveis.php" method="POST">
     <!-- Formulário -->
     <section class="form-section">
         <div class="form-card">
