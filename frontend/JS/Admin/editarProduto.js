@@ -45,15 +45,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (document.getElementById("Categoria")) {
             document.getElementById("Categoria").value = produto.tipo_produto;
         }
-<<<<<<< HEAD
         if (document.getElementById("id_produto")) {
 
             document.getElementById("id_produto").value = produto.id_produto;
-=======
-        if (document.getElementById("id_marca")) {
-
-            document.getElementById("id_marca").value = produto.fk_marcas_id_marca;
->>>>>>> f12ad6a0023d1a7b864faf4e41e9d11e559f1d13
         }
 
         const dadosView = {
