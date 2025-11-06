@@ -14,51 +14,14 @@ const lowConsumptionWarning = document.getElementById('low-consumption-warning')
 const budgetsGrid = document.getElementById('budgets-grid');
 const selectedPropertyInfo = document.getElementById('selected-property-info');
 
-// Dados simulados de fornecedores
-const suppliers = [
-    {
-        id: 1,
-        name: "SolarTech Pro",
-        rating: 4.8,
-        isPremium: true,
-        basePrice: 25000,
-        installmentMultiplier: 0.08,
-        panels: "Painel Canadian Solar 450W",
-    },
-    {
-        id: 2,
-        name: "EcoSolar Systems",
-        rating: 4.6,
-        isPremium: false,
-        basePrice: 28000,
-        installmentMultiplier: 0.075,
-        panels: "Painel Jinko Solar 440W",
-    },
-    {
-        id: 3,
-        name: "GreenEnergy Solutions",
-        rating: 4.7,
-        isPremium: false,
-        basePrice: 23500,
-        installmentMultiplier: 0.09,
-        panels: "Painel Trina Solar 445W",
-    }
-];
+
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
-    loadProperties();
     setupEventListeners();
     initializeStep();
 });
 
-// Carregar propriedades do localStorage
-function loadProperties() {
-    const storedProperties = localStorage.getItem('properties');
-    if (storedProperties) {
-        properties = JSON.parse(storedProperties);
-    }
-}
 
 // Event Listeners
 function setupEventListeners() {
@@ -87,13 +50,10 @@ function setupEventListeners() {
 
 // Inicializar etapa atual
 function initializeStep() {
-    if (properties.length === 0) {
-        showEmptyPropertiesState();
-        return;
-    }
+   
+    renderPropertiesSelector(); 
+    goToStep(1); 
 
-    renderPropertiesSelector();
-    goToStep(1);
 }
 
 // Mostrar estado vazio
@@ -104,62 +64,85 @@ function showEmptyPropertiesState() {
 
 // Renderizar seletor de propriedades
 async function renderPropertiesSelector() {
+    
+    try {
+        // 1. FAZ O FETCH REAL
+        const response = await fetch(`../../../backend/ClienteBackEnd/listaimoveis.php`);
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.erro || `Erro HTTP: ${response.status}`);
+        }
+        
+        const imoveisDoBanco = await response.json();
+        
+        properties = imoveisDoBanco;
+        
+        if (properties.length === 0) {
+            showEmptyPropertiesState();
+            return;
+        }
 
-    const imoveis = await fetch(`../../../backend/ClienteBackEnd/listaimoveis.php`);
-    const imovel = await imoveis.json();
-    console.log(imovel)
+        propertiesSelector.style.display = 'grid';
+        emptyProperties.style.display = 'none';
 
-    if (properties.length === 0) {
+       
+        propertiesSelector.innerHTML = properties.map(property => `
+            <div class="property-option" onclick="selectProperty('${property.id}')">
+                <div class="property-name">
+                    🏠 ${property.nome}
+                </div>
+                <div class="property-address">
+                    ${property.rua}, ${property.bairro} - ${property.cidade}/${property.estado}
+                </div>
+                <div class="property-details">
+                    <div class="detail-item">
+                        <span class="detail-icon">🌍</span>
+                        <div>
+                            <div class="detail-label">Região</div>
+                            <div class="detail-value">${property.regiao}</div>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">⚡</span>
+                        <div>
+                            <div class="detail-label">Consumo</div>
+                            <div class="detail-value">${property.consumo} kWh</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        console.error('Falha em renderPropertiesSelector:', error);
+        showToast(error.message, 'error');
         showEmptyPropertiesState();
+    }
+}
+
+function selectProperty(propertyId) {
+    
+    selectedProperty = properties.find(p => p.id.toString() === propertyId.toString());
+
+    if (!selectedProperty) {
+        console.error('Imóvel não encontrado no estado global:', propertyId);
         return;
     }
 
-    propertiesSelector.style.display = 'grid';
-    emptyProperties.style.display = 'none';
-
-    propertiesSelector.innerHTML = imovel.map(property => `
-        <div class="property-option" onclick="selectProperty('${property.id}')">
-            <div class="property-name">
-                🏠 ${property.nome}
-            </div>
-            <div class="property-address">
-                ${property.rua}, ${property.bairro} - ${property.cidade}/${property.estado}
-            </div>
-            <div class="property-details">
-                <div class="detail-item">
-                    <span class="detail-icon">🌍</span>
-                    <div>
-                        <div class="detail-label">Região</div>
-                        <div class="detail-value">${property.regiao}</div>
-                    </div>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-icon">⚡</span>
-                    <div>
-                        <div class="detail-label">Consumo</div>
-                        <div class="detail-value">${property.consumo} kWh</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Selecionar propriedade
-function selectProperty(propertyId) {
-    selectedProperty = properties.find(p => p.id === propertyId);
-
-    if (!selectedProperty) return;
-
-    // Marcar como selecionada visualmente
     document.querySelectorAll('.property-option').forEach(option => {
         option.classList.remove('selected');
     });
-    event.currentTarget.classList.add('selected');
+    
+    const selectedElement = document.querySelector(`div[onclick="selectProperty('${propertyId}')"]`);
+    if(selectedElement) {
+        selectedElement.classList.add('selected');
+    } else {
+        console.warn('Elemento visual não encontrado para selecionar');
+    }
 
     showToast(`Imóvel "${selectedProperty.nome}" selecionado`, 'success');
 
-    // Verificar consumo baixo
     if (selectedProperty.consumo < 200) {
         showLowConsumptionWarning();
     } else {
@@ -199,110 +182,109 @@ function proceedWithLowConsumption() {
 }
 
 // Prosseguir para orçamentos
-function proceedToBudgets() {
-    generateBudgets();
-    goToStep(2);
-}
+async function proceedToBudgets() {
+    
+    showToast('Buscando propostas...', 'success'); 
 
-// Gerar orçamentos baseados na propriedade
-function generateBudgets() {
-    const consumption = selectedProperty.consumo;
-    const regionMultiplier = getRegionMultiplier(selectedProperty.regiao);
+    try {
+       
+        const response = await fetch(`../../../backend/ClienteBackEnd/orcamentos/buscar_orcamentos.php?id_imovel=${selectedProperty.id}`);
 
-    budgets = suppliers.map(supplier => {
-        const basePrice = supplier.basePrice;
-        const consumptionFactor = Math.max(0.5, Math.min(2, consumption / 350)); // Fator baseado no consumo médio de 350kWh
-        const finalPrice = Math.round((basePrice * consumptionFactor * regionMultiplier) / 100) * 25;
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.erro || `Erro HTTP: ${response.status}`);
+        }
+        
+        const budgetsDoBanco = await response.json();
+        
+        budgets = budgetsDoBanco;
+        
+        if (budgets.length === 0) {
+            showToast('Nenhuma proposta encontrada para este imóvel.', 'warning');
+             goToStep(1); 
+             return; 
+        }
 
-        return {
-            ...supplier,
-            totalPrice: finalPrice,
-            monthlyInstallment: Math.round((finalPrice * supplier.installmentMultiplier) / 10) * 10,
-            estimatedSavings: Math.round(consumption * 0.85 * 0.75), // 85% da conta, R$ 0,75 por kWh
-            panelQuantity: Math.ceil(consumption * 12 / 5400), // Estimativa baseada na geração anual
-            systemPower: Math.round((Math.ceil(consumption * 12 / 5400) * 0.45) * 10) / 10 // 450W por painel
-        };
-    });
+        goToStep(2);
 
-    // Ordenar por melhor custo-benefício (menor preço primeiro)
-    budgets.sort((a, b) => a.totalPrice - b.totalPrice);
-
-    // Marcar o primeiro como premium se não tiver um premium definido
-    if (!budgets.some(b => b.isPremium)) {
-        budgets[0].isPremium = true;
+    } catch (error) {
+        console.error('Falha ao buscar orçamentos:', error);
+        showToast(error.message, 'error');
     }
 }
 
-// Multiplicador por região (baseado na irradiação solar)
-function getRegionMultiplier(region) {
-    const multipliers = {
-        'Nordeste': 0.85,    // Maior irradiação, menor necessidade de painéis
-        'Centro-Oeste': 0.90,
-        'Sudeste': 1.0,      // Base
-        'Sul': 1.1,          // Menor irradiação, maior necessidade
-        'Norte': 0.95
-    };
-    return multipliers[region] || 1.0;
-}
-
-// Renderizar orçamentos
 function renderBudgets() {
     selectedPropertyInfo.innerHTML = `
         <h4>🏠 ${selectedProperty.nome}</h4>
         <p>${selectedProperty.rua}, ${selectedProperty.bairro} - ${selectedProperty.cidade}/${selectedProperty.estado} | Consumo: ${selectedProperty.consumo} kWh/mês</p>
     `;
 
-    budgetsGrid.innerHTML = budgets.map(budget => `
-        <div class="budget-card ${budget.isPremium ? 'premium' : ''}">
-            <div class="budget-header">
-                <div class="supplier-name">${budget.name}</div>
-                <div class="supplier-rating">
-                    <span>⭐ ${budget.rating}</span>
-                    <span>(${Math.floor(Math.random() * 200) + 50} avaliações)</span>
-                </div>
-            </div>
-            
-            <div class="budget-body">
-                <div class="budget-price">
-                    <div class="price-label">Valor Total do Sistema</div>
-                    <div class="price-value">R$ ${budget.totalPrice.toLocaleString('pt-BR')}</div>
-                    <div class="price-installments">ou 60x de R$ ${budget.monthlyInstallment.toLocaleString('pt-BR')}</div>
-                </div>
-                
-                <div class="products-list">
-                    <h5>📦 Produtos Inclusos</h5>
-                    <div class="product-item">
-                        <span>🔋</span> ${budget.panelQuantity} x ${budget.panels}
-                    </div>
-                    <div class="product-item">
-                        <span>⚡</span> 1 x ${budget.inverter}
-                    </div>
-                </div>
-                
-                <div class="budget-details">
-                    <div class="detail-row">
-                        <span class="label">Potência do Sistema</span>
-                        <span class="value">${budget.systemPower} kWp</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Economia Mensal Estimada</span>
-                        <span class="value">R$ ${budget.estimatedSavings.toLocaleString('pt-BR')}</span>
-                    </div>
-                </div>
-                
-                <div class="budget-actions">
-                    <button class="btn btn-danger" onclick="rejectBudget(${budget.id})">
-                        ❌ Recusar
-                    </button>
-                    <button class="btn btn-success" onclick="confirmApproval(${budget.id})">
-                        ✅ Aprovar
-                    </button>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
+    
+    
+    budgetsGrid.innerHTML = budgets.map((budget, index) => {
+        
+        
+        let bestValueBanner = '';
+        let bestValueClass = '';  
 
+      
+        if (index === 0) {
+            bestValueBanner = '<div class="best-value-banner">⭐ MELHOR CUSTO-BENEFÍCIO</div>';
+            bestValueClass = 'best-value'; 
+        }
+        
+        
+        return `
+            <div class="budget-card 
+                ${budget.isPremium ? 'premium' : ''} 
+                ${bestValueClass} 
+            ">
+                
+                ${bestValueBanner}  <div class="budget-header">
+                    <div class="supplier-name">${budget.name}</div>
+                    <div class="supplier-rating">
+                        <span>⭐ ${budget.rating}</span>
+                    </div>
+                </div>
+                
+                <div class="budget-body">
+                    <div class="budget-price">
+                        <div class="price-label">Valor Total do Sistema</div>
+                        <div class="price-value">R$ ${budget.totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
+                        <div class="price-installments">ou 60x de R$ ${budget.monthlyInstallment.toLocaleString('pt-BR')}</div>
+                    </div>
+                    
+                    <div class="products-list">
+                        <h5>📦 Produtos Inclusos</h5>
+                        <div class="product-item">
+                            <span>🔋</span> ${budget.products}
+                        </div>
+                    </div>
+                    
+                    <div class="budget-details">
+                        <div class="detail-row">
+                            <span class="label">Potência do Sistema</span>
+                            <span class="value">${budget.systemPower} kWp</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Economia Mensal Estimada</span>
+                            <span class="value">R$ ${budget.estimatedSavings.toLocaleString('pt-BR')}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="budget-actions">
+                        <button class="btn btn-danger" onclick="rejectBudget(${budget.id})">
+                            ❌ Recusar
+                        </button>
+                        <button class="btn btn-success" onclick="confirmApproval(${budget.id})">
+                            ✅ Aprovar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 // Confirmar aprovação (mostrar modal)
 function confirmApproval(budgetId) {
     const budget = budgets.find(b => b.id === budgetId);
@@ -321,23 +303,57 @@ function confirmApproval(budgetId) {
 }
 
 // Aprovar orçamento
-function approveBudget(budgetId) {
-    const budget = budgets.find(b => b.id === budgetId);
+// ... (seu JS) ...
+
+// Aprovar orçamento
+async function approveBudget(budgetId) { // 'budgetId' na verdade é o 'id_kit'
+    const budget = budgets.find(b => b.id === budgetId); // 'b.id' é o 'id_kit'
     if (!budget) return;
 
-    approvedBudget = {
-        ...budget,
-        approvedAt: new Date().toISOString(),
-        propertyId: selectedProperty.id,
-        propertyName: selectedProperty.nome
-    };
+    showToast('Processando aprovação...', 'success');
 
-    hideModal();
-    showToast('Orçamento aprovado com sucesso!', 'success');
+    try {
+        const response = await fetch(`../../../backend/ClienteBackEnd/orcamentos/aprovar_orcamento.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            
+            body: JSON.stringify({ 
+                id_kit_aprovado: budgetId,
+                id_imovel: selectedProperty.id,
+                valor_total_aprovado: budget.totalPrice, 
+                potencia_aprovada: budget.systemPower, 
+                id_fornecedor: budget.supplierId 
+            })
+        });
 
-    setTimeout(() => {
-        goToStep(3);
-    }, 1500);
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.erro || 'Falha ao aprovar orçamento');
+        }
+
+        approvedBudget = {
+            ...budget,
+            approvedAt: new Date().toISOString(),
+            propertyId: selectedProperty.id,
+            propertyName: selectedProperty.nome
+        };
+
+        hideModal();
+        showToast('Proposta enviada para validação!', 'success'); 
+
+        setTimeout(() => {
+            goToStep(3);
+        }, 1500);
+
+    } catch (error) {
+        console.error('Erro ao aprovar orçamento:', error);
+        hideModal();
+        showToast(error.message, 'error');
+    }
 }
 
 // Recusar orçamento

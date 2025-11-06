@@ -1,4 +1,3 @@
-// Validação da sessão (impedir acesso sem login)
 <?php
 require(__DIR__ . '/../../../backend/login-cadastro/sessao_protegida.php');
 ?>
@@ -21,6 +20,7 @@ require(__DIR__ . '/../../../backend/login-cadastro/sessao_protegida.php');
                 <a href="<?php echo BASE_URL; ?>/backend/login-cadastro/sessao_destroy.php">Sair</a>
                 <a href="../../../frontend/dashboards/Cliente/CadastrarImoveis.php" class="nav-link" id="nav-imoveis">Meus Imóveis</a>
                 <a href="#" class="nav-link active">Orçamentos</a>
+                <a href="MeusOrcamentos.php" class="nav-link" id="nav-orcamentos">Meus orçamentos</a>
             </nav>
         </div>
     </header>
