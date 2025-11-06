@@ -67,16 +67,19 @@ body {
     padding: 120px 0 80px;
     text-align: center;
     color: var(--branco);
+    background: linear-gradient(135deg,#0f263b,#0a3158 ,#0f447a,#1563b0,#1976d2 );
+    
   }
 
   .hero h1 {
     font-size: 4rem;
     margin-bottom: 1rem;
-    background: white;
+    background: var(--amarelo-solar);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: glow 2s ease-in-out infinite alternate;
+    text-shadow: 0 5px 20px #fdc60088;
+    
   }
 
   @keyframes glow {
@@ -85,18 +88,18 @@ body {
   }
 
   .hero p {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     margin-bottom: 2rem;
     opacity: 0.9;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.555);
   }
 
   /* Story Section */
   .story {
     background: var(--branco);
     padding: 80px 0;
-    margin: 40px 0;
-    border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+
   }
 
   .story-grid {
@@ -111,6 +114,9 @@ body {
     color: var(--preto);
     margin-bottom: 2rem;
     position: relative;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.377);
+
   }
 
   .story-text h2::after {
@@ -128,6 +134,7 @@ body {
     font-size: 1.1rem;
     margin-bottom: 1.5rem;
     color: #666;
+    font-weight: bold;
   }
 
   .story-image {
@@ -155,12 +162,14 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background: linear-gradient(135deg,#0f263b,#0a3158 ,#0f447a,#1563b0,#1976d2 );
   }
 
   .values h2 {
     font-size: 2.5rem;
     color: white;
     margin-bottom: 3rem;
+    text-shadow:  1px 1px rgba(255, 255, 255, 0.281);
   }
 
   .values-grid {
@@ -195,6 +204,7 @@ body {
   .value-card h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.555);
   }
 
   /* Team Section */
@@ -256,12 +266,14 @@ body {
   .stats {
     padding: 80px 0;
     text-align: center;
+    background: linear-gradient(-135deg,#0f263b,#0a3158 ,#0f447a,#1563b0,#1976d2 );
   }
 
   .stats h2 {
     font-size: 2.5rem;
     color: white;
     margin-bottom: 3rem;
+    text-shadow: 1px 1px rgba(255, 255, 255, 0.281);
   }
 
   .stats-grid {
@@ -299,23 +311,25 @@ body {
 
   /* CTA Section */
   .cta {
-    background: linear-gradient(135deg, var(--azul-tecnologico) 0%, #000000 100%);;
+    background: linear-gradient(135deg,#0f263b,#0a3158 ,#0f447a,#1563b0,#1976d2 );
     padding: 80px 0;
     text-align: center;
-    border-radius: 20px;
-    margin: 40px 0;
+   
+    
     color: white;
   }
 
   .cta h2 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
+    text-shadow: 1px 1px rgba(255, 255, 255, 0.281);
   }
 
   .cta p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
     opacity: 0.9;
+    text-shadow: 4px 4px 4px rgb(0, 0, 0);
   }
 
   .cta-btn {
@@ -341,7 +355,7 @@ body {
     color: white;
     text-align: center;
     padding: 40px 0;
-    border-radius: 20px 20px 0 0;
+   
   }
 
   .footer-content {

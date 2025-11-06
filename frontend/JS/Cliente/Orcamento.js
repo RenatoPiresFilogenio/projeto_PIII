@@ -67,14 +67,14 @@ function setupEventListeners() {
         e.preventDefault();
         window.location.href = 'index.html';
     });
-    
+
     // Modal events
     document.getElementById('modal-close').addEventListener('click', hideModal);
     document.getElementById('modal-cancel').addEventListener('click', hideModal);
     document.getElementById('modal-overlay').addEventListener('click', (e) => {
         if (e.target === e.currentTarget) hideModal();
     });
-    
+
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -91,7 +91,7 @@ function initializeStep() {
         showEmptyPropertiesState();
         return;
     }
-    
+
     renderPropertiesSelector();
     goToStep(1);
 }
@@ -103,16 +103,21 @@ function showEmptyPropertiesState() {
 }
 
 // Renderizar seletor de propriedades
-function renderPropertiesSelector() {
+async function renderPropertiesSelector() {
+
+    const imoveis = await fetch(`../../../backend/ClienteBackEnd/listaimoveis.php`);
+    const imovel = await imoveis.json();
+    console.log(imovel)
+
     if (properties.length === 0) {
         showEmptyPropertiesState();
         return;
     }
-    
+
     propertiesSelector.style.display = 'grid';
     emptyProperties.style.display = 'none';
-    
-    propertiesSelector.innerHTML = properties.map(property => `
+
+    propertiesSelector.innerHTML = imovel.map(property => `
         <div class="property-option" onclick="selectProperty('${property.id}')">
             <div class="property-name">
                 🏠 ${property.nome}
@@ -143,17 +148,17 @@ function renderPropertiesSelector() {
 // Selecionar propriedade
 function selectProperty(propertyId) {
     selectedProperty = properties.find(p => p.id === propertyId);
-    
+
     if (!selectedProperty) return;
-    
+
     // Marcar como selecionada visualmente
     document.querySelectorAll('.property-option').forEach(option => {
         option.classList.remove('selected');
     });
     event.currentTarget.classList.add('selected');
-    
+
     showToast(`Imóvel "${selectedProperty.nome}" selecionado`, 'success');
-    
+
     // Verificar consumo baixo
     if (selectedProperty.consumo < 200) {
         showLowConsumptionWarning();
@@ -166,7 +171,7 @@ function selectProperty(propertyId) {
 function showLowConsumptionWarning() {
     lowConsumptionWarning.style.display = 'block';
     document.getElementById('consumption-value').textContent = selectedProperty.consumo;
-    
+
     // Scroll para o aviso
     lowConsumptionWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
@@ -175,11 +180,11 @@ function showLowConsumptionWarning() {
 function backToPropertySelection() {
     lowConsumptionWarning.style.display = 'none';
     selectedProperty = null;
-    
+
     document.querySelectorAll('.property-option').forEach(option => {
         option.classList.remove('selected');
     });
-    
+
     showToast('Seleção cancelada', 'success');
 }
 
@@ -187,7 +192,7 @@ function backToPropertySelection() {
 function proceedWithLowConsumption() {
     lowConsumptionWarning.style.display = 'none';
     showToast('Continuando com a simulação...', 'warning');
-    
+
     setTimeout(() => {
         proceedToBudgets();
     }, 1000);
@@ -203,12 +208,12 @@ function proceedToBudgets() {
 function generateBudgets() {
     const consumption = selectedProperty.consumo;
     const regionMultiplier = getRegionMultiplier(selectedProperty.regiao);
-    
+
     budgets = suppliers.map(supplier => {
         const basePrice = supplier.basePrice;
         const consumptionFactor = Math.max(0.5, Math.min(2, consumption / 350)); // Fator baseado no consumo médio de 350kWh
         const finalPrice = Math.round((basePrice * consumptionFactor * regionMultiplier) / 100) * 25;
-        
+
         return {
             ...supplier,
             totalPrice: finalPrice,
@@ -218,10 +223,10 @@ function generateBudgets() {
             systemPower: Math.round((Math.ceil(consumption * 12 / 5400) * 0.45) * 10) / 10 // 450W por painel
         };
     });
-    
+
     // Ordenar por melhor custo-benefício (menor preço primeiro)
     budgets.sort((a, b) => a.totalPrice - b.totalPrice);
-    
+
     // Marcar o primeiro como premium se não tiver um premium definido
     if (!budgets.some(b => b.isPremium)) {
         budgets[0].isPremium = true;
@@ -246,7 +251,7 @@ function renderBudgets() {
         <h4>🏠 ${selectedProperty.nome}</h4>
         <p>${selectedProperty.rua}, ${selectedProperty.bairro} - ${selectedProperty.cidade}/${selectedProperty.estado} | Consumo: ${selectedProperty.consumo} kWh/mês</p>
     `;
-    
+
     budgetsGrid.innerHTML = budgets.map(budget => `
         <div class="budget-card ${budget.isPremium ? 'premium' : ''}">
             <div class="budget-header">
@@ -302,7 +307,7 @@ function renderBudgets() {
 function confirmApproval(budgetId) {
     const budget = budgets.find(b => b.id === budgetId);
     if (!budget) return;
-    
+
     document.getElementById('modal-title').textContent = 'Confirmar Aprovação';
     document.getElementById('modal-budget-summary').innerHTML = `
         <h5>${budget.name}</h5>
@@ -310,7 +315,7 @@ function confirmApproval(budgetId) {
         <p><strong>Sistema:</strong> ${budget.systemPower} kWp com ${budget.panelQuantity} painéis</p>
         <p><strong>Economia mensal:</strong> R$ ${budget.estimatedSavings.toLocaleString('pt-BR')}</p>
     `;
-    
+
     document.getElementById('modal-confirm').onclick = () => approveBudget(budgetId);
     showModal();
 }
@@ -319,17 +324,17 @@ function confirmApproval(budgetId) {
 function approveBudget(budgetId) {
     const budget = budgets.find(b => b.id === budgetId);
     if (!budget) return;
-    
+
     approvedBudget = {
         ...budget,
         approvedAt: new Date().toISOString(),
         propertyId: selectedProperty.id,
         propertyName: selectedProperty.nome
     };
-    
+
     hideModal();
     showToast('Orçamento aprovado com sucesso!', 'success');
-    
+
     setTimeout(() => {
         goToStep(3);
     }, 1500);
@@ -339,9 +344,9 @@ function approveBudget(budgetId) {
 function rejectBudget(budgetId) {
     const budget = budgets.find(b => b.id === budgetId);
     if (!budget) return;
-    
+
     showToast(`Orçamento da ${budget.name} recusado`, 'warning');
-    
+
     // Remover o card visualmente
     const budgetCards = document.querySelectorAll('.budget-card');
     budgetCards.forEach(card => {
@@ -356,7 +361,7 @@ function rejectBudget(budgetId) {
 // Navegação entre etapas
 function goToStep(stepNumber) {
     currentStep = stepNumber;
-    
+
     // Atualizar indicadores de progresso
     document.querySelectorAll('.step').forEach((step, index) => {
         step.classList.remove('active', 'completed');
@@ -366,7 +371,7 @@ function goToStep(stepNumber) {
             step.classList.add('active');
         }
     });
-    
+
     // Mostrar conteúdo da etapa
     document.querySelectorAll('.step-content').forEach((content, index) => {
         content.classList.remove('active');
@@ -374,7 +379,7 @@ function goToStep(stepNumber) {
             content.classList.add('active');
         }
     });
-    
+
     // Executar ações específicas da etapa
     switch (stepNumber) {
         case 1:
@@ -387,7 +392,7 @@ function goToStep(stepNumber) {
             renderConfirmation();
             break;
     }
-    
+
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -395,7 +400,7 @@ function goToStep(stepNumber) {
 // Renderizar confirmação
 function renderConfirmation() {
     if (!approvedBudget) return;
-    
+
     const approvalDate = new Date(approvedBudget.approvedAt).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: '2-digit',
@@ -403,7 +408,7 @@ function renderConfirmation() {
         hour: '2-digit',
         minute: '2-digit'
     });
-    
+
     document.getElementById('approved-budget-info').innerHTML = `
         <h4>📋 Detalhes do Orçamento Aprovado</h4>
         <div class="detail-row">
@@ -427,7 +432,7 @@ function renderConfirmation() {
             <span class="value">${approvedBudget.systemPower} kWp (${approvedBudget.panelQuantity} painéis)</span>
         </div>
     `;
-    
+
     document.getElementById('approval-date').textContent = approvalDate;
 }
 
@@ -436,17 +441,17 @@ function startNewQuote() {
     selectedProperty = null;
     budgets = [];
     approvedBudget = null;
-    
+
     // Limpar seleções visuais
     document.querySelectorAll('.property-option').forEach(option => {
         option.classList.remove('selected');
     });
-    
+
     // Esconder aviso de consumo baixo
     lowConsumptionWarning.style.display = 'none';
-    
+
     showToast('Iniciando novo orçamento...', 'success');
-    
+
     setTimeout(() => {
         goToStep(1);
     }, 1000);
@@ -457,7 +462,7 @@ function showToast(message, type = 'success') {
     toast.textContent = message;
     toast.className = `toast ${type}`;
     toast.classList.add('show');
-    
+
     setTimeout(() => {
         toast.classList.remove('show');
     }, 4000);
@@ -502,7 +507,7 @@ function createDemoProperties() {
                 createdAt: new Date().toISOString()
             }
         ];
-        
+
         showToast('Propriedades de demonstração carregadas', 'success');
     }
 }
@@ -510,7 +515,7 @@ function createDemoProperties() {
 // Função para simular delay de carregamento
 function simulateLoading(element, duration = 2000) {
     element.classList.add('loading');
-    
+
     setTimeout(() => {
         element.classList.remove('loading');
     }, duration);
@@ -530,7 +535,7 @@ function calculateROI(budget, property) {
     const averageEnergyPrice = 0.75; // R$ 0,75 por kWh
     const monthlySavings = monthlyConsumption * averageEnergyPrice * 0.85; // 85% de economia
     const paybackYears = budget.totalPrice / (monthlySavings * 12);
-    
+
     return {
         monthlySavings: Math.round(monthlySavings),
         paybackYears: Math.round(paybackYears * 10) / 10,

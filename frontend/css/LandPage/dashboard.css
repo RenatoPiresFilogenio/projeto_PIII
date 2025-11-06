@@ -17,19 +17,23 @@
     .dashboard-image img {
       width: 100%;
       border-radius: 15px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
 
     .dashboard-text h2 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       margin-bottom: 1.5rem;
       color: #2c3e50;
+      text-shadow:1px 1px 1px rgba(0, 0, 0, 0.2);
     }
 
     .dashboard-text p {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       margin-bottom: 2rem;
       color: #555;
+     font-weight: bolder;
+     text-shadow:1px 1px 1px rgba(0, 0, 0, 0.2);
+
     }
 
     .dashboard-text ul {
@@ -41,6 +45,9 @@
       padding: 0.8rem 0;
       font-size: 1.1rem;
       border-bottom: 1px solid #eee;
+      font-weight: bold;
+      color: #555;
+      text-shadow:1px 1px 1px rgba(0, 0, 0, 0.2);
     }
 
     .btn-demo {

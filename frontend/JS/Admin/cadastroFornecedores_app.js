@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarProdutos();
     carregarMarcasEPreencherSelect();
     carregarListKits();
+    carregarListKitsFornecedor();
     carregarKitsCadastrados();
 });
 
@@ -81,12 +82,10 @@ async function carregarKitsCadastrados() {
     try {
 
         const responseKits = await fetch("../../../../backend/Admin/Kits/ListarKits.php");
-        const data = await responseKits.json(); 
-        console.log(data.produtos); 
+        const data = await responseKits.json();
+        const kits = data.produtos;
 
-        const kits = data.produtos; 
-
-        if (!kits || kits.length === 0) { 
+        if (!kits || kits.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
                     <h3>Nenhum kit cadastrado</h3>
@@ -97,7 +96,7 @@ async function carregarKitsCadastrados() {
 
         container.innerHTML = kits.map(kit => `
             <div class="fornecedor-card">
-                <h3>Nome ${kit.nome}</h3>
+                <h3>Nome ${kit.descricao}</h3>
                 <p><strong>Descrição:</strong> ${kit.descricao}</p>
                     <a class="btn-success" 
                     href="../../../../frontend/dashboards/Admin/editar_kit/editar_kit.html?id=${kit.id_kit}">
@@ -115,6 +114,32 @@ async function carregarKitsCadastrados() {
     }
 
 }
+
+async function carregarListKitsFornecedor() {
+    const list_kits = document.getElementById("kit_id");
+
+    try {
+        const responseKitsList = await fetch("../../../../backend/Admin/Kits/ListarKits.php");
+        const data = await responseKitsList.json(); 
+
+        if (data.status === "success" && Array.isArray(data.produtos)) {
+            list_kits.innerHTML = `
+                <option value="">Selecione um kit</option>
+            ` + data.produtos.map(kit => `
+                <option value="${kit.id_kit}">
+                    Kit: ${kit.descricao} - Descrição: ${kit.descricao}
+                </option>
+            `).join('');
+        } else {
+            list_kits.innerHTML = '<option value="">Nenhum kit encontrado.</option>';
+        }
+
+    } catch (e) {
+        console.error("Erro ao carregar ou exibir kits:", e);
+        list_kits.innerHTML = '<option value="">Erro ao carregar a lista de kits.</option>';
+    }
+}
+
 
 async function carregarListKits() {
 
@@ -381,6 +406,8 @@ async function carregarFornecedores() {
         console.error("Erro ao carregar fornecedores:", error);
     }
 }
+/// carregando kit para cadastro de fornecedor
+
 
 // =========================
 // CARREGAR PRODUTOS

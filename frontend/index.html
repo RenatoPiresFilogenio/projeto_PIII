@@ -1,225 +1,398 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="css/LandPage/app.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-</head>
-
-<body>
-
-  <header>
-    <div class="logo">Solar Smart</div>
-
-    <!-- Botão hamburguer -->
-    <div class="menu-toggle" id="menu-toggle">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-
-    <!-- Menu -->
-    <nav id="menu">
-      <ul>
-        <li><a href="#">Início</a></li>
-        <li><a href="#como-funciona">Como funciona</a></li>
-        <li><a href="#beneficios">Benefícios</a></li>
-        <li><a href="#contato">Contato</a></li>
-        <li><a href="sobre.html">Sobre nós</a></li>
-        <li><a href="login.html" class="login-btn">Login</a></li>
-      </ul>
-    </nav>
-
-
-
-    <nav id="menu_responsivo">
-      <ul>
-        <li><a href="#">Início</a></li>
-        <li><a href="#como-funciona">Como funciona</a></li>
-        <li><a href="#beneficios">Benefícios</a></li>
-        <li><a href="#contato">Contato</a></li>
-        <li><a href="frontend/sobre.php">Sobre nós</a></li>
-        <li><a href="frontend/login.html" class="login-btn">Login</a></li>
-      </ul>
-    </nav>
-
-  </header>
-
-
-
-  <section class="hero" id="observer_section_orcamento">
-    <div class="hero-text">
-      <h1>Orçamento personalizado <br> para sua <span>energia solar</span></h1>
-      <p>
-        Receba um orçamento completo e personalizado com o Solar Smart!
-        <strong>Análise detalhada do seu consumo e localização</strong> para a solução ideal.
-      </p>
-      <a href="login.html" class="cta-btn">Solicitar orçamento</a>
-    </div>
-    <div class="hero-img">
-      <img class="forma_img" id="img_session1"
-        src="./video_gi/SolarSmart_logo.jpg"
-        alt="Painéis solares">
-    </div>
-  </section>
-
-  <!-- COMO FUNCIONA -->
-  <!DOCTYPE html>
-  <html lang="pt-br">
-
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Como Funciona Interativo</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/LandPage/app.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solar Smart</title>
+
+    <style>
+      /* ======== SEÇÃO LINHA DO TEMPO ======== */
+      .timeline-section {
+        background: #fff;
+        padding: 80px 5%;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      .timeline-section h2 {
+        color: #004d73;
+        font-size: 2rem;
+        margin-bottom: 8px;
+        text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.308);
+      }
+
+      .timeline-section p {
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+        font-weight: bold;
+        color: #3a5468;
+        font-size: 1.1rem;
+      }
+
+      /* ======== CONTAINER PRINCIPAL ======== */
+      .timeline {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 80px;
+        gap: 40px;
+      }
+
+      /* Faixa azul */
+      .timeline::before {
+        content: "";
+        position: absolute;
+        top: 62%;
+        left: 17%;
+        right: 17%;
+        height: 6px;
+        background: #007bb8;
+        border-radius: 6px;
+        z-index: 0;
+      }
+
+      /* Cada etapa */
+      .milestone {
+        position: relative;
+        z-index: 2;
+        flex: 1;
+        text-align: center;
+      }
+
+      /* Bolinha laranja */
+      .dot {
+        width: 38px;
+        height: 38px;
+        background: #ff8a2b;
+        border-radius: 50%;
+        margin: 0 auto;
+        position: relative;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Balão de fala */
+      .bubble {
+        position: relative;
+        background: #e9f5fb;
+        border-radius: 12px;
+        padding: 16px 20px;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        margin-bottom: 25px;
+        transition: transform 0.2s ease;
+      }
+
+      .bubble:hover {
+        transform: translateY(-5px);
+      }
+
+      /* Ponta do balão (para baixo) */
+      .bubble::after {
+        content: "";
+        position: absolute;
+        bottom: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 12px 10px 0 10px;
+        border-style: solid;
+        border-color: #e9f5fb transparent transparent transparent;
+      }
+
+      .bubble p {
+        color: #0e3b5a;
+        font-weight: 600;
+        margin: 0;
+        user-select: none;
+      }
+
+      .year {
+        font-weight: 700;
+        color: #0e3b5a;
+        margin-top: 12px;
+        font-size: 1.1rem;
+      }
+
+      /* ======== RESPONSIVIDADE ======== */
+      @media (max-width: 1288px) {
+        .bubble p {
+          font-size: 16px;
+        }
+      }
+
+      @media (max-width: 1192px) {
+        .bubble p {
+          font-size: 14px;
+        }
+      }
+
+      @media (max-width: 1071px) {
+        .bubble p {
+          font-size: 12px;
+        }
+      }
+
+      @media (max-width: 949px) {
+        .bubble p {
+          font-size: 11px;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .timeline {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .timeline::before {
+          top: 10%;
+          left: 50%;
+          right: auto;
+          width: 6px;
+          height: 80%;
+          transform: translateX(-50%);
+        }
+
+        .milestone {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          position: relative;
+          margin: 40px 0;
+        }
+
+        .dot {
+          margin: 0;
+          position: relative;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+
+        .bubble {
+          order: 3;
+          margin: 0;
+          width: 45%;
+        }
+
+        .bubble p {
+          font-size: 15px;
+        }
+
+        .bubble::after {
+          top: 50%;
+          left: -11px;
+          bottom: auto;
+          transform: translateY(-50%) rotate(0deg);
+          border-width: 10px 12px 10px 0;
+          border-color: transparent #e9f5fb transparent transparent;
+        }
+
+        .year {
+          order: 1;
+          width: 22%;
+          text-align: right;
+          font-size: 1rem;
+          margin-top: 2px;
+        }
+      }
+    </style>
   </head>
 
   <body>
+    <header>
+      <div class="logo">Solar Smart</div>
+      <nav id="menu">
+        <ul>
+          <li><a href="#">Início</a></li>
+          <li><a href="#como-funciona">Como funciona</a></li>
+          <li><a href="#beneficios">Benefícios</a></li>
+          <li><a href="#contato">Contato</a></li>
+          <li><a href="sobre.html">Sobre nós</a></li>
+          <li><a href="login.html" class="login-btn">Login</a></li>
+        </ul>
+      </nav>
+    </header>
 
-    <!DOCTYPE html>
-    <html lang="pt-br">
+    <!-- HERO -->
+    <section class="hero" id="observer_section_orcamento">
+      <div class="hero-text">
+        <h1>
+          <span>Orçamento</span> personalizado<br />
+          para sua <span>energia solar</span>
+        </h1>
+        <p>
+          Receba um orçamento completo e personalizado com o Solar Smart!
+          <strong>Análise detalhada do seu consumo e localização</strong> para a
+          solução ideal.
+        </p>
+        <a href="login.html" class="cta-btn">Solicitar orçamento</a>
+      </div>
+      <div class="hero-img">
+        <img
+          class="forma_img"
+          id="img_session1"
+          src="video_gi/painel2.png"
+          alt="Painéis solares"
+        />
+      </div>
+    </section>
 
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Como Funciona - Interativo e Visual</title>
-      <link rel="stylesheet" href="style.css">
-    </head>
+    <!-- ======== COMO FUNCIONA ======== -->
+    <section id="como-funciona" class="timeline-section">
+      <h2>Como funciona</h2>
+      <p>Veja como a Solar Smart simplifica sua jornada de economia de energia.</p>
 
-    <body>
-
-      <section class="como-funciona" id="como-funciona">
-        <h2>Como criamos seu orçamento personalizado em 3 etapas</h2>
-
-        <div class="stage">
-          <div class="box">
-            <div class="step">🚀 Passo 1</div>
-            <div class="icon">⚡</div>
-            <p>Informe seu consumo mensal de energia e sua região. Assim conseguimos entender suas necessidades com
-              precisão.</p>
+      <div class="timeline">
+        <div class="milestone">
+          <div class="bubble">
+            <p>Informe seu consumo e região</p>
           </div>
-
-          <div class="box">
-            <div class="step">🔍 Passo 2</div>
-            <div class="icon">📊</div>
-            <p>Analisamos seu perfil de consumo e dimensionamos os equipamentos ideais para garantir o melhor
-              custo-benefício.</p>
-          </div>
-
-          <div class="box">
-            <div class="step">💡 Passo 3</div>
-            <div class="icon">💰</div>
-            <p>Você recebe um orçamento detalhado e personalizado, pronto para transformar sua economia de energia em
-              realidade.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Formulário de Orçamento -->
-
-      <!-- Demonstração Dashboard -->
-      <section class="dashboard-demo" id="dashboard_demo">
-        <div class="dashboard-container">
-          <div class="dashboard-image">
-            <img src="video_gi/Economia_Energia_Cofrinho_Retangular.jpg" alt="Sistema de Orçamento Solar Smart">
-          </div>
-          <div class="dashboard-text">
-            <h2>Sistema completo de orçamento</h2>
-            <p>Nossa plataforma analisa todos os dados para criar o orçamento mais preciso e adequado às suas
-              necessidades.
-            </p>
-            <ul>
-              <li>💰 Cálculo preciso de economia e retorno</li>
-              <li>📋 Orçamento completo com especificações técnicas</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section class="beneficios" id="beneficios">
-        <h2>Por que escolher nosso orçamento personalizado</h2>
-        <div class="benefits-grid">
-          <div class="benefit">
-            <h3>Totalmente personalizado</h3>
-            <p>Cada projeto é único e adequado às suas necessidades</p>
-          </div>
-          <div class="benefit">
-            <h3>Transparência total</h3>
-            <p>Orçamento detalhado sem custos ocultos</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Depoimentos -->
-      <section class="testimonials">
-        <h2>O que dizem nossos clientes</h2>
-        <div class="testimonials-container">
-          <div class="testimonial-card">
-            <p>"O orçamento foi muito detalhado e preciso. O sistema instalado superou minhas expectativas de economia!"
-            </p>
-            <h4>Maria Silva</h4>
-            <span>Residencial - São Paulo/SP</span>
-          </div>
-          <div class="testimonial-card">
-            <p>"A análise considerou perfeitamente o consumo da minha empresa. Projeto customizado e excelente
-              custo-benefício!"</p>
-            <h4>João Pereira</h4>
-            <span>Comercial - Campinas/SP</span>
-          </div>
-          <div class="testimonial-card">
-            <p>"Transparência total no orçamento e suporte excepcional. Já estou economizando 70% na conta de luz!"</p>
-            <h4>Ana Costa</h4>
-            <span>Residencial - Ribeirão Preto/SP</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Rodapé -->
-      <footer class="rodape">
-        <div class="rodape-container">
-          <div class="rodape-col">
-            <h3>Solar Smart</h3>
-            <p>Orçamentos personalizados para energia solar.<br>
-              Análise completa do seu consumo e localização.</p>
-          </div>
-
-          <div class="rodape-col">
-            <h4>Links rápidos</h4>
-            <ul>
-              <li><a href="#inicio">Início</a></li>
-              <li><a href="#como-funciona">Como funciona</a></li>
-              <li><a href="#beneficios">Benefícios</a></li>
-              <li><a href="#orcamento">Solicitar orçamento</a></li>
-              <li><a href="#contato">Contato</a></li>
-            </ul>
-          </div>
-
-          <div class="rodape-col">
-            <h4>Contato</h4>
-            <p>Email: orcamento@solarsmart.com.br</p>
-            <p>Telefone: (19) 99999-9999</p>
-            <p>Araras - SP</p>
-          </div>
-
-          <div class="rodape-col">
-            <h4>Siga-nos</h4>
-            <div class="redes-sociais" id="contato">
-              <a href="#"><i id="icones_rodape" class="fa-brands fa-square-facebook"></i></a>
-              <a href="#"><i id="icones_rodape" class="fa-brands fa-square-instagram"></i></a>
-              <a href="#"><i id="icones_rodape" class="fa-brands fa-linkedin"></i></a>
-            </div>
-          </div>
+          <div class="dot"></div>
+          <div class="year">⚡ 1° Passo</div>
         </div>
 
-        <div class="rodape-bottom">
-          <p>&copy; 2025 Solar Smart - Todos os direitos reservados.</p>
+        <div class="milestone">
+          <div class="bubble">
+            <p>Indicamos os melhores equipamentos</p>
+          </div>
+          <div class="dot"></div>
+          <div class="year">🔍 2° Passo</div>
         </div>
-      </footer>
 
+        <div class="milestone">
+          <div class="bubble">
+            <p>Orçamento personalizado de energia</p>
+          </div>
+          <div class="dot"></div>
+          <div class="year">💡 3° Passo</div>
+        </div>
+      </div>
+    </section>
 
-    </body>
+    <!-- Formulário de Orçamento -->
+    <!-- Demonstração Dashboard -->
+    <section class="dashboard-demo" id="dashboard_demo">
+      <div class="dashboard-container">
+        <div class="dashboard-image">
+          <img
+            src="video_gi/Economia_Energia_Cofrinho_Retangular.jpg"
+            alt="Sistema de Orçamento Solar Smart"
+          />
+        </div>
+        <div class="dashboard-text">
+          <h2>Sistema completo de orçamento</h2>
+          <p>
+            Nossa plataforma analisa todos os dados para criar o orçamento mais
+            preciso e adequado às suas necessidades.
+          </p>
+          <ul>
+            <li>💰 Cálculo preciso de economia e retorno</li>
+            <li>📋 Orçamento completo com especificações técnicas</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-    </html>
-    <script src="https://kit.fontawesome.com/6c4a5a739f.js" crossorigin="anonymous"></script>
+    <section class="beneficios" id="beneficios">
+      <h2>Por que escolher nosso orçamento personalizado</h2>
+      <div class="benefits-grid">
+        <div class="benefit">
+          <h3>Totalmente personalizado</h3>
+          <p>Cada projeto é único e adequado às suas necessidades</p>
+        </div>
+        <div class="benefit">
+          <h3>Transparência total</h3>
+          <p>Orçamento detalhado sem custos ocultos</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Depoimentos -->
+    <section class="testimonials">
+      <h2>O que dizem nossos clientes</h2>
+      <div class="testimonials-container">
+        <div class="testimonial-card">
+          <p>
+            "O orçamento foi muito detalhado e preciso. O sistema instalado
+            superou minhas expectativas de economia!"
+          </p>
+          <h4>Maria Silva</h4>
+          <span>Residencial - São Paulo/SP</span>
+        </div>
+        <div class="testimonial-card">
+          <p>
+            "A análise considerou perfeitamente o consumo da minha empresa.
+            Projeto customizado e excelente custo-benefício!"
+          </p>
+          <h4>João Pereira</h4>
+          <span>Comercial - Campinas/SP</span>
+        </div>
+        <div class="testimonial-card">
+          <p>
+            "Transparência total no orçamento e suporte excepcional. Já estou
+            economizando 70% na conta de luz!"
+          </p>
+          <h4>Ana Costa</h4>
+          <span>Residencial - Ribeirão Preto/SP</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="rodape">
+      <div class="rodape-container">
+        <div class="rodape-col">
+          <h3>Solar Smart</h3>
+          <p>
+            Orçamentos personalizados para energia solar.<br />
+            Análise completa do seu consumo e localização.
+          </p>
+        </div>
+        <div class="rodape-col">
+          <h4>Links rápidos</h4>
+          <ul>
+            <li><a href="#inicio">Início</a></li>
+            <li><a href="#como-funciona">Como funciona</a></li>
+            <li><a href="#beneficios">Benefícios</a></li>
+            <li><a href="#orcamento">Solicitar orçamento</a></li>
+            <li><a href="#contato">Contato</a></li>
+          </ul>
+        </div>
+        <div class="rodape-col">
+          <h4>Contato</h4>
+          <p>Email: orcamento@solarsmart.com.br</p>
+          <p>Telefone: (19) 99999-9999</p>
+          <p>Araras - SP</p>
+        </div>
+        <div class="rodape-col">
+          <h4>Siga-nos</h4>
+          <div class="redes-sociais" id="contato">
+            <a href="#"><i id="icones_rodape" class="fa-brands fa-square-facebook"></i></a>
+            <a href="#"><i id="icones_rodape" class="fa-brands fa-square-instagram"></i></a>
+            <a href="#"><i id="icones_rodape" class="fa-brands fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="rodape-bottom">
+        <p>&copy; 2025 Solar Smart - Todos os direitos reservados.</p>
+      </div>
+    </footer>
+
+    <script
+      src="https://kit.fontawesome.com/6c4a5a739f.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="../frontend/JS/LandPage/landepage.js"></script>
+
+    <script>
+      document.querySelectorAll(".bubble p").forEach((p) => {
+        p.contentEditable = false;
+      });
+    </script>
+  </body>
+</html>

@@ -1,7 +1,22 @@
 @import "./variables.css";
 
+
+/*#082543
+#0f263b
+#0a3158
+#0f447a
+#1563b0
+#1976d2
+
+ultima cor 
+105899
+
+
+135deg
+*/
+
 .hero {                                         
-      background: linear-gradient(135deg, #000000 0%, var(--azul-tecnologico) 100%);
+      background: linear-gradient(135deg,#0f263b,#0a3158 ,#0f447a,#1563b0,#1976d2 );
       color: white;
       padding: 120px 5% 80px 5%;
       display: grid;
@@ -45,9 +60,9 @@
     }
 
     .cta-btn:hover {
-      transform: translateY(-3px);
+      transform: translateY(-1px);
       box-shadow: 0 8px 25px rgba(43, 255, 0, 0.4);
-      transition: all 1s ease;
+      transition: 0.5s;
       transform: scale(1.2);
     }
 
@@ -57,12 +72,19 @@
 
     .forma_img {
       width: 100%;
-      max-width: 500px;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(5, 5, 5, 0.2);
+      max-width: 600px;
+      border-radius: 120px 50px 120px 50px ;
+      box-shadow: rgba(0, 0, 0, 0.9);
       transition: transform 0.3s ease;
+      font-weight: bold;
+      margin-top: -90px;
+      
     }
 
     .forma_img:hover {
-      transform: scale(1.05);
+      transform: scale(1.10);
     }
+
+    /* Linha do tempo */
+
+    

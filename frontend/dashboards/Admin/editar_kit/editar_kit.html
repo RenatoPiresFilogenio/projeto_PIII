@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Editar Kit</title>
     <link rel="stylesheet" href="../../../css/Dashboards/editarPages/style.css">
 </head>
 
@@ -13,57 +13,81 @@
 
         <div class="container-form">
 
-            <form action="../../../../backend/Admin/Marcas/EditarMarca.php" class="form_editar_fornecedor"
-                method="POST">
+            <form action="../../../../backend/Admin/Kits/EditarKit.php" class="form_editar_kit" method="POST">
 
-                <h1 id="titulo_marca">Editar marca</h1>
-                <input type="hidden" id="id_marca" name="id_marca">
+                <h1>Editar Kit</h1>
+
+                <!-- ID do kit oculto -->
+                <input type="hidden" id="kit_id" name="kit_id">
+
                 <div class="container-input">
+
+                    <!-- Descrição do kit -->
                     <div class="div_input">
-                        <span>Nome do kit</span>
-                        <input type="text" id="nome_kit" class="input" name="nome_kit">
+                        <span>Descrição do Kit</span>
+                        <input type="text" id="descricao_kit" class="input" name="kit_descricao" required>
                     </div>
 
+                    <!-- Fornecedor (não editável) -->
                     <div class="div_input">
-                        <span>Modelo</span>
-                        <input type="text" id="Modelo" class="input" name="Modelo">
+                        <span>Fornecedor</span>
+                        <input type="text" id="fornecedor_kit_nome" class="input" name="fornecedor_kit_nome" disabled>
                     </div>
 
+                    <!-- Produtos -->
                     <div class="div_input">
                         <span>Produtos</span>
-                        <input type="text" id="Produtos" class="input" name="Produtos">
+                        <div id="produtos_container">
+                            <!-- Produtos dinâmicos serão adicionados aqui -->
+                            <div class="produto_item">
+                                <input type="hidden" name="produto_ids[]" value="">
+                                <input type="number" name="quantidades[]" placeholder="Quantidade" min="1" required>
+                                <input type="text" name="valores_unitarios[]" placeholder="Valor (R$)" required>
+                            </div>
+                        </div>
+                        <button type="button" id="add_produto">Adicionar Produto</button>
                     </div>
 
                 </div>
 
                 <div class="btns">
-
                     <a href="../../Admin/cadastro_fornecedores/cadastroFornecedores.html">
-                        <button type="button" class="btn-danger">
-                            Fechar
-                        </button>
+                        <button type="button" class="btn-danger">Fechar</button>
                     </a>
-
-                    <a href="">
-                        <button class="btn-primary" type="submit">
-                            Salvar
-                        </button>
-                    </a>
-
+                    <button class="btn-primary" type="submit">Salvar</button>
+                </div>
 
             </form>
         </div>
 
-        <div id="Marca_view">
-
-
-
+        <div id="kit_view">
+            <!-- Aqui pode ser mostrado um resumo do kit ou produtos já cadastrados -->
         </div>
 
     </div>
 
+    <script>
+        // Script básico para adicionar novos produtos
+        const addProdutoBtn = document.getElementById('add_produto');
+        const produtosContainer = document.getElementById('produtos_container');
 
-    <script src=""></script>
+        addProdutoBtn.addEventListener('click', () => {
+            const newProduto = document.createElement('div');
+            newProduto.classList.add('produto_item');
+            newProduto.innerHTML = `
+                <input type="hidden" name="produto_ids[]" value="">
+                <input type="number" name="quantidades[]" placeholder="Quantidade" min="1" required>
+                <input type="text" name="valores_unitarios[]" placeholder="Valor (R$)" required>
+                <button type="button" class="remove_produto">Remover</button>
+            `;
+            produtosContainer.appendChild(newProduto);
+
+            newProduto.querySelector('.remove_produto').addEventListener('click', () => {
+                newProduto.remove();
+            });
+        });
+    </script>
+
 </body>
 
 </html>

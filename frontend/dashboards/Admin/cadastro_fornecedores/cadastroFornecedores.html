@@ -155,15 +155,15 @@
                             required>
                     </div>
                     <div class="form-group">
+                        <label class="form-label" for="produto_valor">Potencia em kW*</label>
+                        <input type="number" class="form-input" name="potencia_kwh" id="potencia_kwh" 
+                            required>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label" for="produto_tipo">Tipo do Produto *</label>
                         <select id="tipo_produto" name="tipo_produto" class="form-input" required>
-<<<<<<< HEAD
                             <option value="1">Placa Solar</option>
                             <option value="2">Inversor</option>
-=======
-                                <option value="1">Placa Solar</option>
-                                <option value="2">Inversor</option>
->>>>>>> f12ad6a0023d1a7b864faf4e41e9d11e559f1d13
                         </select>
                     </div>
                     <div class="form-group">
@@ -186,11 +186,6 @@
 
             <form id="formKit" action="../../../../backend/Admin/Kits/CadastrarKits.php" method="POST">
                 <div class="form-grid">
-
-                    <div class="form-group">
-                        <label class="form-label" for="kit_nome">Nome do kit *</label>
-                        <input type="text" class="form-input" name="kit_nome" id="kit_nome" required>
-                    </div>
 
                     <div class="form-group">
                         <label class="form-label" for="kit_descricao">Descrição *</label>
@@ -258,7 +253,10 @@
         </div>
     </div>
 
+    
+
     <script src="../../../JS/Admin/cadastroFornecedores_app.js"></script>
 </body>
 
 </html>
+

@@ -32,7 +32,7 @@ function setupEventListeners() {
         // Simular navegação para página de orçamentos
         showToast('Redirecionando para página de orçamentos...', 'success');
         setTimeout(() => {
-            window.location.href = 'orcamentos.html';
+            window.location.href = 'orcamentos.php';
         }, 1500);
     });
     

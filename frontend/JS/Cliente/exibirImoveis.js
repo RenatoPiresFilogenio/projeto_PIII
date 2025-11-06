@@ -31,7 +31,7 @@ function setupEventListeners() {
         }
         showToast('Redirecionando para página de orçamentos...', 'success');
         setTimeout(() => {
-            window.location.href = 'orcamentos.html';
+            window.location.href = 'orcamentos.php';
         }, 1500);
     });
 
@@ -50,7 +50,7 @@ function setupEventListeners() {
             return;
         }
         showToast('Redirecionando para orçamentos...','success');
-        setTimeout(()=>{window.location.href='orcamentos.html';},1500);
+        setTimeout(()=>{window.location.href='orcamentos.php';},1500);
     });
 
     // Auto-select região
