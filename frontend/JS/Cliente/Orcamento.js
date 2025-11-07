@@ -285,7 +285,6 @@ function renderBudgets() {
         `;
     }).join('');
 }
-// Confirmar aprovação (mostrar modal)
 function confirmApproval(budgetId) {
     const budget = budgets.find(b => b.id === budgetId);
     if (!budget) return;
@@ -302,12 +301,9 @@ function confirmApproval(budgetId) {
     showModal();
 }
 
-// Aprovar orçamento
-// ... (seu JS) ...
 
-// Aprovar orçamento
-async function approveBudget(budgetId) { // 'budgetId' na verdade é o 'id_kit'
-    const budget = budgets.find(b => b.id === budgetId); // 'b.id' é o 'id_kit'
+async function approveBudget(budgetId) {
+    const budget = budgets.find(b => b.id === budgetId); 
     if (!budget) return;
 
     showToast('Processando aprovação...', 'success');
@@ -356,14 +352,12 @@ async function approveBudget(budgetId) { // 'budgetId' na verdade é o 'id_kit'
     }
 }
 
-// Recusar orçamento
 function rejectBudget(budgetId) {
     const budget = budgets.find(b => b.id === budgetId);
     if (!budget) return;
 
     showToast(`Orçamento da ${budget.name} recusado`, 'warning');
 
-    // Remover o card visualmente
     const budgetCards = document.querySelectorAll('.budget-card');
     budgetCards.forEach(card => {
         if (card.querySelector('.supplier-name').textContent === budget.name) {
@@ -374,11 +368,9 @@ function rejectBudget(budgetId) {
     });
 }
 
-// Navegação entre etapas
 function goToStep(stepNumber) {
     currentStep = stepNumber;
 
-    // Atualizar indicadores de progresso
     document.querySelectorAll('.step').forEach((step, index) => {
         step.classList.remove('active', 'completed');
         if (index + 1 < stepNumber) {
@@ -388,7 +380,6 @@ function goToStep(stepNumber) {
         }
     });
 
-    // Mostrar conteúdo da etapa
     document.querySelectorAll('.step-content').forEach((content, index) => {
         content.classList.remove('active');
         if (index + 1 === stepNumber) {
@@ -396,7 +387,6 @@ function goToStep(stepNumber) {
         }
     });
 
-    // Executar ações específicas da etapa
     switch (stepNumber) {
         case 1:
             renderPropertiesSelector();
@@ -409,11 +399,9 @@ function goToStep(stepNumber) {
             break;
     }
 
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Renderizar confirmação
 function renderConfirmation() {
     if (!approvedBudget) return;
 
@@ -452,18 +440,15 @@ function renderConfirmation() {
     document.getElementById('approval-date').textContent = approvalDate;
 }
 
-// Iniciar novo orçamento
 function startNewQuote() {
     selectedProperty = null;
     budgets = [];
     approvedBudget = null;
 
-    // Limpar seleções visuais
     document.querySelectorAll('.property-option').forEach(option => {
         option.classList.remove('selected');
     });
 
-    // Esconder aviso de consumo baixo
     lowConsumptionWarning.style.display = 'none';
 
     showToast('Iniciando novo orçamento...', 'success');
@@ -473,7 +458,6 @@ function startNewQuote() {
     }, 1000);
 }
 
-// Utility functions
 function showToast(message, type = 'success') {
     toast.textContent = message;
     toast.className = `toast ${type}`;
@@ -494,7 +478,6 @@ function hideModal() {
     document.body.style.overflow = 'auto';
 }
 
-// Simulação de dados para demonstração (caso não tenha propriedades)
 function createDemoProperties() {
     if (properties.length === 0) {
         properties = [
@@ -528,7 +511,6 @@ function createDemoProperties() {
     }
 }
 
-// Função para simular delay de carregamento
 function simulateLoading(element, duration = 2000) {
     element.classList.add('loading');
 
@@ -537,7 +519,6 @@ function simulateLoading(element, duration = 2000) {
     }, duration);
 }
 
-// Validações e verificações
 function validatePropertySelection() {
     if (!selectedProperty) {
         showToast('Selecione um imóvel antes de continuar', 'error');
@@ -559,7 +540,6 @@ function calculateROI(budget, property) {
     };
 }
 
-// Formatação de valores
 function formatCurrency(value) {
     return new Intl.NumberFormat('pt-BR', {
         style: 'currency',
@@ -573,11 +553,8 @@ function formatNumber(value) {
     return new Intl.NumberFormat('pt-BR').format(value);
 }
 
-// Event handlers adicionais
 document.addEventListener('DOMContentLoaded', () => {
-    // Verificar se existe ao menos uma propriedade para demo
     if (properties.length === 0) {
-        // Aguardar um pouco para ver se as propriedades são carregadas
         setTimeout(() => {
             if (properties.length === 0) {
                 createDemoProperties();
@@ -587,7 +564,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Função para debug (remover em produção)
 window.debugApp = {
     properties,
     selectedProperty,
@@ -612,7 +588,6 @@ window.debugApp = {
     }
 };
 
-// Tratamento de erros globais
 window.addEventListener('error', (e) => {
     console.error('Erro na aplicação:', e.error);
     showToast('Ocorreu um erro inesperado. Tente novamente.', 'error');

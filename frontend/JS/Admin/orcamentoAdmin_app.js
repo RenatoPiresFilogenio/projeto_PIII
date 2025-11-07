@@ -1,206 +1,251 @@
-const orcamentosAprovados = [
-            {
-                id: 101,
-                cliente: "João Silva",
-                email: "joao@empresa.com",
-                telefone: "(11) 99999-9999",
-                fornecedor: "Tech Solutions",
-                valor: 2500.00,
-                dataAprovacao: "2024-09-16",
-                dataVencimento: "2024-09-30",
-                regiao: "sudeste",
-            },
-            {
-                id: 102,
-                cliente: "Maria Santos",
-                email: "maria@loja.com",
-                telefone: "(47) 88888-8888",
-                fornecedor: "Digital Works",
-                valor: 1800.00,
-                dataAprovacao: "2024-09-15",
-                dataVencimento: "2024-09-25",
-                regiao: "sul",
-            },
-            {
-                id: 103,
-                cliente: "Carlos Mendes",
-                email: "carlos@industria.com",
-                telefone: "(11) 77777-7777",
-                fornecedor: "Tech Solutions",
-                valor: 4200.00,
-                dataAprovacao: "2024-09-14",
-                dataVencimento: "2024-10-15",
-                regiao: "sudeste",
-            },
-            {
-                id: 104,
-                cliente: "Ana Costa",
-                email: "ana@startup.com",
-                telefone: "(61) 66666-6666",
-                fornecedor: "Code Masters",
-                valor: 2800.00,
-                dataAprovacao: "2024-09-13",
-                dataVencimento: "2024-09-28",
-                regiao: "centro-oeste",
-            }
-        ];
 
-        function formatarMoeda(valor) {
-            return new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            }).format(valor);
-        }
+const API_URL = '../../../../backend/Admin/Orcamentos/aprovarOrcamentos.php';
 
-        function formatarData(data) {
-            return new Date(data).toLocaleDateString('pt-BR');
-        }
+function formatarMoeda(valor) {
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    }).format(valor);
+}
 
-        function calcularDiasRestantes(dataVencimento) {
-            const hoje = new Date();
-            const vencimento = new Date(dataVencimento);
-            const diffTime = vencimento - hoje;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays;
-        }
+function formatarData(data) {
+    return new Date(data + 'T00:00:00').toLocaleDateString('pt-BR');
+}
 
-        function renderizarEstatisticas() {
-            const total = orcamentosAprovados.length;
-            const valorTotal = orcamentosAprovados.reduce((sum, orc) => sum + orc.valor, 0);
-            const vencendoSoon = orcamentosAprovados.filter(orc => calcularDiasRestantes(orc.dataVencimento) <= 7).length;
+async function renderizarEstatisticasGerais() {
+    try {
+        const response = await fetch(`${API_URL}?action=estatisticasGerais`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const stats = await response.json();
 
-            const container = document.getElementById('statsBar');
+        const totalCount = Number(stats.total) || 0;
+        const aprovadosCount = Number(stats.aprovados) || 0;
+        const recusadosCount = Number(stats.recusados) || 0;
+        const naoLiberadosCount = Number(stats.naoliberados) || 0;
+        
+        const valorTotal = Number(stats.valortotal) || 0;
+        const valorAprovado = Number(stats.valoraprovado) || 0;
+        const valorRecusado = Number(stats.valorrecusado) || 0;
+
+        const container = document.getElementById('estatisticasGerais');
+        
+        container.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-number">${totalCount}</div>
+                <div class="stat-label">Total de Orçamentos</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number" style="color: #38a169;">${formatarMoeda(valorAprovado)}</div>
+                <div class="stat-label">Valor Aprovado</div>
+                <div class="stat-sublabel">${aprovadosCount} ${aprovadosCount === 1 ? 'proposta' : 'propostas'}</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number" style="color: #e53e3e;">${formatarMoeda(valorRecusado)}</div>
+                <div class="stat-label">Valor Perdido (Recusado)</div>
+                <div class="stat-sublabel">${recusadosCount} ${recusadosCount === 1 ? 'proposta' : 'propostas'}</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number" style="color: #d69e2e;">${naoLiberadosCount}</div>
+                <div class="stat-label">Não Liberados</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-number" style="font-size: 1.5rem;">${formatarMoeda(valorTotal)}</div>
+                <div class="stat-label">Valor Total (Propostas)</div>
+            </div>
+        `;
+    } catch (error) {
+        console.error("Falha ao buscar estatísticas:", error);
+         document.getElementById('estatisticasGerais').innerHTML = 
+            '<div class="empty-state"><h3>Erro ao carregar estatísticas.</h3></div>';
+    }
+}
+
+async function renderizarOrcamentos() {
+    const filtroRegiao = document.getElementById('filtroRegiao').value;
+    const filtroFornecedor = document.getElementById('filtroFornecedor').value;
+    const buscaCliente = document.getElementById('buscaCliente').value;
+
+    const params = new URLSearchParams({
+        action: 'orcamentosAguardando',
+        regiao: filtroRegiao,
+        fornecedor: filtroFornecedor,
+        cliente: buscaCliente
+    });
+
+    try {
+        const response = await fetch(`${API_URL}?${params}`);
+        if (!response.ok) throw new Error('Falha ao buscar orçamentos');
+        const filtrados = await response.json();
+
+        const container = document.getElementById('orcamentosAprovados');
+
+        if (filtrados.length === 0) {
             container.innerHTML = `
-                <div class="stat-item">
-                    <div class="stat-number">${total}</div>
-                    <div class="stat-label">Aguardando Confirmação</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">${formatarMoeda(valorTotal)}</div>
-                    <div class="stat-label">Valor Total</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">${formatarMoeda(valorTotal / total)}</div>
-                    <div class="stat-label">Valor Médio</div>
+                <div class="empty-state">
+                    <h3>Nenhum orçamento encontrado</h3>
+                    <p>Tente ajustar os filtros ou aguarde novas aprovações dos clientes</p>
                 </div>
             `;
+            return;
         }
 
-        function renderizarOrcamentos() {
-            const filtroRegiao = document.getElementById('filtroRegiao').value;
-            const filtroFornecedor = document.getElementById('filtroFornecedor').value;
-            const buscaCliente = document.getElementById('buscaCliente').value.toLowerCase();
-
-            let filtrados = orcamentosAprovados;
-
-            if (filtroRegiao) {
-                filtrados = filtrados.filter(orc => orc.regiao === filtroRegiao);
-            }
-
-            if (filtroFornecedor) {
-                filtrados = filtrados.filter(orc => orc.fornecedor === filtroFornecedor);
-            }
-
-            if (buscaCliente) {
-                filtrados = filtrados.filter(orc => orc.cliente.toLowerCase().includes(buscaCliente));
-            }
-
-            const container = document.getElementById('orcamentosAprovados');
-
-            if (filtrados.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>Nenhum orçamento encontrado</h3>
-                        <p>Tente ajustar os filtros ou aguarde novas aprovações dos clientes</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = filtrados.map(orcamento => {
+        container.innerHTML = filtrados.map(orcamento => {
             const status_pendente = true;
-                return `
-                    <div class="orcamento-card">
-                        <div class="status-badge" style="background: ${status_pendente ? '#a14d38ff' : '#38a169'};">
-                            ${status_pendente ? 'PENDENTE' : '✅ APROVADO'}
-                        </div>
-                        
-                        <div class="cliente-header">
-                            <div class="cliente-nome">${orcamento.cliente}</div>
-                            <div class="cliente-info">
-                                📧 ${orcamento.email} | 📱 ${orcamento.telefone} | 📍 ${orcamento.regiao.toUpperCase()}
-                            </div>
-                        </div>
 
-                        <div class="orcamento-details">
-                            <div class="detail-item">
-                                <div class="detail-label">Valor</div>
-                                <div class="detail-value valor">${formatarMoeda(orcamento.valor)}</div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Fornecedor</div>
-                                <div class="detail-value">${orcamento.fornecedor}</div>
-                            </div>
-
-                        </div>
-
-                        <div class="actions">
-                            <button class="btn btn-detalhes" onclick="verDetalhes(${orcamento.id})">
-                                📋 Ver Detalhes
-                            </button>
-                            <button class="btn btn-rejeitar" onclick="rejeitarOrcamento(${orcamento.id})">
-                                ❌ Rejeitar
-                            </button>
-                            <button class="btn btn-confirmar" onclick="confirmarOrcamento(${orcamento.id})">
-                                ✅ Confirmar Execução
-                            </button>
+            return `
+                <div class="orcamento-card">
+                    <div class="status-badge" style="background: ${status_pendente ? '#a14d38ff' : '#38a169'};">
+                        ${status_pendente ? 'PENDENTE' : '✅ APROVADO'}
+                    </div>
+                    
+                    <div class="cliente-header">
+                        <div class="cliente-nome">${orcamento.cliente}</div>
+                        <div class="cliente-info">
+                            📧 ${orcamento.email} | 📱 ${orcamento.telefone} | 📍 ${orcamento.regiao.toUpperCase()}
                         </div>
                     </div>
-                `;
-            }).join('');
+
+                    <div class="orcamento-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Valor</div>
+                            <div class="detail-value valor">${formatarMoeda(orcamento.valor)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Fornecedor</div>
+                            <div class="detail-value">${orcamento.fornecedor}</div>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn btn-detalhes" onclick="verDetalhes(${orcamento.id})">
+                            📋 Ver Detalhes
+                        </button>
+                        <button class="btn btn-rejeitar" onclick="rejeitarOrcamento(${orcamento.id}, '${orcamento.cliente}')">
+                            ❌ Rejeitar
+                        </button>
+                        <button class="btn btn-confirmar" onclick="confirmarOrcamento(${orcamento.id}, '${orcamento.cliente}')">
+                            ✅ Confirmar Execução
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+    } catch (error) {
+        console.error("Erro em renderizarOrcamentos:", error);
+        container.innerHTML = `<div class="empty-state"><h3>Erro ao carregar dados.</h3></div>`;
+    }
+}
+
+async function popularFiltros() {
+    try {
+        const response = await fetch(`${API_URL}?action=getFornecedores`);
+        if (!response.ok) throw new Error('Falha ao buscar fornecedores');
+        const fornecedores = await response.json();
+
+        const select = document.getElementById('filtroFornecedor');
+        fornecedores.forEach(nome => {
+            const option = document.createElement('option');
+            option.value = nome;
+            option.textContent = nome;
+            select.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Erro ao popular filtros:", error);
+    }
+}
+
+
+function confirmarOrcamento(id, cliente) {
+    document.getElementById('modalTitle').textContent = `Confirmar - ${cliente}`;
+    document.getElementById('modalObservacoes').style.display = 'block';
+
+    document.getElementById('btnConfirmarModal').onclick = async function () {
+        const observacoes = document.getElementById('observacoes').value;
+
+        const sucesso = await atualizarStatus(id, 'confirmado', observacoes);
+
+        if (sucesso) {
+            alert(` Orçamento de ${cliente} confirmado com sucesso!`);
+            fecharModal();
+            renderizarEstatisticasGerais();
+            renderizarOrcamentos();
+        } else {
+            alert(" Erro ao confirmar o orçamento. Tente novamente.");
+        }
+    };
+}
+
+async function rejeitarOrcamento(id, cliente) {
+    const motivo = prompt(`Motivo da rejeição do orçamento de ${cliente}:`);
+
+    if (motivo !== null && motivo.trim() !== "") {
+        const sucesso = await atualizarStatus(id, 'rejeitado', motivo);
+
+        if (sucesso) {
+            alert(` Orçamento de ${cliente} rejeitado.`);
+
+            renderizarEstatisticasGerais();
+            renderizarOrcamentos();
+        } else {
+            alert(" Erro ao rejeitar o orçamento. Tente novamente.");
+        }
+    } else if (motivo !== null) {
+        alert("É necessário informar um motivo para a rejeição.");
+    }
+}
+
+
+async function atualizarStatus(id, novoStatus, observacoes) {
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'atualizarStatus',
+                id: id,
+                status: novoStatus,
+                observacoes: observacoes
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || result.success === false) {
+            console.error("Falha na API:", result.error || 'Erro desconhecido');
+            return false;
         }
 
-        function confirmarOrcamento(id) {
-            const orcamento = orcamentosAprovados.find(orc => orc.id === id);
-            document.getElementById('modalTitle').textContent = `Confirmar - ${orcamento.cliente}`;
-            document.getElementById('modalObservacoes').style.display = 'block';
-            
-            document.getElementById('btnConfirmarModal').onclick = function() {
-                const observacoes = document.getElementById('observacoes').value;
-                
-                // Simular confirmação
-                alert(`✅ Orçamento de ${orcamento.cliente} confirmado com sucesso!\nValor: ${formatarMoeda(orcamento.valor)}\nObservações: ${observacoes || 'Nenhuma'}`);
-                
-                // Remover da lista
-                const index = orcamentosAprovados.findIndex(orc => orc.id === id);
-                orcamentosAprovados.splice(index, 1);
-                
-                fecharModal();
-                renderizarEstatisticas();
-                renderizarOrcamentos();
-            };
+        return result.success;
+
+    } catch (error) {
+        console.error("Erro de rede em atualizarStatus:", error);
+        return false;
+    }
+}
+
+
+async function verDetalhes(id) {
+    try {
+        const response = await fetch(`${API_URL}?action=orcamentoDetalhes&id=${id}`);
+        if (!response.ok) throw new Error('Falha ao buscar detalhes');
+        const orcamento = await response.json();
+
+        if (orcamento.error) {
+            alert(orcamento.error);
+            return;
         }
 
-        function rejeitarOrcamento(id) {
-            const orcamento = orcamentosAprovados.find(orc => orc.id === id);
-            const motivo = prompt(`Motivo da rejeição do orçamento de ${orcamento.cliente}:`);
-            
-            if (motivo) {
-                alert(`❌ Orçamento de ${orcamento.cliente} rejeitado.\nMotivo: ${motivo}`);
-                
-                // Remover da lista
-                const index = orcamentosAprovados.findIndex(orc => orc.id === id);
-                orcamentosAprovados.splice(index, 1);
-                
-                renderizarEstatisticas();
-                renderizarOrcamentos();
-            }
-        }
+        const itensFormatados = orcamento.itens.split(', ').map(item => `• ${item}`).join('\n');
 
-        function verDetalhes(id) {
-            const orcamento = orcamentosAprovados.find(orc => orc.id === id);
-            const detalhes = `
-DETALHES COMPLETOS DO ORÇAMENTO
+        const detalhes = `
+DETALHES COMPLETOS DO ORÇAMENTO (ID: ${orcamento.id})
 
 Cliente: ${orcamento.cliente}
 Email: ${orcamento.email}
@@ -209,30 +254,38 @@ Região: ${orcamento.regiao.toUpperCase()}
 
 Fornecedor: ${orcamento.fornecedor}
 Valor: ${formatarMoeda(orcamento.valor)}
+
 Itens Inclusos:
-${orcamento.itens.map(item => `• ${item}`).join('\n')}
-            `;
-            
-            alert(detalhes);
-        }
+${itensFormatados}
+        `;
 
-        function fecharModal() {
-            document.getElementById('modalObservacoes').style.display = 'none';
-            document.getElementById('observacoes').value = '';
-        }
+        alert(detalhes);
 
-        // Event listeners
-        document.getElementById('filtroRegiao').addEventListener('change', renderizarOrcamentos);
-        document.getElementById('filtroFornecedor').addEventListener('change', renderizarOrcamentos);
-        document.getElementById('buscaCliente').addEventListener('input', renderizarOrcamentos);
+    } catch (error) {
+        console.error("Erro em verDetalhes:", error);
+        alert("Erro ao carregar os detalhes.");
+    }
+}
 
-        // Fechar modal ao clicar fora
-        document.getElementById('modalObservacoes').addEventListener('click', function(e) {
-            if (e.target === this) {
-                fecharModal();
-            }
-        });
+function fecharModal() {
+    document.getElementById('modalObservacoes').style.display = 'none';
+    document.getElementById('observacoes').value = '';
+    document.getElementById('btnConfirmarModal').onclick = null;
+}
 
-        // Inicializar página
-        renderizarEstatisticas();
-        renderizarOrcamentos();
+
+document.getElementById('filtroRegiao').addEventListener('change', renderizarOrcamentos);
+document.getElementById('filtroFornecedor').addEventListener('change', renderizarOrcamentos);
+document.getElementById('buscaCliente').addEventListener('input', renderizarOrcamentos);
+
+document.getElementById('modalObservacoes').addEventListener('click', function (e) {
+    if (e.target === this) {
+        fecharModal();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    popularFiltros();
+    renderizarEstatisticasGerais();
+    renderizarOrcamentos();
+});

@@ -3,9 +3,11 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f7fa;
+    /* Este é o novo fundo azulado suave */
+    background: #f0f7ff; 
     min-height: 100vh;
     padding: 20px;
+    color: var(--cinza-escuro);
 }
 
 .container {
@@ -13,104 +15,96 @@ body {
     margin: 0 auto;
 }
 
+/* --- HEADER SUPERIOR --- */
+
 .header {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
+    background: var(--branco);
+    border-radius: var(--border-radius);
+    padding: 20px 30px;
     margin-bottom: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    box-shadow: var(--sombra);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 20px;
+    border-top: 5px solid var(--azul-tecnologico); /* Destaque superior */
 }
 
 .header h1 {
-    color: #2d3748;
-    font-size: 2.2rem;
+    color: var(--azul-tecnologico);
+    font-size: 2rem;
     font-weight: 700;
+    /* Destaque sutil com o amarelo da marca */
+    border-left: 5px solid var(--amarelo-solar);
+    padding-left: 15px;
+    margin: 0;
+}
+
+/* Botões de Ação no Header */
+.btn-novo,
+.btn-fornecedor,
+.btn-sair {
+    color: var(--branco);
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
 }
 
 .btn-novo {
-    background: #4299e1;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    background: var(--verde-sustentavel); /* Cor de Ação Principal */
 }
-
-.btn-novo:hover {
-    background: #3182ce;
+.btn-novo:hover,
+.btn-fornecedor:hover,
+.btn-sair:hover {
+    filter: brightness(1.1); /* Efeito de hover sutil */
+    box-shadow: var(--sombra-hover);
 }
 
 .btn-fornecedor {
-    background: #0586f0;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn-fornecedor:hover {
-    background: #238ef1;
+    background: var(--azul-tecnologico); /* Cor de Ação Secundária */
 }
 
 .btn-sair {
-    background: #ec1d0f;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    background: var(--vermelho-erro); /* Cor de Perigo */
 }
 
-.btn-sair:hover {
-    background: #fc0606;
-}
+
+/* --- BLOCOS DE CONTEÚDO --- */
 
 .block {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
+    background: var(--branco);
+    border-radius: var(--border-radius);
+    padding: 25px 30px;
     margin-bottom: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    box-shadow: var(--sombra);
 }
 
 .block-title {
-    color: #2d3748;
+    color: var(--azul-tecnologico);
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 25px;
     padding-bottom: 15px;
-    border-bottom: 3px solid #e2e8f0;
+    border-bottom: 2px solid var(--cinza-medio);
     display: flex;
     align-items: center;
     gap: 10px;
+    /* Destaque de acento amarelo */
+    border-left: 5px solid var(--amarelo-solar);
+    padding-left: 10px;
 }
+
+/* --- FILTROS --- */
 
 .filters {
     display: flex;
@@ -121,33 +115,37 @@ body {
 
 .filter-select {
     padding: 10px 15px;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    background: white;
+    border: 1px solid var(--cinza-medio);
+    border-radius: var(--border-radius);
+    background: var(--branco);
     font-size: 0.95rem;
     cursor: pointer;
-    transition: border-color 0.3s ease;
+    transition: var(--transition);
     min-width: 150px;
 }
 
-.filter-select:focus {
+.filter-select:focus,
+.filter-select:hover {
     outline: none;
-    border-color: #4299e1;
+    border-color: var(--azul-tecnologico);
 }
 
+/* --- LISTA DE ORÇAMENTOS --- */
+
 .orcamento-item {
-    background: #f7fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    background: var(--branco);
+    border: 1px solid var(--cinza-medio);
+    border-radius: var(--border-radius);
     padding: 20px;
     margin-bottom: 15px;
-    transition: all 0.3s ease;
+    transition: var(--transition);
     cursor: pointer;
 }
 
 .orcamento-item:hover {
-    border-color: #4299e1;
-    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.15);
+    border-color: var(--azul-tecnologico);
+    box-shadow: var(--sombra-hover);
+    transform: translateY(-2px);
 }
 
 .orcamento-header {
@@ -160,13 +158,13 @@ body {
 .cliente-nome {
     font-size: 1.2rem;
     font-weight: 600;
-    color: #2d3748;
+    color: #333;
 }
 
 .orcamento-valor {
     font-size: 1.3rem;
     font-weight: 700;
-    color: #4299e1;
+    color: var(--azul-tecnologico); /* Cor primária da marca */
 }
 
 .orcamento-info {
@@ -174,57 +172,79 @@ body {
     justify-content: space-between;
     align-items: center;
     font-size: 0.9rem;
-    color: #718096;
+    color: var(--cinza-escuro);
 }
 
+/* Badges de Status (Impactantes) */
 .status {
     padding: 6px 12px;
-    border-radius: 20px;
-    font-weight: 500;
-    font-size: 0.8rem;
+    border-radius: 100px; /* Formato "pill" */
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--branco);
+    text-transform: uppercase;
 }
 
 .status.aprovado {
-    background: #c6f6d5;
-    color: #2f855a;
+    background: var(--verde-sucesso);
 }
 
 .status.recusado {
-    background: #fed7d7;
-    color: #c53030;
+    background: var(--vermelho-erro);
 }
 
 .status.nao-liberado {
-    background: #fef5e7;
-    color: #d69e2e;
+    background: var(--laranja-aviso);
 }
+
+
+/* --- GRID DE ESTATÍSTICAS --- */
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 20px;
 }
 
 .stat-card {
-    background: #f7fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    background: var(--branco);
+    border: 1px solid var(--cinza-medio);
+    border-radius: var(--border-radius);
     padding: 20px;
     text-align: center;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: var(--transition);
+}
+.stat-card:hover {
+    box-shadow: var(--sombra-hover);
+    transform: translateY(-2px);
 }
 
 .stat-number {
-    font-size: 2rem;
+    font-size: 2.1rem;
     font-weight: 700;
-    color: #4299e1;
+    color: var(--azul-tecnologico); /* Cor primária da marca */
     margin-bottom: 8px;
 }
 
 .stat-label {
-    color: #718096;
+    color: var(--cinza-escuro);
     font-size: 0.9rem;
     font-weight: 500;
 }
+
+.stat-card .stat-sublabel {
+    font-size: 0.85rem;
+    color: var(--cinza-escuro);
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+
+/* --- GRID DE CLIENTES --- */
 
 .clientes-grid {
     display: grid;
@@ -233,24 +253,24 @@ body {
 }
 
 .regiao-block {
-    background: #f7fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    background: var(--branco);
+    border: 1px solid var(--cinza-medio);
+    border-radius: var(--border-radius);
     padding: 20px;
 }
 
 .regiao-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #4299e1;
+    color: var(--azul-tecnologico); /* Cor primária da marca */
     margin-bottom: 15px;
     text-transform: uppercase;
 }
 
 .cliente-item {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
+    background: var(--branco);
+    border: 1px solid var(--cinza-medio);
+    border-radius: var(--border-radius);
     padding: 15px;
     margin-bottom: 12px;
 }
@@ -258,7 +278,7 @@ body {
 .cliente-header {
     font-weight: 600;
     font-size: 1rem;
-    color: #2d3748;
+    color: #333;
     margin-bottom: 8px;
 }
 
@@ -268,52 +288,66 @@ body {
     flex-wrap: wrap;
 }
 
+/* Badges de Status Menores */
 .stat-badge {
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 100px; /* Formato "pill" */
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--branco);
+    text-transform: uppercase;
 }
 
 .stat-badge.aprovados {
-    background: #c6f6d5;
-    color: #2f855a;
+    background: var(--verde-sucesso);
 }
 
 .stat-badge.recusados {
-    background: #fed7d7;
-    color: #c53030;
+    background: var(--vermelho-erro);
 }
 
 .stat-badge.nao-liberados {
-    background: #fef5e7;
-    color: #d69e2e;
+    background: var(--laranja-aviso);
 }
+
+
+/* --- GRID DE INSIGHTS --- */
 
 .insights-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
 .insight-block {
-    background: #f7fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    background: var(--branco);
+    border: 1px solid var(--cinza-medio);
+    border-radius: var(--border-radius);
     padding: 20px;
 }
 
+/* Título de cada card de Insight */
+.insight-block h3 {
+    color: var(--azul-tecnologico);
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--cinza-medio);
+    padding-bottom: 10px;
+    text-transform: uppercase;
+}
+
 .insight-item {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
+    background: var(--cinza-claro); /* Contraste com o fundo branco */
+    border: 1px solid var(--cinza-medio);
+    border-radius: var(--border-radius);
     padding: 15px;
     margin-bottom: 12px;
 }
 
 .insight-title {
     font-weight: 600;
-    color: #718096;
+    color: var(--cinza-escuro);
     font-size: 0.85rem;
     margin-bottom: 5px;
     text-transform: uppercase;
@@ -322,28 +356,44 @@ body {
 .insight-value {
     font-size: 1.4rem;
     font-weight: 700;
-    color: #2d3748;
+    color: var(--azul-tecnologico); /* Cor primária da marca */
     margin-bottom: 5px;
 }
 
 .insight-desc {
     font-size: 0.85rem;
-    color: #718096;
+    color: var(--cinza-escuro);
 }
+
+/* --- ESTADOS VAZIOS --- */
 
 .empty-state {
     text-align: center;
     padding: 40px 20px;
-    color: #718096;
-    background: #f7fafc;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
+    color: var(--cinza-escuro);
+    background: var(--branco);
+    border-radius: var(--border-radius);
+    border: 1px dashed var(--cinza-medio);
 }
+.empty-state h3 {
+    color: var(--azul-tecnologico);
+}
+
+
+/* --- RESPONSIVIDADE --- */
 
 @media (max-width: 768px) {
     .header {
         flex-direction: column;
         text-align: center;
+        gap: 15px;
+    }
+    
+    .header h1 {
+        border-left: none;
+        padding-left: 0;
+        border-bottom: 3px solid var(--amarelo-solar);
+        padding-bottom: 10px;
     }
 
     .filters {
@@ -363,12 +413,11 @@ body {
     .orcamento-info {
         flex-direction: column;
         align-items: flex-start;
-        gap: 8px;
+        gap: 10px;
     }
 
     .clientes-grid,
     .insights-grid {
         grid-template-columns: 1fr;
     }
-
 }
