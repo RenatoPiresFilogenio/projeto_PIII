@@ -1,68 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../../../css/Dashboards/editarPages/style.css">
+    <title>Editar Fornecedor - Solar Smart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../../../css/Dashboards/editarPages/fornecedor.css">
 </head>
 
 <body>
+    <div id="notification-area"></div>
+
     <div class="container">
-        <h1>Edite o fornecedor</h1>
-        <div class="container-form">
-            <form action="../../../../backend/Admin/Fornecedor/EditarFornecedor.php" class="form_editar_fornecedor" method="POST">
+        
+        <div class="edit-layout-wrapper">
 
-                <input type="hidden" name="id_fornecedor" id="id_fornecedor">
+            <div class="form-container">
+                <form action="../../../../backend/Admin/Fornecedor/EditarFornecedor.php" class="form_editar_fornecedor" 
+                      id="form-editar-fornecedor" method="POST">
 
-                <div class="container-input">
-                    <div class="div_input">
-                        <span>Nome do Fornecedor</span>
-                        <input type="text" id="nome_fornecedor" class="input" name="nome_fornecedor">
+                    <h1 id="titulo_fornecedor"><i class="fas fa-edit"></i> Editar Fornecedor</h1>
+                    <input type="hidden" name="id_fornecedor" id="id_fornecedor">
+
+                    <div class="container-input">
+                        <div class="div_input">
+                            <span>Nome do Fornecedor *</span>
+                            <input type="text" id="nome_fornecedor" class="input" name="nome_fornecedor" required>
+                        </div>
+                        <div class="div_input">
+                            <span>Telefone *</span>
+                            <input type="tel" id="telefone" class="input" name="telefone" required>
+                        </div>
+                        <div class="div_input">
+                            <span>Email *</span>
+                            <input type="email" id="email" class="input" name="email" required>
+                        </div>
+                        <div class="div_input">
+                            <span>Associar Kit *</span>
+                            <select id="kits" name="kits" class="input" required>
+                                <option value="">Carregando kits...</option>
+                            </select>
+                        </div>
                     </div>
 
-
-                    <div class="div_input">
-                        <span>Telefone</span>
-                        <input type="text" id="telefone" class="input" name="telefone">
+                    <div class="btns">
+                        <button type="button" class="btn btn-secondary" id="btn-fechar">
+                            <i class="fas fa-times"></i> Fechar
+                        </button>
+                        <button type="button" class="btn btn-danger" id="btn-excluir">
+                            <i class="fas fa-trash-alt"></i> Excluir
+                        </button>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-save"></i> Salvar
+                        </button>
                     </div>
 
+                </form>
+            </div>
 
-                    <div class="div_input">
-                        <span>Email</span>
-                        <input type="text" id="email" class="input" name="email">
-                    </div>
+            <div class="preview-container" id="Fornecedor_view">
                 </div>
 
-                <div class="div_option">
-                    <span>Kit</span>
-                    <select value="" id="kits" name="kits">
-                    </select>
-                </div>
-        </div>
-        <div class="btns">
-
-            <a href="../../Admin/cadastro_fornecedores/cadastroFornecedores.html">
-                <button type="button" class="btn-danger">
-                    Fechar
-                </button>
-            </a>
-
-            <button class="btn-primary" type="submit">
-                Salvar
-            </button>
-
-            </form>
-        </div>
-    </div>
-
-    <div class="div_kit" id="Fornecedor_view">
-
-    </div>
-    </div>
+        </div> </div>
 
     <script src="../../../JS/Admin/editarFornecedor.js"></script>
 </body>
-
 </html>

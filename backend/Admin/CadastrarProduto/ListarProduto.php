@@ -7,7 +7,9 @@ try {
     $sql = "SELECT p.*, m.nome AS nome_marca, m.modelo AS modelo_marca, m.site_oficial, m.pais_origem
             FROM produtos p
             JOIN marcas m ON p.fk_marcas_id_marca = m.id_marca
+            WHERE p.is_delete = FALSE 
             ORDER BY p.id_produto DESC";
+            
     $stmt = $pdo->query($sql);
     $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -15,6 +17,7 @@ try {
         'status' => 'success',
         'produtos' => $produtos
     ]);
+
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
@@ -23,3 +26,4 @@ try {
         'error' => $e->getMessage()
     ]);
 }
+?>

@@ -2,15 +2,14 @@
 @import url(../../page-default.css);
 @import url(../../variables.css);
 
-
 body {
-    background-color: #f0f7ff; 
+    background-color: #f0f7ff; /* Fundo azul suave */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 20px;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1200px; 
     width: 90%;
     margin: 20px auto;
     background-color: var(--branco);
@@ -45,8 +44,7 @@ body {
     margin-bottom: 25px;
 }
 
-.div_input span,
-.div_option span {
+.div_input span {
     font-weight: 600;
     color: var(--cinza-escuro);
     margin-bottom: 8px;
@@ -54,25 +52,23 @@ body {
     font-size: 0.9rem;
 }
 
-.input,
-.div_option select {
+.input {
     width: 100%;
     padding: 12px;
     border: 1px solid var(--cinza-medio);
     border-radius: var(--border-radius);
     transition: var(--transition);
     font-size: 1rem;
-    font-family: inherit;
 }
 
 .input:focus,
-.div_option select:focus {
+select.input:focus {
     outline: none;
     border-color: var(--azul-tecnologico);
     box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
 }
 
-.div_option select {
+select.input {
     background-color: var(--branco);
     cursor: pointer;
 }
@@ -86,32 +82,44 @@ body {
     gap: 10px;
 }
 
+
 .preview-container {
     background: #f9faff;
     border: 1px solid var(--cinza-medio);
     border-radius: var(--border-radius);
     padding: 20px;
-    position: sticky;
+    position: sticky; 
     top: 20px;
 }
 
-.card-fornecedor { 
+.card-marca { 
     border-left: 5px solid var(--azul-tecnologico);
     padding-left: 15px;
 }
-.card-fornecedor-titulo {
+.card-marca-titulo {
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--azul-tecnologico);
     margin-top: 0;
     margin-bottom: 15px;
 }
-.card-fornecedor-info {
+.card-marca-titulo strong {
+    color: #333;
+}
+.card-marca-info {
     font-size: 0.95rem;
     color: var(--cinza-escuro);
     margin-bottom: 10px;
     font-weight: 500;
-    word-break: break-all;
+}
+.card-marca-link {
+    font-weight: 600;
+    color: var(--azul-tecnologico);
+    text-decoration: none;
+    transition: var(--transition);
+}
+.card-marca-link:hover {
+    text-decoration: underline;
 }
 
 #notification-area {
@@ -144,13 +152,14 @@ body {
     background: var(--vermelho-erro);
 }
 
+/* --- Responsividade --- */
 @media (max-width: 900px) {
     .edit-layout-wrapper {
         grid-template-columns: 1fr; 
         gap: 20px;
     }
     .preview-container {
-        position: static;
+        position: static; 
     }
     .container {
         padding: 20px;

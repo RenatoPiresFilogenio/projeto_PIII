@@ -4,7 +4,10 @@ require("../../DB/database.php");
 header('Content-Type: application/json');
 
 try {
-    $sql = "SELECT * FROM marcas ORDER BY id_marca DESC";
+    $sql = "SELECT * FROM marcas 
+            WHERE is_delete = FALSE 
+            ORDER BY nome ASC";
+            
     $stmt = $pdo->query($sql);
     $marcas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -12,6 +15,7 @@ try {
         'status' => 'success',
         'marcas' => $marcas
     ]);
+
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
@@ -20,3 +24,4 @@ try {
         'error' => $e->getMessage()
     ]);
 }
+?>

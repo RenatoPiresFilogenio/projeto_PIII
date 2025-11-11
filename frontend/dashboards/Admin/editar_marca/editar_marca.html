@@ -1,73 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Editar Marca</title>
     <link rel="stylesheet" href="../../../css/Dashboards/editarPages/style.css">
 </head>
 
 <body>
     <div class="container">
 
-        <div class="container-form">
+        <div class="edit-layout-wrapper">
 
-            <form action="../../../../backend/Admin/Marcas/EditarMarca.php" class="form_editar_fornecedor"
-                method="POST">
+            <div class="container-form">
+                <form action="../../../../backend/Admin/Marcas/EditarMarca.php" class="form_editar_fornecedor"
+                    method="POST">
 
-                <h1 id="titulo_marca">Editar marca</h1>
-                <input type="hidden" id="id_marca" name="id_marca">
-                <div class="container-input">
-                    <div class="div_input">
-                        <span>Nome da marca</span>
-                        <input type="text" id="nome_marca" class="input" name="nome_marca">
+                    <h1 id="titulo_marca">Editar marca</h1>
+                    <input type="hidden" id="id_marca" name="id_marca">
+
+                    <div class="container-input grid-cols-2">
+                        <div class="div_input">
+                            <span>Nome da marca</span>
+                            <input type="text" id="nome_marca" class="input" name="nome_marca">
+                        </div>
+                        <div class="div_input">
+                            <span>Modelo</span>
+                            <input type="text" id="Modelo" class="input" name="Modelo">
+                        </div>
+                        <div class="div_input">
+                            <span>Site Oficial</span>
+                            <input type="text" id="site_oficial" class="input" name="site_oficial">
+                        </div>
+                        <div class="div_input">
+                            <span>País de Origem</span>
+                            <input type="text" id="pais_origem" class="input" name="pais_origem">
+                        </div>
                     </div>
 
-                    <div class="div_input">
-                        <span>Modelo</span>
-                        <input type="text" id="Modelo" class="input" name="Modelo">
-                    </div>
-
-                    <div class="div_input">
-                        <span>Site Oficial</span>
-                        <input type="text" id="site_oficial" class="input" name="site_oficial">
-                    </div>
-
-                    <div class="div_input">
-                        <span>Pais de Origem</span>
-                        <input type="text" id="pais_origem" class="input" name="pais_origem">
-                    </div>
-                </div>
-
-                <div class="btns">
-
-                    <a href="../../Admin/cadastro_fornecedores/cadastroFornecedores.html">
-                        <button type="button" class="btn-danger">
+                    <div class="btns">
+                        <button type="button" class="btn-danger" id="btn-fechar">
                             Fechar
                         </button>
-                    </a>
 
-                    <a href="">
+                        <button type="button" class="btn-warning" id="btn-excluir">
+                            Excluir Marca
+                        </button>
+
                         <button class="btn-primary" type="submit">
                             Salvar
                         </button>
-                    </a>
+                    </div>
+                </form>
+            </div>
 
-
-            </form>
-        </div>
-
-        <div id="Marca_view">
-
-        
+            <div id="Marca_view">
+            </div>
 
         </div>
-
     </div>
-
-
     <script src="../../../JS/Admin/editarMarca.js"></script>
+    <script>
+        document.getElementById('btn-fechar').addEventListener('click', () => {
+            window.location.href = '../../Admin/cadastro_fornecedores/cadastroFornecedores.html';
+        });
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,279 @@
+/* Importações (Verifique os caminhos) */
+@import url(../../btn-default.css);
+@import url(../../page-default.css);
+@import url(../../variables.css);
+
+/* --- GERAL --- */
+body {
+    background-color: #f0f7ff; /* Fundo azul suave */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    width: 90%;
+    margin: 20px auto;
+    background-color: var(--branco);
+    border: 1px solid var(--cinza-medio);
+    box-shadow: var(--sombra);
+    border-radius: var(--border-radius, 8px);
+    padding: 30px 40px;
+}
+
+/* --- LAYOUT DE 2 COLUNAS --- */
+.edit-layout-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* Coluna Esquerda: Formulário */
+.form-container h1 {
+    color: var(--azul-tecnologico);
+    font-size: 2rem;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 2px solid var(--cinza-medio);
+    padding-bottom: 15px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.div_input span,
+.div_option span {
+    font-weight: 600;
+    color: var(--cinza-escuro);
+    margin-bottom: 8px;
+    display: block;
+    font-size: 0.9rem;
+}
+
+.input,
+.div_option select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--cinza-medio);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--branco);
+    cursor: pointer;
+}
+
+.input:focus,
+.div_option select:focus {
+    outline: none;
+    border-color: var(--azul-tecnologico);
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+}
+
+.btns {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--cinza-medio);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.form-divider {
+    border: 0;
+    border-top: 1px solid var(--cinza-medio);
+    margin: 25px 0;
+}
+
+/* --- Coluna Direita: Preview Card --- */
+.preview-container {
+    background: #f9faff;
+    border: 1px solid var(--cinza-medio);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+}
+.card-kit-placeholder {
+    text-align: center;
+    padding: 30px;
+    color: var(--cinza-escuro);
+}
+.card-kit-placeholder .fas {
+    font-size: 3rem;
+    color: var(--cinza-medio);
+    margin-bottom: 15px;
+}
+
+/* --- Estilos do Card de Preview (Preenchido) --- */
+.card-kit-preview {
+    border-left: 5px solid var(--amarelo-solar);
+    padding-left: 15px;
+}
+.card-kit-titulo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--azul-tecnologico);
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+.card-kit-info {
+    font-size: 0.95rem;
+    color: var(--cinza-escuro);
+    margin-bottom: 10px;
+    font-weight: 500;
+    word-break: break-all;
+}
+.card-kit-info strong {
+    color: #333;
+}
+.card-kit-produtos-lista {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 15px;
+    border-top: 1px solid var(--cinza-medio);
+    padding-top: 10px;
+}
+.card-kit-produto-item {
+    font-size: 0.9rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* --- GRUPO DE INPUT (Adicionar Produto) --- */
+.input-group {
+    display: flex;
+}
+.input-group .input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.input-group .btn-primary {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    flex-shrink: 0;
+    /* Remove o uppercase para caber "Confirmar" */
+    text-transform: none; 
+}
+
+/* --- LISTA DE PRODUTOS SELECIONADOS (Do seu CSS de Modal) --- */
+.lista-produtos-container {
+    margin-top: 20px;
+}
+.lista-produtos-container h4 {
+    font-weight: 600;
+    color: var(--azul-tecnologico);
+    margin-bottom: 10px;
+}
+.lista_produto_selecionado {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.list_produto_item {
+    background-color: #f0f7ff; /* Fundo azul suave */
+    border: 1px solid var(--cinza-medio);
+    border-radius: var(--border-radius);
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.controles-produto {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.controle-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.controle-item label {
+    font-size: 0.8rem;
+    color: var(--cinza-escuro);
+    font-weight: 600;
+}
+.input_number, .input_valor {
+    width: 80px;
+    padding: 8px;
+    border: 1px solid var(--cinza-medio);
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+}
+.input_valor {
+    width: 100px;
+}
+.btn-remover {
+    background: transparent;
+    border: none;
+    color: var(--vermelho-erro);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    transition: var(--transition);
+}
+.btn-remover:hover {
+    transform: scale(1.1);
+    color: darkred;
+}
+/* --- FIM Estilos de Lista --- */
+
+/* --- ÁREA DE NOTIFICAÇÃO --- */
+#notification-area {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.notification {
+    background: #333;
+    color: white;
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--sombra-intensa);
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease;
+}
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+.notification.success {
+    background: var(--verde-sustentavel);
+}
+.notification.error {
+    background: var(--vermelho-erro);
+}
+
+/* --- Responsividade --- */
+@media (max-width: 900px) {
+    .edit-layout-wrapper {
+        grid-template-columns: 1fr; /* Coluna única */
+        gap: 20px;
+    }
+    .preview-container {
+        position: static;
+    }
+    .container {
+        padding: 20px;
+    }
+}

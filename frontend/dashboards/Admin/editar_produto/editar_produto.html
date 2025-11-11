@@ -1,59 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Produto</title>
-    <link rel="stylesheet" href="../../../css/Dashboards/editarPages/style.css">
+    <title>Editar Produto - Solar Smart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../../../css/Dashboards/editarPages/produtos.css">
 </head>
 
 <body>
+    <div id="notification-area"></div>
+
     <div class="container">
 
-        <div class="container-form">
+        <div class="edit-layout-wrapper">
 
-            <form action="../../../../backend/Admin/CadastrarProduto/EditarProduto.php" class="form_editar_fornecedor"
-                method="POST">
+            <div class="form-container">
+                <form action="../../../../backend/Admin/CadastrarProduto/EditarProduto.php"
+                    class="form_editar_fornecedor" id="form-editar-produto" method="POST">
 
-                <h1 id="titulo_marca">Editar produto</h1>
-                <input type="hidden" id="id_produto" name="id_produto">
+                    <h1 id="titulo_marca"><i class="fas fa-edit"></i> Editar Produto</h1>
+                    <input type="hidden" id="id_produto" name="id_produto">
 
-                <div class="container-input">
-                    <div class="div_input">
-                        <span>Nome do produto</span>
-                        <input type="text" id="nome_produto" class="input" name="nome_produto" required>
+                    <div class="container-input">
+                        <div class="div_input">
+                            <span>Nome do produto *</span>
+                            <input type="text" id="nome_produto" class="input" name="nome_produto" required>
+                        </div>
+                        <div class="div_input">
+                            <span>Modelo *</span>
+                            <input type="text" id="Modelo" class="input" name="Modelo" required>
+                        </div>
+                        <div class="div_input">
+                            <span>Valor *</span>
+                            <input type="number" step="0.01" id="valor_unitario" class="input" name="valor_unitario"
+                                required>
+                        </div>
+                        <div class="div_input">
+                            <span>Potência (kW) *</span>
+                            <input type="number" step="0.01" id="potencia_kwh" class="input" name="potencia_kwh"
+                                required>
+                        </div>
+                        <div class="div_input">
+                            <span>Tipo do Produto *</span>
+                            <select id="tipo_produto" name="tipo_produto" class="input" required>
+                                <option value="1">Placa Solar</option>
+                                <option value="2">Inversor</option>
+                            </select>
+                        </div>
+                        <div class="div_input">
+                            <span>Marca *</span>
+                            <select id="id_marca" name="id_marca" class="input" required>
+                                <option value="">Carregando marcas...</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="div_input">
-                        <span>Modelo</span>
-                        <input type="text" id="Modelo" class="input" name="Modelo" required>
-                    </div>
-
-                    <div class="div_input">
-                        <span>Valor</span>
-                        <input type="number" step="0.01" id="valor_unitario" class="input" name="valor_unitario"
-                            required>
-                    </div>
-                </div>
-
-                <div class="btns">
-                    <a href="../../../dashboards/Admin/cadastro_fornecedores/cadastroFornecedores.html">
-                        <button type="button" class="btn-danger">
-                            Fechar
+                    <div class="btns">
+                        <button type="button" class="btn btn-secondary" id="btn-fechar">
+                            <i class="fas fa-times"></i> Fechar
                         </button>
-                    </a>
+                        <button type="button" class="btn btn-danger" id="btn-excluir">
+                            <i class="fas fa-trash-alt"></i> Excluir
+                        </button>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-save"></i> Salvar
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-                    <button class="btn-primary" type="submit">
-                        Salvar
-                    </button>
-                </div>
+            <div class="preview-container" id="produto_view">
+            </div>
 
-            </form>
         </div>
-
-        <div id="produto_view"></div>
-
     </div>
 
     <script src="../../../JS/Admin/editarProduto.js"></script>

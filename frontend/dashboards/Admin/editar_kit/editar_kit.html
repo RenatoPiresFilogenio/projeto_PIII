@@ -1,93 +1,90 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Kit</title>
-    <link rel="stylesheet" href="../../../css/Dashboards/editarPages/style.css">
+    <title>Editar Kit - Solar Smart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../../../css/Dashboards/editarPages/kits.css">
 </head>
-
 <body>
+    <div id="notification-area"></div>
+
     <div class="container">
+        <div class="edit-layout-wrapper">
+            
+            <div class="form-container">
+                <form action="../../../../backend/Admin/Kits/EditarKit.php" class="form_editar_kit" 
+                      id="form-editar-kit" method="POST">
 
-        <div class="container-form">
+                    <h1 id="titulo_kit"><i class="fas fa-edit"></i> Editar Kit</h1>
+                    
+                    <input type="hidden" id="kit_id" name="kit_id">
 
-            <form action="../../../../backend/Admin/Kits/EditarKit.php" class="form_editar_kit" method="POST">
-
-                <h1>Editar Kit</h1>
-
-                <!-- ID do kit oculto -->
-                <input type="hidden" id="kit_id" name="kit_id">
-
-                <div class="container-input">
-
-                    <!-- Descrição do kit -->
-                    <div class="div_input">
-                        <span>Descrição do Kit</span>
-                        <input type="text" id="descricao_kit" class="input" name="kit_descricao" required>
+                    <div class="form-grid">
+                        <div class="div_input">
+                            <span>Descrição do Kit *</span>
+                            <input type="text" id="descricao_kit" class="input" name="kit_descricao" required>
+                        </div>
+                        <div class="div_input">
+                            <span>Fornecedor *</span>
+                            <select id="fornecedor_kit_id" name="fornecedor_kit_id" class="input" required>
+                                <option value="">Carregando...</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <!-- Fornecedor (não editável) -->
-                    <div class="div_input">
-                        <span>Fornecedor</span>
-                        <input type="text" id="fornecedor_kit_nome" class="input" name="fornecedor_kit_nome" disabled>
-                    </div>
+                    <hr class="form-divider">
 
-                    <!-- Produtos -->
-                    <div class="div_input">
-                        <span>Produtos</span>
-                        <div id="produtos_container">
-                            <!-- Produtos dinâmicos serão adicionados aqui -->
-                            <div class="produto_item">
-                                <input type="hidden" name="produto_ids[]" value="">
-                                <input type="number" name="quantidades[]" placeholder="Quantidade" min="1" required>
-                                <input type="text" name="valores_unitarios[]" placeholder="Valor (R$)" required>
+                    <div class="form-grid">
+                        <div class="div_input">
+                            <span>Adicionar Produto *</span>
+                            <div class="input-group">
+                                <select name="produto_kit_id_temp" class="input" id="produtos_list_kit_id">
+                                    <option value="">Selecione um produto</option>
+                                </select>
+                                <button type="button" class="btn btn-primary" id="btn-add-produto">
+                                    Confirmar
+                                </button>
                             </div>
                         </div>
-                        <button type="button" id="add_produto">Adicionar Produto</button>
                     </div>
 
+                    <div class="lista-produtos-container">
+                        <h4>Produtos Selecionados</h4>
+                        <ul id="lista_produto" class="lista_produto_selecionado">
+                            </ul>
+                    </div>
+
+                    <div class="btns">
+                        <button type="button" class="btn btn-secondary" id="btn-fechar">
+                            <i class="fas fa-times"></i> Fechar
+                        </button>
+                        <button type="button" class="btn btn-danger" id="btn-excluir">
+                            <i class="fas fa-trash-alt"></i> Excluir
+                        </button>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="preview-container" id="kit_view">
+                <div class="card-kit-placeholder">
+                    <i class="fas fa-box-open"></i>
+                    <p>Carregando dados do kit...</p>
                 </div>
+            </div>
 
-                <div class="btns">
-                    <a href="../../Admin/cadastro_fornecedores/cadastroFornecedores.html">
-                        <button type="button" class="btn-danger">Fechar</button>
-                    </a>
-                    <button class="btn-primary" type="submit">Salvar</button>
-                </div>
+        </div> </div>
 
-            </form>
-        </div>
-
-        <div id="kit_view">
-            <!-- Aqui pode ser mostrado um resumo do kit ou produtos já cadastrados -->
-        </div>
-
-    </div>
-
+    <script src="../../../JS/Admin/editarKit.js"></script>
     <script>
-        // Script básico para adicionar novos produtos
-        const addProdutoBtn = document.getElementById('add_produto');
-        const produtosContainer = document.getElementById('produtos_container');
-
-        addProdutoBtn.addEventListener('click', () => {
-            const newProduto = document.createElement('div');
-            newProduto.classList.add('produto_item');
-            newProduto.innerHTML = `
-                <input type="hidden" name="produto_ids[]" value="">
-                <input type="number" name="quantidades[]" placeholder="Quantidade" min="1" required>
-                <input type="text" name="valores_unitarios[]" placeholder="Valor (R$)" required>
-                <button type="button" class="remove_produto">Remover</button>
-            `;
-            produtosContainer.appendChild(newProduto);
-
-            newProduto.querySelector('.remove_produto').addEventListener('click', () => {
-                newProduto.remove();
-            });
+        document.getElementById('btn-fechar').addEventListener('click', () => {
+            window.location.href = '../../Admin/cadastro_fornecedores/cadastroFornecedores.html?tab=kits';
         });
     </script>
-
 </body>
-
 </html>
