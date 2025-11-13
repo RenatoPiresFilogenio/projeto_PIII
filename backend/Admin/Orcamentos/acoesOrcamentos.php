@@ -62,7 +62,7 @@ function getOrcamentos($pdo)
         SELECT
             O.ID_ORCAMENTO AS id,
             U.NOME AS cliente,
-            COALESCE(F.NOME, 'N/D') AS fornecedor, -- Adicionado
+            COALESCE(F.NOME, 'N/D') AS fornecedor, 
             O.VALOR_TOTAL AS valor,
             O.DATA AS data,
             O.STATUS AS status,
@@ -74,15 +74,21 @@ function getOrcamentos($pdo)
         JOIN CIDADES C ON B.FK_CIDADES_ID_CIDADE = C.ID_CIDADE
         JOIN ESTADOS E ON C.FK_ESTADOS_ID_ESTADO = E.ID_ESTADO
         JOIN REGIAO R ON E.FK_REGIAO_ID_REGIAO = R.ID_REGIAO
-        LEFT JOIN FORNECEDORES F ON O.FK_FORNECEDOR_ID = F.ID_FORNECEDOR -- Adicionado
+        LEFT JOIN FORNECEDORES F ON O.FK_FORNECEDOR_ID = F.ID_FORNECEDOR
     ";
 
     $conditions = ["O.IS_DELETE = FALSE"];
     $params = [];
 
     if (!empty($_GET['status'])) {
-        $conditions[] = "O.STATUS = ?";
-        $params[] = $_GET['status'];
+        if ($_GET['status'] === 'recusado') {
+            // --- CORREÇÃO AQUI ---
+            // Se o filtro for "recusado", busca AMBOS os status
+            $conditions[] = "(O.STATUS = 'recusado' OR O.STATUS = 'rejeitado')";
+        } else {
+            $conditions[] = "O.STATUS = ?";
+            $params[] = $_GET['status'];
+        }
     }
     if (!empty($_GET['regiao'])) {
         $conditions[] = "LOWER(R.NOME) = ?";
@@ -103,14 +109,16 @@ function getEstatisticasGerais($pdo)
             COUNT(ID_ORCAMENTO) AS total,
             
             -- Contagens
-            SUM(CASE WHEN STATUS = 'aprovado' THEN 1 ELSE 0 END) AS aprovados,
-            SUM(CASE WHEN STATUS = 'recusado' THEN 1 ELSE 0 END) AS recusados,
-            SUM(CASE WHEN STATUS = 'nao-liberado' THEN 1 ELSE 0 END) AS naoLiberados,
+            SUM(CASE WHEN STATUS = 'aprovado' OR STATUS = 'confirmado' THEN 1 ELSE 0 END) AS aprovados,
+            -- --- CORREÇÃO AQUI --- (Conta recusado e rejeitado juntos)
+            SUM(CASE WHEN STATUS = 'recusado' OR STATUS = 'rejeitado' THEN 1 ELSE 0 END) AS recusados,
+            SUM(CASE WHEN STATUS = 'nao-liberado' OR STATUS = 'AGUARDA_ADM' THEN 1 ELSE 0 END) AS naoLiberados,
             
             -- Valores Monetários
             SUM(VALOR_TOTAL) AS valorTotal,
-            SUM(CASE WHEN STATUS = 'aprovado' THEN VALOR_TOTAL ELSE 0 END) AS valoraprovado,
-            SUM(CASE WHEN STATUS = 'recusado' THEN VALOR_TOTAL ELSE 0 END) AS valorrecusado
+            SUM(CASE WHEN STATUS = 'aprovado' OR STATUS = 'confirmado' THEN VALOR_TOTAL ELSE 0 END) AS valoraprovado,
+            -- --- CORREÇÃO AQUI --- (Soma recusado e rejeitado juntos)
+            SUM(CASE WHEN STATUS = 'recusado' OR STATUS = 'rejeitado' THEN VALOR_TOTAL ELSE 0 END) AS valorrecusado
 
         FROM ORCAMENTO
         WHERE IS_DELETE = FALSE

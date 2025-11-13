@@ -1,3 +1,30 @@
+// =========================
+// MAPA DE REGIÕES E ESTADOS
+// =========================
+const estadosPorRegiao = {
+    'Norte': [
+        { sigla: 'AC', nome: 'Acre' }, { sigla: 'AP', nome: 'Amapá' }, { sigla: 'AM', nome: 'Amazonas' },
+        { sigla: 'PA', nome: 'Pará' }, { sigla: 'RO', nome: 'Rondônia' }, { sigla: 'RR', nome: 'Roraima' },
+        { sigla: 'TO', nome: 'Tocantins' }
+    ],
+    'Nordeste': [
+        { sigla: 'AL', nome: 'Alagoas' }, { sigla: 'BA', nome: 'Bahia' }, { sigla: 'CE', nome: 'Ceará' },
+        { sigla: 'MA', nome: 'Maranhão' }, { sigla: 'PB', nome: 'Paraíba' }, { sigla: 'PE', nome: 'Pernambuco' },
+        { sigla: 'PI', nome: 'Piauí' }, { sigla: 'RN', nome: 'Rio Grande do Norte' }, { sigla: 'SE', nome: 'Sergipe' }
+    ],
+    'Centro-Oeste': [
+        { sigla: 'DF', nome: 'Distrito Federal' }, { sigla: 'GO', nome: 'Goiás' },
+        { sigla: 'MT', nome: 'Mato Grosso' }, { sigla: 'MS', nome: 'Mato Grosso do Sul' }
+    ],
+    'Sudeste': [
+        { sigla: 'ES', nome: 'Espírito Santo' }, { sigla: 'MG', nome: 'Minas Gerais' },
+        { sigla: 'RJ', nome: 'Rio de Janeiro' }, { sigla: 'SP', nome: 'São Paulo' }
+    ],
+    'Sul': [
+        { sigla: 'PR', nome: 'Paraná' }, { sigla: 'RS', nome: 'Rio Grande do Sul' }, { sigla: 'SC', nome: 'Santa Catarina' }
+    ]
+};
+
 // Estado da aplicação
 let properties = [];
 let editingId = null;
@@ -18,6 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await fetchProperties();
     setupEventListeners();
     updateNavigationState();
+    filtrarEstadosPorRegiao(); 
 });
 
 // Event Listeners
@@ -31,18 +59,16 @@ function setupEventListeners() {
         }
         showToast('Redirecionando para página de orçamentos...', 'success');
         setTimeout(() => {
-            window.location.href = 'orcamentos.php';
+            window.location.href = 'Orcamentos.php';
         }, 1500);
     });
 
-    // Modal
     document.getElementById('modal-close').addEventListener('click', hideModal);
     document.getElementById('modal-cancel').addEventListener('click', hideModal);
     modal.addEventListener('click', (e) => {
         if(e.target===modal) hideModal();
     });
 
-    // Navegação
     document.getElementById('nav-orcamentos').addEventListener('click', (e)=>{
         e.preventDefault();
         if(properties.length===0){
@@ -50,13 +76,11 @@ function setupEventListeners() {
             return;
         }
         showToast('Redirecionando para orçamentos...','success');
-        setTimeout(()=>{window.location.href='orcamentos.php';},1500);
+        setTimeout(()=>{window.location.href='Orcamentos.php';},1500);
     });
 
-    // Auto-select região
-    document.getElementById('estado').addEventListener('change', updateRegionByState);
+    document.getElementById('regiao').addEventListener('change', filtrarEstadosPorRegiao);
 
-    // Atalhos
     document.addEventListener('keydown',(e)=>{
         if(e.key==='Escape'){
             if(modal.classList.contains('show')) hideModal();
@@ -68,15 +92,22 @@ function setupEventListeners() {
 // Buscar imóveis do banco
 async function fetchProperties(){
     try {
-        const res = await fetch('../../../backend/ClienteBackEnd/listaimoveis.php');
+        const res = await fetch('../../../backend/ClienteBackEnd/listaimoveis.php?_cache=' + new Date().getTime());
         const data = await res.json();
-        console.log('Imóveis:', data); // Debug
-        properties = data;
-        console.log("error" + properties);
+        
+        if(data.error) {
+             console.error("Erro vindo do backend:", data.error);
+             properties = [];
+        } else {
+             properties = data;
+        }
+        
         renderProperties();
     } catch(e){
-        console.error(e);
+        console.error("Erro ao buscar imóveis (fetch):", e);
         showToast('Erro ao carregar imóveis','error');
+        properties = [];
+        renderProperties();
     }
 }
 
@@ -97,7 +128,7 @@ async function handleFormSubmit(e){
         });
         const data = await res.json();
         if(data.success){
-            showToast(editingId ? '✅ Imóvel atualizado!' : '✅ Imóvel cadastrado!','success');
+            showToast(editingId ? 'Imóvel atualizado com sucesso!' : 'Imóvel cadastrado com sucesso!','success');
             resetForm();
             await fetchProperties();
         } else {
@@ -124,31 +155,36 @@ function renderProperties() {
     emptyState.style.display = 'none';
 
     propertiesList.innerHTML = properties.map(p => `
-    <div class="property-card">
+    <div class="property-card" id="imovel-${p.id}">
         <div class="property-header">
             <div>
-                <div class="property-title">🏠 ${p.nome || '-'}</div>
+                <div class="property-title"><i class="fas fa-home"></i> ${p.nome || '-'}</div>
                 <div class="property-address">
-                    ${p.rua || '-'}, ${p.numero || '-'} - ${p.bairro || '-'}, ${p.cidade || '-'} / ${p.estado || '-'} - CEP: ${p.cep || '-'},
+                    ${p.rua || '-'}, ${p.numero || '-'} - ${p.bairro || '-'}, ${p.cidade || '-'} / ${p.estado || '-'} - CEP: ${p.cep || '-'}
                 </div>
             </div>
-            <input type="hidden" id="${p.id}" name="${p.id}">
             <div class="property-actions">
-                <button class="btn btn-primary btn-icon" onclick="editProperty('${p.id}')" title="Editar">✏️</button>
-                <button class="btn btn-danger btn-icon" onclick="confirmDeleteProperty('${p.id}')" title="Excluir">🗑️</button>
+                <button class="btn btn-primary btn-icon" onclick="editProperty('${p.id}')" title="Editar">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+                <button class="btn btn-danger btn-icon" onclick="confirmDeleteProperty('${p.id}')" title="Excluir">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
             </div>
         </div>
         <div class="property-info">
-            <div class="info-item"><span class="info-icon">🌍</span>
+            <div class="info-item">
+                <span class="info-icon"><i class="fas fa-map-marker-alt"></i></span>
                 <div>
                     <div class="info-label">Região</div>
                     <div class="info-value">${p.regiao || 'Não informado'}</div>
                 </div>
             </div>
-            <div class="info-item"><span class="info-icon">⚡</span>
+            <div class="info-item">
+                <span class="info-icon"><i class="fas fa-bolt"></i></span>
                 <div>
                     <div class="info-label">Consumo Mensal</div>
-                    <div class="info-value">${p.consumo || '-'}</div>
+                    <div class="info-value">${p.consumo || '-'} kWh</div> 
                 </div>
             </div>
         </div>
@@ -166,10 +202,15 @@ function editProperty(id){
     editingId = id;
     document.getElementById('nome').value = property.nome;
     document.getElementById('rua').value = property.rua;
+    document.getElementById('numero').value = property.numero;
     document.getElementById('bairro').value = property.bairro;
     document.getElementById('cidade').value = property.cidade;
-    document.getElementById('estado').value = property.estado;
+    document.getElementById('cep').value = property.cep;
     document.getElementById('regiao').value = property.regiao || '';
+    
+    filtrarEstadosPorRegiao(); 
+    document.getElementById('estado').value = property.estado;
+    
     document.getElementById('consumo').value = property.consumo || '';
 
     formTitle.textContent = 'Editar Imóvel';
@@ -179,13 +220,13 @@ function editProperty(id){
     document.querySelectorAll('.error').forEach(el=>el.classList.remove('error'));
     document.querySelector('.form-section').scrollIntoView({behavior:'smooth'});
 
-    showToast('Modo de edição ativado','success');
+    showToast('Modo de edição ativado', 'success');
 }
 
 // Cancelar edição
 function cancelEdit(){
     resetForm();
-    showToast('Edição cancelada','success');
+    showToast('Edição cancelada', 'success');
 }
 
 // Reset form
@@ -197,6 +238,8 @@ function resetForm(){
     btnCancel.style.display = 'none';
     document.querySelectorAll('.error-message').forEach(el=>el.textContent='');
     document.querySelectorAll('.error').forEach(el=>el.classList.remove('error'));
+    
+    filtrarEstadosPorRegiao();
 }
 
 // Confirmar exclusão
@@ -213,13 +256,13 @@ function confirmDeleteProperty(id){
 // Deletar imóvel
 async function deleteProperty(id){
     try {
-        const res = await fetch('../../../backend/ClienteBackend/excluirImoveis.php',{
+        const res = await fetch('../../../backend/ClienteBackEnd/excluirImoveis.php',{
             method:'POST',
             body: new URLSearchParams({id})
         });
         const data = await res.json();
         if(data.success){
-            showToast('🗑️ Imóvel excluído com sucesso','success');
+            showToast('Imóvel excluído com sucesso','success');
             await fetchProperties();
             hideModal();
         } else {
@@ -236,10 +279,12 @@ function validateForm(){
     const fields = [
         {id:'nome', message:'Nome do imóvel é obrigatório'},
         {id:'rua', message:'Rua é obrigatória'},
-        {id:'bairro', message:'Bairro é obrigatório'},
-        {id:'cidade', message:'Cidade é obrigatória'},
-        {id:'estado', message:'Estado é obrigatório'},
+        {id:'numero', message:'Número é obrigatório'},
         {id:'regiao', message:'Região é obrigatória'},
+        {id:'estado', message:'Estado é obrigatório'},
+        {id:'cidade', message:'Cidade é obrigatória'},
+        {id:'bairro', message:'Bairro é obrigatório'},
+        {id:'cep', message:'CEP é obrigatório'},
         {id:'consumo', message:'Consumo mensal é obrigatório'}
     ];
 
@@ -278,20 +323,36 @@ function clearFieldError(fieldId){
     errorElement.textContent='';
 }
 
-// Auto-select região
-function updateRegionByState(){
-    const estado = document.getElementById('estado').value;
-    const regiao = document.getElementById('regiao');
+// Filtra Estados baseado na Região
+function filtrarEstadosPorRegiao() {
+    const regiaoSelect = document.getElementById('regiao');
+    const estadoSelect = document.getElementById('estado');
+    const selectedRegion = regiaoSelect.value;
+    
+    const currentEstado = estadoSelect.value; 
 
-    const regioesPorEstado = {
-        'AC':'Norte','AM':'Norte','AP':'Norte','PA':'Norte','RO':'Norte','RR':'Norte','TO':'Norte',
-        'AL':'Nordeste','BA':'Nordeste','CE':'Nordeste','MA':'Nordeste','PB':'Nordeste','PE':'Nordeste','PI':'Nordeste','RN':'Nordeste','SE':'Nordeste',
-        'GO':'Centro-Oeste','MT':'Centro-Oeste','MS':'Centro-Oeste','DF':'Centro-Oeste',
-        'ES':'Sudeste','MG':'Sudeste','RJ':'Sudeste','SP':'Sudeste',
-        'PR':'Sul','RS':'Sul','SC':'Sul'
-    };
+    estadoSelect.innerHTML = '<option value="">Selecione o estado</option>';
 
-    if(regioesPorEstado[estado]) regiao.value = regioesPorEstado[estado];
+    if (selectedRegion && estadosPorRegiao[selectedRegion]) {
+        estadoSelect.disabled = false;
+        const states = estadosPorRegiao[selectedRegion];
+        
+        states.forEach(estado => {
+            const option = document.createElement('option');
+            option.value = estado.sigla;
+            option.textContent = estado.nome;
+            estadoSelect.appendChild(option);
+        });
+
+        // Tenta restaurar a seleção anterior (útil para o 'editProperty')
+        if (currentEstado) {
+            estadoSelect.value = currentEstado;
+        }
+
+    } else {
+        estadoSelect.innerHTML = '<option value="">Selecione a região primeiro</option>';
+        estadoSelect.disabled = true;
+    }
 }
 
 // Toast e modal
@@ -331,12 +392,15 @@ function showButtonLoading(loading){
 // Atualizar estado da navegação
 function updateNavigationState(){
     const navOrcamentos = document.getElementById('nav-orcamentos');
+    const btnSolicitar = document.getElementById('btn-solicitar-orcamento');
+
+    if(!navOrcamentos || !btnSolicitar) return; 
 
     if(properties.length===0){
         navOrcamentos.style.opacity='0.6';
-        btnSolicitarOrcamento.style.opacity='0.6';
+        btnSolicitar.style.opacity='0.6';
     } else {
         navOrcamentos.style.opacity='1';
-        btnSolicitarOrcamento.style.opacity='1';
+        btnSolicitar.style.opacity='1';
     }
 }

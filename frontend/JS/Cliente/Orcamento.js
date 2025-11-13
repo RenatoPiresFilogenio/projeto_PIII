@@ -28,7 +28,7 @@ function setupEventListeners() {
     // Navigation
     document.getElementById('nav-imoveis').addEventListener('click', (e) => {
         e.preventDefault();
-        window.location.href = 'index.html';
+        window.location.href = 'CadastrarImoveis.php';
     });
 
     // Modal events

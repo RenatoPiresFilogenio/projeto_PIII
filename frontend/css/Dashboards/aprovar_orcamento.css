@@ -398,7 +398,6 @@ input.filter-select {
     }
 }
 
-/* Esconde o modal por padrão (para o JS controlar) */
 .modal {
     display: none; 
 }

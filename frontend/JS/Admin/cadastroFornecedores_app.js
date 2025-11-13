@@ -1,16 +1,9 @@
 // =========================
 // FUNÇÃO HELPER
 // =========================
-
-/**
- * Formata uma string de data (YYYY-MM-DD) para DD/MM/YYYY.
- * @param {string} dataString - A string de data do banco.
- * @returns {string} - A data formatada ou 'N/D'.
- */
 function formatarData(dataString) {
     if (!dataString) return 'N/D';
     try {
-        // Adiciona T00:00:00 para evitar problemas de fuso horário
         const data = new Date(dataString + 'T00:00:00');
         return data.toLocaleDateString('pt-BR');
     } catch (e) {
@@ -20,68 +13,42 @@ function formatarData(dataString) {
 }
 
 // =========================
-// MODAIS (REFATORADO PARA CSS)
+// MODAIS
 // =========================
-
-// Obtém a referência para os elementos do modal uma única vez
 const modalFornecedor = document.getElementById("modalFornecedor");
 const modalProduto = document.getElementById("modalProduto");
 const modalMarca = document.getElementById("modalMarca");
 const modalKit = document.getElementById('modalKit');
-// Adicionei isso para garantir que todos os modais sejam encontrados
-const allModals = [modalFornecedor, modalProduto, modalMarca, modalKit];
 
-/**
- * Função genérica para abrir um modal
- * @param {HTMLElement} modalElement - O elemento do modal a ser aberto
- */
 function abrirModal(modalElement) {
-    if (modalElement) {
-        modalElement.classList.add("active"); // Usa classe CSS para animação
-    }
+    if (modalElement) modalElement.classList.add("active");
 }
-
-/**
- * Função genérica para fechar um modal
- * @param {HTMLElement} modalElement 
- */
 function fecharModal(modalElement) {
-    if (modalElement) {
-        modalElement.classList.remove("active"); // Usa classe CSS para animação
-    }
+    if (modalElement) modalElement.classList.remove("active");
 }
 
-// ----- Funções Específicas-----
 function abrirModalFornecedor() { abrirModal(modalFornecedor); }
 function abrirModalProduto() { abrirModal(modalProduto); }
 function abrirModalMarca() { abrirModal(modalMarca); }
 function abrirModalKit() { abrirModal(modalKit); }
 
-// --- fechar modal ---
-// (Adicionei o 'modalElement' que faltava na sua definição original)
 function fecharModalFornecedor() { fecharModal(modalFornecedor); }
 function fecharModalProduto() { fecharModal(modalProduto); }
 function fecharModalMarca() { fecharModal(modalMarca); }
 function fecharModalKit() { fecharModal(modalKit); }
 
-// ----- FECHAR MODAL AO CLICAR FORA -----
 window.addEventListener("click", (event) => {
-    // Verifica se o clique foi no fundo escuro do modal
     if (event.target.classList.contains('modal')) {
         fecharModal(event.target);
     }
 });
 
-
 // =========================
 // TROCAR DE ABA
 // =========================
 function mostrarTab(tab) {
-    const tabs = document.querySelectorAll(".tab");
-    const contents = document.querySelectorAll(".tab-content");
-
-    tabs.forEach(t => t.classList.remove("active"));
-    contents.forEach(c => c.classList.remove("active"));
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
 
     const tabButton = document.querySelector(`[onclick="mostrarTab('${tab}')"]`);
     const tabContent = document.getElementById(`tab-${tab}`);
@@ -91,27 +58,19 @@ function mostrarTab(tab) {
 }
 
 // =========================
-// RENDERIZAÇÃO DOS CARDS (O "TCHAM")
+// RENDERIZAÇÃO DOS CARDS
 // =========================
-
-/**
- * Carrega e renderiza os KITS cadastrados
- */
 async function carregarKitsCadastrados() {
     const container = document.getElementById("kitList");
     container.innerHTML = "<p>Carregando kits...</p>";
 
     try {
-        const responseKits = await fetch("../../../../backend/Admin/Kits/ListarKits.php");
+        const responseKits = await fetch("../../../../backend/Admin/Kits/ListarKits.php?_cache=" + new Date().getTime());
         const data = await responseKits.json();
-        const kits = data.produtos; // 'produtos' parece ser o nome do array na sua API
+        const kits = data.produtos; 
 
         if (!kits || kits.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <h3>Nenhum kit cadastrado</h3>
-                    <p>Adicione kits clicando em "Novo kit".</p>
-                </div>`;
+            container.innerHTML = `<div class="empty-state"><h3>Nenhum kit cadastrado</h3><p>Adicione kits clicando em "Novo kit".</p></div>`;
             return;
         }
 
@@ -123,7 +82,7 @@ async function carregarKitsCadastrados() {
                         <a href="../../../../frontend/dashboards/Admin/editar_kit/editar_kit.html?id=${kit.id_kit}" class="btn-icon btn-edit" title="Editar">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
-                        <button class="btn-icon btn-delete" title="Excluir" onclick="ExcluirFornecedor(${kit.id_kit})">
+                        <button class="btn-icon btn-delete" title="Excluir" onclick="excluirKit(${kit.id_kit})">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
@@ -134,7 +93,7 @@ async function carregarKitsCadastrados() {
                             <dt class="info-label">Descrição</dt>
                             <dd class="info-value">${kit.descricao || 'Sem descrição'}</dd>
                         </div>
-                        </dl>
+                    </dl>
                 </div>
             </div>
         `).join("");
@@ -145,23 +104,16 @@ async function carregarKitsCadastrados() {
     }
 }
 
-/**
- * Carrega e renderiza os FORNECEDORES
- */
 async function carregarFornecedores() {
     const container = document.getElementById("fornecedoresList");
     container.innerHTML = "<p>Carregando fornecedores...</p>";
 
     try {
-        const response = await fetch("../../../../backend/Admin/Fornecedor/ListarFornecedor.php");
+        const response = await fetch("../../../../backend/Admin/Fornecedor/ListarFornecedor.php?_cache=" + new Date().getTime());
         const fornecedores = await response.json();
 
         if (!fornecedores || fornecedores.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <h3>Nenhum fornecedor cadastrado</h3>
-                    <p>Adicione fornecedores clicando em "Novo Fornecedor".</p>
-                </div>`;
+            container.innerHTML = `<div class="empty-state"><h3>Nenhum fornecedor cadastrado</h3><p>Adicione fornecedores clicando em "Novo Fornecedor".</p></div>`;
             return;
         }
 
@@ -173,7 +125,7 @@ async function carregarFornecedores() {
                         <a href="../../../../frontend/dashboards/Admin/editar_fornecedor/editar_fornecedor.html?id=${f.id_fornecedor}" class="btn-icon btn-edit" title="Editar">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
-                        <button class="btn-icon btn-delete" title="Excluir" onclick="ExcluirFornecedor(${f.id_fornecedor})">
+                        <button class="btn-icon btn-delete" title="Excluir" onclick="excluirFornecedor(${f.id_fornecedor})">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
@@ -203,15 +155,12 @@ async function carregarFornecedores() {
     }
 }
 
-/**
- * Carrega e renderiza os PRODUTOS
- */
 async function carregarProdutos() {
     const container = document.getElementById("produtosList");
     container.innerHTML = "<p>Carregando produtos...</p>";
 
     try {
-        const response = await fetch("../../../../backend/Admin/CadastrarProduto/ListarProduto.php");
+        const response = await fetch("../../../../backend/Admin/CadastrarProduto/ListarProduto.php?_cache=" + new Date().getTime());
         if (!response.ok) throw new Error(`Erro de servidor: ${response.status}`);
         
         const responseData = await response.json();
@@ -225,7 +174,6 @@ async function carregarProdutos() {
         }
 
         container.innerHTML = produtos.map(p => {
-            // Assumindo que a API retorna 'valor_unitario' e 'potencia_kwh'
             const valor = parseFloat(p.valor_unitario) || 0;
             const potencia = p.potencia_kwh || 'N/D';
 
@@ -237,7 +185,7 @@ async function carregarProdutos() {
                         <button class="btn-icon btn-edit" title="Editar" onclick="abrirModalProdutoEditar(${p.id_produto})">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
-                        <button class="btn-icon btn-delete" title="Excluir" onclick="ExcluirFornecedor(${p.id_produto})">
+                        <button class="btn-icon btn-delete" title="Excluir" onclick="excluirProduto(${p.id_produto})">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
@@ -275,9 +223,6 @@ async function carregarProdutos() {
     }
 }
 
-/**
- * Carrega MARCAS (para a lista E para o select de produtos)
- */
 async function carregarMarcasEPreencherSelect() {
     const listContainer = document.getElementById('marcasList');
     const selectContainer = document.getElementById('id_marca');
@@ -285,14 +230,13 @@ async function carregarMarcasEPreencherSelect() {
     listContainer.innerHTML = "<p>Carregando marcas...</p>";
 
     try {
-        const response = await fetch('../../../../backend/Admin/Marcas/ListarMarcas.php');
+        const response = await fetch('../../../../backend/Admin/Marcas/ListarMarcas.php?_cache=' + new Date().getTime());
         const responseData = await response.json();
         const marcas = responseData.marcas;
 
         if (!marcas || marcas.length === 0) {
             listContainer.innerHTML = `<div class="empty-state"><h3>Nenhuma marca cadastrada</h3></div>`;
         } else {
-            // Renderiza os CARDS de Marcas
             listContainer.innerHTML = marcas.map(m => {
                 const pais = m.pais_origem || 'N/D';
                 const data = formatarData(m.data_cadastro);
@@ -307,7 +251,7 @@ async function carregarMarcasEPreencherSelect() {
                             <button class="btn-icon btn-edit" title="Editar" onclick="AbrirEditorMarca(${m.id_marca})">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
-                            <button class="btn-icon btn-delete" title="Excluir" onclick="ExcluirFornecedor(${m.id_marca})">
+                            <button class="btn-icon btn-delete" title="Excluir" onclick="excluirMarca(${m.id_marca})">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
@@ -321,7 +265,7 @@ async function carregarMarcasEPreencherSelect() {
                             <div class="info-item">
                                 <dt class="info-label">Site Oficial</dt>
                                 <dd class="info-value">
-                                    <a href="https://${site}" target="_blank">${siteTexto}</a>
+                                    <a href="https://${site.replace(/^https?:\/\//,'')}" target="_blank">${siteTexto}</a>
                                 </dd>
                             </div>
                             <div class="info-item">
@@ -334,7 +278,6 @@ async function carregarMarcasEPreencherSelect() {
             }).join("");
         }
 
-        // Preenche o SELECT no modal de Produtos
         if (!marcas || marcas.length === 0) {
             selectContainer.innerHTML = `<option value="" disabled>Nenhuma marca cadastrada</option>`;
         } else {
@@ -346,11 +289,59 @@ async function carregarMarcasEPreencherSelect() {
             });
             selectContainer.innerHTML = optionsHtml.join("");
         }
-
     } catch (error) {
         listContainer.innerHTML = `<div class="empty-state"><h3>Erro ao carregar marcas</h3></div>`;
         selectContainer.innerHTML = `<option value="" disabled>Erro ao carregar</option>`;
         console.error("Erro ao carregar marcas:", error);
+    }
+}
+
+// =========================
+// FUNÇÕES DE EXCLUSÃO
+// =========================
+async function excluirMarca(id) {
+    if (!confirm("Tem certeza que deseja excluir esta marca?")) return;
+    const response = await fetch(`../../../../backend/Admin/Marcas/EditarMarca.php?action=delete&id=${id}`, { method: 'GET' });
+    const data = await response.json();
+    if (response.ok && data.success) {
+        alert(data.message);
+        document.getElementById(`marca-${id}`)?.remove();
+        carregarMarcasEPreencherSelect(); 
+    } else {
+        alert(`Erro: ${data.message || 'Erro desconhecido.'}`);
+    }
+}
+async function excluirProduto(id) {
+    if (!confirm("Tem certeza que deseja excluir este produto?")) return;
+    const response = await fetch(`../../../../backend/Admin/CadastrarProduto/EditarProduto.php?action=delete&id=${id}`, { method: 'GET' });
+    const data = await response.json();
+    if (response.ok && data.success) {
+        alert(data.message);
+        document.getElementById(`produto-${id}`)?.remove();
+    } else {
+        alert(`Erro: ${data.message || 'Erro desconhecido.'}`);
+    }
+}
+async function excluirFornecedor(id) {
+    if (!confirm("Tem certeza que deseja excluir este fornecedor?")) return;
+    const response = await fetch(`../../../../backend/Admin/Fornecedor/EditarFornecedor.php?action=delete&id=${id}`, { method: 'GET' });
+    const data = await response.json();
+    if (response.ok && data.success) {
+        alert(data.message);
+        document.getElementById(`fornecedor-${id}`)?.remove();
+    } else {
+        alert(`Erro: ${data.message || 'Erro desconhecido.'}`);
+    }
+}
+async function excluirKit(id) {
+    if (!confirm("Tem certeza que deseja excluir este kit?")) return;
+    const response = await fetch(`../../../../backend/Admin/Kits/EditarKit.php?action=delete&id=${id}`, { method: 'GET' });
+    const data = await response.json();
+    if (response.ok && data.success) {
+        alert(data.message);
+        document.getElementById(`kit-${id}`)?.remove();
+    } else {
+        alert(`Erro: ${data.message || 'Erro desconhecido.'}`);
     }
 }
 
@@ -359,30 +350,22 @@ async function carregarMarcasEPreencherSelect() {
 // FUNÇÕES DE NAVEGAÇÃO
 // =========================
 function abrirModalFornecedorEditar(id_fornecedor) {
-    const urlComId = `../../../dashboards/Admin/editar_fornecedor/editar_fornecedor.html?id=${id_fornecedor}`;
-    window.location.href = urlComId;
+    window.location.href = `../../../dashboards/Admin/editar_fornecedor/editar_fornecedor.html?id=${id_fornecedor}`;
 }
-
 function AbrirEditorMarca(id_marca) {
-    const urlComId = `../../../dashboards/Admin/editar_marca/editar_marca.html?id=${id_marca}`;
-    window.location.href = urlComId;
+    window.location.href = `../../../dashboards/Admin/editar_marca/editar_marca.html?id=${id_marca}`;
 }
-
 function abrirModalProdutoEditar(id_produto) {
-    const urlComId = `../../../dashboards/Admin/editar_produto/editar_produto.html?id=${id_produto}`;
-    window.location.href = urlComId;
+    window.location.href = `../../../dashboards/Admin/editar_produto/editar_produto.html?id=${id_produto}`;
 }
 
 // =========================
 // LÓGICA DO MODAL DE KITS
 // =========================
-
-/**
- * Carrega os selects de Fornecedor e Produto dentro do modal de Kits.
- */
 async function carregarListKits() {
     const list_fornecedor = document.getElementById("fornecedor_list_kit_id");
     const list_product = document.getElementById("produtos_list_kit_id");
+    if (!list_fornecedor || !list_product) return; 
 
     list_fornecedor.innerHTML = "<option value=''>Carregando fornecedores...</option>";
     list_fornecedor.disabled = true;
@@ -390,58 +373,44 @@ async function carregarListKits() {
     list_product.disabled = true;
 
     try {
-        let responseFornecedor = await fetch("../../../../backend/Admin/Fornecedor/ListarFornecedor.php");
+        let responseFornecedor = await fetch("../../../../backend/Admin/Fornecedor/ListarFornecedor.php?_cache=" + new Date().getTime());
         if (!responseFornecedor.ok) throw new Error(`Erro HTTP (Fornecedores): ${responseFornecedor.status}`);
         
         const fornecedores = await responseFornecedor.json();
-
         if (!fornecedores || fornecedores.length === 0) {
             list_fornecedor.innerHTML = `<option value="">Nenhum fornecedor</option>`;
             list_product.innerHTML = `<option value="">Nenhum fornecedor</option>`;
         } else {
-            const optionsHTML = fornecedores.map(fornecedor =>
-                `<option value="${fornecedor.id_fornecedor}">${fornecedor.nome}</option>`
-            );
-            list_fornecedor.innerHTML = `
-                <option value="" selected disabled>Selecione um fornecedor</option>
-                ${optionsHTML.join('')}
-            `;
+            const optionsHTML = fornecedores.map(fornecedor => `<option value="${fornecedor.id_fornecedor}">${fornecedor.nome}</option>`);
+            list_fornecedor.innerHTML = `<option value="" selected disabled>Selecione um fornecedor</option>${optionsHTML.join('')}`;
             list_fornecedor.disabled = false;
         }
 
-        let responseProdutos = await fetch("../../../../backend/Admin/CadastrarProduto/ListarProduto.php");
+        let responseProdutos = await fetch("../../../../backend/Admin/CadastrarProduto/ListarProduto.php?_cache=" + new Date().getTime());
         if (!responseProdutos.ok) throw new Error(`Erro HTTP (Produtos): ${responseProdutos.status}`);
         
         const responseData = await responseProdutos.json();
         const produtos = responseData.produtos;
-
         if (produtos && produtos.length > 0) {
-            const optionsHTML_product = produtos.map(produto =>
-                `<option value="${produto.id_produto}">${produto.nome}</option>`
-            );
-            list_product.innerHTML = `
-                <option value="" selected disabled>Selecione um Produto</option>
-                ${optionsHTML_product.join('')}
-            `;
+            const optionsHTML_product = produtos.map(produto => `<option value="${produto.id_produto}">${produto.nome}</option>`);
+            list_product.innerHTML = `<option value="" selected disabled>Selecione um Produto</option>${optionsHTML_product.join('')}`;
             list_product.disabled = false;
         } else {
             list_product.innerHTML = `<option value="">Nenhum produto</option>`;
         }
     } catch (error) {
         console.error("Falha ao carregar listas do kit:", error);
-        list_fornecedor.innerHTML = `<option value="">Falha ao carregar</option>`;
-        list_product.innerHTML = `<option value="">Falha ao carregar</option>`;
+        list_fornecedor.innerHTML = `<option value="">Falha ao carregar</Gera-Meme</option>`;
+        list_product.innerHTML = `<option value="">Falha ao carregar dados</option>`;
     }
 }
 
-/**
- * Carrega a lista de kits no modal de Fornecedor.
- */
 async function carregarListKitsFornecedor() {
     const list_kits = document.getElementById("kit_id");
+    if (!list_kits) return; 
 
     try {
-        const responseKitsList = await fetch("../../../../backend/Admin/Kits/ListarKits.php");
+        const responseKitsList = await fetch("../../../../backend/Admin/Kits/ListarKits.php?_cache=" + new Date().getTime());
         const data = await responseKitsList.json();
 
         if (data.status === "success" && Array.isArray(data.produtos)) {
@@ -462,9 +431,6 @@ async function carregarListKitsFornecedor() {
     }
 }
 
-/**
- * Adiciona o produto selecionado à lista <ul> no modal de Kit.
- */
 function adicionarProdutoNaLista() {
     const list_product_select = document.getElementById('produtos_list_kit_id');
     const lista_produto_ul = document.getElementById('lista_produto');
@@ -489,11 +455,12 @@ function adicionarProdutoNaLista() {
     const inputIdQtd = `qtd_prod_${produtoId}`;
     const inputIdVal = `val_prod_${produtoId}`;
 
-    // Este HTML corresponde ao novo CSS que adicionei
+   
     li.innerHTML = `
-        <span>${produtoNome}</span>
+        <span><strong>${produtoNome}</strong></span>
         
         <div class="controles-produto"> 
+            <input type="hidden" name="produto_ids[]" value="${produtoId}">
             <div class="controle-item">
                 <label for="${inputIdQtd}">Qtd *</label>
                 <input 
@@ -505,7 +472,6 @@ function adicionarProdutoNaLista() {
                     min="1" 
                     required>
             </div>
-
             <div class="controle-item">
                 <label for="${inputIdVal}">Valor Unit. *</label>
                 <input 
@@ -516,48 +482,28 @@ function adicionarProdutoNaLista() {
                     placeholder="0,00" 
                     required>
             </div>
-
-            <input type="hidden" name="produto_ids[]" value="${produtoId}">
-            
-            <button type="button" class="btn-remover" aria-label="Remover ${produtoNome}">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-        </div>
+            </div>
     `;
 
     lista_produto_ul.appendChild(li);
     list_product_select.selectedIndex = 0;
 }
 
-/**
- * Observa cliques na lista de produtos do kit (para remoção).
- */
-function gerenciarCliquesLista(event) {
-    // Procura pelo botão de remover
-    const removeButton = event.target.closest('.btn-remover');
-    if (removeButton) {
-        // Remove o <li> pai
-        removeButton.closest('li.list_produto_item').remove();
-    }
-}
-
-
-// =========================
-// EVENT LISTENER PRINCIPAL (DOMContentLoaded)
-// =========================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Funções de carregamento principais
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('tab')) {
+        mostrarTab(urlParams.get('tab'));
+    }
+
     carregarFornecedores();
     carregarProdutos();
     carregarMarcasEPreencherSelect();
-    carregarListKitsFornecedor(); // Preenche select no modal Fornecedor
-    carregarKitsCadastrados(); // Renderiza cards de Kits
-    
-    // Carrega selects do modal de Kits
+    carregarListKitsFornecedor(); 
+    carregarKitsCadastrados(); 
     carregarListKits(); 
 
-    // --- Listeners do Modal de Kit ---
     const btn_conf_product = document.getElementById('conf_product_list');
     const lista_produto_ul = document.getElementById('lista_produto');
     const formKit = document.getElementById('formKit');
@@ -566,15 +512,11 @@ document.addEventListener('DOMContentLoaded', () => {
         btn_conf_product.addEventListener('click', adicionarProdutoNaLista);
     }
     
-    if (lista_produto_ul) {
-        lista_produto_ul.addEventListener('click', gerenciarCliquesLista);
-    }
-    
     if (formKit) {
         formKit.addEventListener('submit', function (event) {
             const produtosNaLista = lista_produto_ul.querySelectorAll('li.list_produto_item');
             if (produtosNaLista.length === 0) {
-                event.preventDefault(); // Para o envio
+                event.preventDefault(); 
                 alert("Você deve adicionar pelo menos um produto ao kit antes de salvar.");
             }
         });

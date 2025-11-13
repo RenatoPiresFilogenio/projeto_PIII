@@ -33,7 +33,41 @@ async function renderizarOrcamentosEscolhidos() {
             return;
         }
 
-        container.innerHTML = filtrados.map(orcamento => `
+        container.innerHTML = filtrados.map(orcamento => {
+            
+            // --- NOVA LÓGICA DE STATUS ---
+            let statusClass = '';
+            let statusTexto = '';
+
+            switch (orcamento.status) {
+                case 'aprovado':
+                case 'confirmado':
+                    statusClass = 'approved';
+                    statusTexto = 'Aprovado';
+                    break;
+                case 'recusado':
+                    statusClass = 'denied';
+                    statusTexto = 'Recusado (Cliente)';
+                    break;
+                case 'rejeitado':
+                    statusClass = 'rejeitado'; // Classe CSS para vermelho forte
+                    statusTexto = 'Rejeitado (Admin)';
+                    break;
+                case 'nao-liberado':
+                    statusClass = 'pending';
+                    statusTexto = 'Não Liberado';
+                    break;
+                case 'AGUARDA_ADM':
+                    statusClass = 'pending';
+                    statusTexto = 'Aguardando Admin';
+                    break;
+                default:
+                    statusClass = 'other';
+                    statusTexto = orcamento.status;
+            }
+            // --- FIM DA LÓGICA ---
+
+            return `
             <div class="orcamento-item" onclick="verOrcamento(${orcamento.id})">
                 <div class="orcamento-header">
                     <div class="cliente-nome">${orcamento.cliente}</div>
@@ -42,15 +76,17 @@ async function renderizarOrcamentosEscolhidos() {
                 <div class="orcamento-info">
                     <span>${orcamento.fornecedor} • ${orcamento.regiao.toUpperCase()}</span>
                     <div style="display: flex; gap: 10px; align-items: center;">
-                        <span class="status ${orcamento.status}">
-                            ${orcamento.status === 'nao-liberado' ? 'Não Liberado' :
-                orcamento.status.charAt(0).toUpperCase() + orcamento.status.slice(1)}
+                        
+                        <span class="status ${statusClass}">
+                            ${statusTexto}
                         </span>
+                        
                         <span>${formatarData(orcamento.data)}</span>
                     </div>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
 
     } catch (error) {
         console.error("Falha ao buscar orçamentos:", error);

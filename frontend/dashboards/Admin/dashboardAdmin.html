@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Solar Smart</title> <link rel="stylesheet" href="../../css/Dashboards/cssAdmin.css">
+    <title>Dashboard - Solar Smart</title>
+    <link rel="stylesheet" href="../../css/Dashboards/cssAdmin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -13,7 +14,7 @@
     <div class="container">
 
         <div class="header">
-            <h1>Solar Smart Dashboard</h1> 
+            <h1>Solar Smart Dashboard</h1>
             <nav class="header-nav">
                 <a href="aprovar_orcamento.html" class="btn-novo">
                     <i class="fas fa-check-circle"></i> Orçamentos em Aprovação </a>
@@ -27,13 +28,14 @@
 
         <div class="block">
             <div class="block-title">
-                <i class="fas fa-solar-panel"></i> Orçamentos Escolhidos </div>
+                <i class="fas fa-solar-panel"></i> Orçamentos Escolhidos
+            </div>
             <div class="filters">
                 <select class="filter-select" id="filtroStatus">
                     <option value="">Todos os Status</option>
                     <option value="aprovado">Aprovados</option>
-                    <option value="recusado">Recusados</option>
-                    <option value="nao-liberado">Não Liberados</option>
+                    <option value="recusado">Recusados (Cliente ou Admin)</option>
+                    <option value="AGUARDA_ADM">Aguardando Admin decidir</option>
                 </select>
                 <select class="filter-select" id="filtroRegiao">
                     <option value="">Todas as Regiões</option>
@@ -52,7 +54,8 @@
 
         <div class="block">
             <div class="block-title">
-                <i class="fas fa-chart-line"></i> Resumo Geral </div>
+                <i class="fas fa-chart-line"></i> Resumo Geral
+            </div>
             <div class="stats-grid" id="estatisticasGerais">
 
             </div>
@@ -61,7 +64,8 @@
 
         <div class="block">
             <div class="block-title">
-                <i class="fas fa-users"></i> Clientes por Região </div>
+                <i class="fas fa-users"></i> Clientes por Região
+            </div>
             <div class="clientes-grid" id="clientesPorRegiao">
 
             </div>
@@ -70,7 +74,8 @@
 
         <div class="block">
             <div class="block-title">
-                <i class="fas fa-award"></i> Insights e Rankings </div>
+                <i class="fas fa-award"></i> Insights e Rankings
+            </div>
             <div class="insights-grid">
 
                 <div class="insight-block">

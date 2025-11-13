@@ -2,7 +2,6 @@
 require_once '../../DB/database.php';
 session_start();
 
-
 if (!isset($_SESSION['id_usuario'])) {
     http_response_code(401); 
     echo json_encode(['erro' => 'Usuário não autenticado. Faça login.']);
@@ -32,11 +31,9 @@ try {
         FROM 
             ORCAMENTO O
         
-        -- Join para pegar os dados do cliente (Usuário)
         JOIN IMOVEIS I ON O.FK_IMOVEIS_ID = I.ID
         JOIN USUARIOS U ON I.FK_USUARIOS_ID_USUARIO = U.ID_USUARIO
         
-        -- Joins da sua View (para pegar produtos e fornecedor)
         LEFT JOIN FORNECEDORES F ON O.FK_FORNECEDOR_ID = F.ID_FORNECEDOR
         LEFT JOIN (
             SELECT 
@@ -52,14 +49,15 @@ try {
         
         WHERE 
             O.IS_DELETE = FALSE
-            AND U.ID_USUARIO = ?  -- A MÁGICA: Filtra APENAS os do cliente logado
+            AND U.ID_USUARIO = ?
         ORDER BY
-            -- Coloca os pendentes primeiro, depois os mais recentes
             CASE 
                 WHEN O.STATUS = 'AGUARDA_ADM' THEN 1
-                WHEN O.STATUS = 'APROVADO' THEN 2
-                WHEN O.STATUS = 'NEGADO' THEN 3
-                ELSE 4
+                WHEN O.STATUS = 'aprovado' THEN 2
+                WHEN O.STATUS = 'confirmado' THEN 2
+                WHEN O.STATUS = 'recusado' THEN 3
+                WHEN O.STATUS = 'rejeitado' THEN 4
+                ELSE 5
             END ASC,
             O.DATA DESC
     ";
@@ -91,12 +89,16 @@ try {
             $response['pending'][] = $formatted;
         } 
         else { 
-            if ($budget['status'] === 'APROVADO') {
+            
+            if ($budget['status'] === 'aprovado' || $budget['status'] === 'confirmado') {
                 $formatted['status_class'] = 'approved';
-                $formatted['status_texto'] = 'Aprovado pelo Admin';
-            } else if ($budget['status'] === 'NEGADO') {
+                $formatted['status_texto'] = 'Aprovado';
+            } else if ($budget['status'] === 'recusado') {
                 $formatted['status_class'] = 'denied';
-                $formatted['status_texto'] = 'Negado pelo Admin';
+                $formatted['status_texto'] = 'Recusado por Você';
+            } else if ($budget['status'] === 'rejeitado') {
+                $formatted['status_class'] = 'rejeitado';
+                $formatted['status_texto'] = 'Rejeitado pelo Admin';
             } else {
                 $formatted['status_class'] = 'other';
                 $formatted['status_texto'] = $budget['status']; 

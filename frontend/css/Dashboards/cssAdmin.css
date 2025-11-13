@@ -4,7 +4,7 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     /* Este é o novo fundo azulado suave */
-    background: #f0f7ff; 
+    background: #f0f7ff;
     min-height: 100vh;
     padding: 20px;
     color: var(--cinza-escuro);
@@ -28,7 +28,8 @@ body {
     align-items: center;
     flex-wrap: wrap;
     gap: 20px;
-    border-top: 5px solid var(--azul-tecnologico); /* Destaque superior */
+    border-top: 5px solid var(--azul-tecnologico);
+    /* Destaque superior */
 }
 
 .header h1 {
@@ -61,21 +62,26 @@ body {
 }
 
 .btn-novo {
-    background: var(--verde-sustentavel); /* Cor de Ação Principal */
+    background: var(--verde-sustentavel);
+    /* Cor de Ação Principal */
 }
+
 .btn-novo:hover,
 .btn-fornecedor:hover,
 .btn-sair:hover {
-    filter: brightness(1.1); /* Efeito de hover sutil */
+    filter: brightness(1.1);
+    /* Efeito de hover sutil */
     box-shadow: var(--sombra-hover);
 }
 
 .btn-fornecedor {
-    background: var(--azul-tecnologico); /* Cor de Ação Secundária */
+    background: var(--azul-tecnologico);
+    /* Cor de Ação Secundária */
 }
 
 .btn-sair {
-    background: var(--vermelho-erro); /* Cor de Perigo */
+    background: var(--vermelho-erro);
+    /* Cor de Perigo */
 }
 
 
@@ -164,7 +170,8 @@ body {
 .orcamento-valor {
     font-size: 1.3rem;
     font-weight: 700;
-    color: var(--azul-tecnologico); /* Cor primária da marca */
+    color: var(--azul-tecnologico);
+    /* Cor primária da marca */
 }
 
 .orcamento-info {
@@ -177,26 +184,43 @@ body {
 
 /* Badges de Status (Impactantes) */
 .status {
-    padding: 6px 12px;
-    border-radius: 100px; /* Formato "pill" */
+    padding: 5px 12px;
+    border-radius: 100px;
+    /* Formato "pill" */
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--branco);
     text-transform: uppercase;
+    border: 1px solid transparent;
 }
 
-.status.aprovado {
+/* MODIFICADORES DE COR */
+.status.approved {
     background: var(--verde-sucesso);
+    color: var(--branco);
 }
 
-.status.recusado {
+/* Este foi corrigido de "outline" para "solid" */
+.status.denied {
     background: var(--vermelho-erro);
+    color: var(--branco);
 }
 
-.status.nao-liberado {
+.status.rejeitado {
+    background: #a00000;
+    /* Vermelho mais escuro para diferenciar */
+    color: var(--branco);
+}
+
+.status.pending {
     background: var(--laranja-aviso);
+    color: var(--branco);
 }
 
+.status.other {
+    background: var(--cinza-medio);
+    color: #333;
+}
 
 /* --- GRID DE ESTATÍSTICAS --- */
 
@@ -218,6 +242,7 @@ body {
     justify-content: center;
     transition: var(--transition);
 }
+
 .stat-card:hover {
     box-shadow: var(--sombra-hover);
     transform: translateY(-2px);
@@ -226,7 +251,8 @@ body {
 .stat-number {
     font-size: 2.1rem;
     font-weight: 700;
-    color: var(--azul-tecnologico); /* Cor primária da marca */
+    color: var(--azul-tecnologico);
+    /* Cor primária da marca */
     margin-bottom: 8px;
 }
 
@@ -262,7 +288,8 @@ body {
 .regiao-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--azul-tecnologico); /* Cor primária da marca */
+    color: var(--azul-tecnologico);
+    /* Cor primária da marca */
     margin-bottom: 15px;
     text-transform: uppercase;
 }
@@ -291,7 +318,8 @@ body {
 /* Badges de Status Menores */
 .stat-badge {
     padding: 4px 10px;
-    border-radius: 100px; /* Formato "pill" */
+    border-radius: 100px;
+    /* Formato "pill" */
     font-size: 0.7rem;
     font-weight: 600;
     color: var(--branco);
@@ -338,7 +366,8 @@ body {
 }
 
 .insight-item {
-    background: var(--cinza-claro); /* Contraste com o fundo branco */
+    background: var(--cinza-claro);
+    /* Contraste com o fundo branco */
     border: 1px solid var(--cinza-medio);
     border-radius: var(--border-radius);
     padding: 15px;
@@ -356,7 +385,8 @@ body {
 .insight-value {
     font-size: 1.4rem;
     font-weight: 700;
-    color: var(--azul-tecnologico); /* Cor primária da marca */
+    color: var(--azul-tecnologico);
+    /* Cor primária da marca */
     margin-bottom: 5px;
 }
 
@@ -375,6 +405,7 @@ body {
     border-radius: var(--border-radius);
     border: 1px dashed var(--cinza-medio);
 }
+
 .empty-state h3 {
     color: var(--azul-tecnologico);
 }
@@ -388,7 +419,7 @@ body {
         text-align: center;
         gap: 15px;
     }
-    
+
     .header h1 {
         border-left: none;
         padding-left: 0;
