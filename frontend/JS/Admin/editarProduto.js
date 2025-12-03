@@ -119,7 +119,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
-async function ProdutoView(dados) {
+/**
+ * Renderiza o painel de visualização do produto (Estilo Padronizado)
+ */
+function ProdutoView(dados) {
     const container = document.getElementById('produto_view');
     if (!container) return;
 
@@ -129,25 +132,89 @@ async function ProdutoView(dados) {
     }
 
     const nomeProduto = dados.nome || 'Produto';
-    const modelo = dados.modelo || 'N/D';
-    const nomeMarca = dados.nome_marca || 'N/D';
-    const pais = dados.pais_origem || 'N/D';
+    const modelo = dados.modelo || '-';
+    const nomeMarca = dados.nome_marca || '-';
+    const pais = dados.pais_origem || '-';
     const data = formatarData(dados.data_cadastro);
-    const site = dados.site_oficial || '#';
     
-    const htmlDoProduto = `
-       <div class="card-marca" id="produto-${dados.id_produto || ''}">
-            <h3 class="card-marca-titulo">Produto: <strong>${nomeProduto}</strong></h3>
-            <p class="card-marca-info">Modelo: ${modelo}</p>
-            <hr>
-            <h4 class="card-marca-titulo">Marca: ${nomeMarca}</h4>
-            <p class="card-marca-info">País de Origem: ${pais}</p>
-            <p class="card-marca-info">Data de Cadastro (Marca): ${data}</p>
-            <a href="https://${site.replace(/^https?:\/\//,'')}" target="_blank" class="card-marca-link">Site Oficial da Marca</a>
-       </div>
+    // Link do site da marca
+    let linkSite = dados.site_oficial || '#';
+    let displaySite = 'Site Oficial da Marca';
+    
+    if (linkSite !== '#' && linkSite.trim() !== '') {
+        if (!linkSite.startsWith('http')) {
+            linkSite = 'https://' + linkSite;
+        }
+    } else {
+        linkSite = '#';
+        displaySite = 'Site da marca não informado';
+    }
+    
+    // HTML Estruturado igual ao de Marca/Fornecedor
+    const htmlPainel = `
+        <div class="info-panel">
+            <h3>Produto: ${nomeProduto}</h3>
+            
+            <div class="info-panel-row">
+                <strong>Modelo:</strong> ${modelo}
+            </div>
+
+            <div style="margin: 20px 0; border-top: 1px dashed #ccc; padding-top: 15px;">
+                <h4 style="color: #0056b3; margin-bottom: 10px;">Dados da Marca</h4>
+                
+                <div class="info-panel-row">
+                    <strong>Marca:</strong> ${nomeMarca}
+                </div>
+                
+                <div class="info-panel-row">
+                    <strong>País de Origem:</strong> ${pais}
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <a href="${linkSite}" target="_blank" class="info-panel-link" 
+                   ${linkSite === '#' ? 'style="color:#aaa; pointer-events:none;"' : ''}>
+                   ${displaySite} <i class="fas fa-external-link-alt" style="font-size:0.8rem;"></i>
+                </a>
+            </div>
+        </div>
     `;
-    container.innerHTML = htmlDoProduto;
+    container.innerHTML = htmlPainel;
 }
+
+// Listeners para atualização em tempo real
+document.getElementById('nome_produto').addEventListener('input', (e) => {
+    const tituloPrincipal = document.getElementById('titulo_marca');
+    const tituloPainel = document.querySelector('.info-panel h3');
+    
+    if(tituloPrincipal) tituloPrincipal.innerHTML = `<i class="fas fa-edit"></i> Editar Produto: ${e.target.value}`;
+    if(tituloPainel) tituloPainel.textContent = `Produto: ${e.target.value}`;
+});
+
+// Listener para atualizar o nome da marca no painel quando mudar o select
+document.getElementById('id_marca').addEventListener('change', (e) => {
+    const textoMarca = e.target.options[e.target.selectedIndex].text;
+    // Tenta encontrar o campo no painel para atualizar visualmente
+    // (Isso é um bonus visual, o ideal é recarregar os dados da marca, mas assim já ajuda)
+    // O ideal seria fazer um fetch da marca nova, mas por simplicidade:
+    const rows = document.querySelectorAll('.info-panel-row');
+    rows.forEach(row => {
+        if(row.innerHTML.includes('<strong>Marca:</strong>')) {
+            row.innerHTML = `<strong>Marca:</strong> ${textoMarca}`;
+        }
+    });
+});
+// Listener para atualizar o nome da marca no painel quando mudar o select
+document.getElementById('id_marca').addEventListener('change', (e) => {
+    const textoMarca = e.target.options[e.target.selectedIndex].text;
+  
+    const rows = document.querySelectorAll('.info-panel-row');
+    rows.forEach(row => {
+        if(row.innerHTML.includes('<strong>Marca:</strong>')) {
+            row.innerHTML = `<strong>Marca:</strong> ${textoMarca}`;
+        }
+    });
+});
 
 /**
  * Funções de Notificação e Helpers

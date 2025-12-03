@@ -1,131 +1,175 @@
-/* Importações (Assumindo que seu variables.css tem as cores da marca) */
 @import url(../../../css/LandPage/variables.css);
 @import url(../../btn-default.css);
 @import url(../../page-default.css);
 
-/* --- ANIMAÇÕES GLOBAIS --- */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-@keyframes popIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+/* --- VARIÁVEIS DE FALLBACK (Caso não carregue o variables.css) --- */
+:root {
+    --azul-tecnologico: #0056b3;
+    --verde-sustentavel: #28a745;
+    --branco: #ffffff;
+    --cinza-claro: #f8fafc;
+    --cinza-medio: #e2e8f0;
+    --cinza-escuro: #4a5568;
+    --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    --sombra-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --border-radius: 12px;
+    --vermelho-erro: #dc3545;
 }
 
-/* --- ESTILOS GERAIS --- */
+/* --- RESET E ESTRUTURA --- */
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f0f7ff; /* Fundo azul suave (agradável) */
-    min-height: 100vh;
+    font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+    background-color: #f4f7fa;
+    /* Fundo Azulado Suave */
+    color: #2d3748;
+    margin: 0;
     padding: 20px;
-    color: var(--cinza-escuro);
+    min-height: 100vh;
 }
 
 .container {
     max-width: 1400px;
     margin: 0 auto;
+    padding-bottom: 50px;
 }
 
 /* --- HEADER --- */
 .header {
     background: var(--branco);
-    border-radius: var(--border-radius);
+    border-radius: 16px;
     padding: 20px 30px;
     margin-bottom: 30px;
     box-shadow: var(--sombra);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    border-top: 5px solid var(--azul-tecnologico); /* Marca principal */
+    border-top: 4px solid var(--azul-tecnologico);
+    /* Identidade Solar Smart */
 }
 
 .header h1 {
-    color: var(--azul-tecnologico);
-    font-size: 2rem;
-    font-weight: 700;
+    color: #1a202c;
+    font-size: 1.8rem;
+    font-weight: 800;
     margin: 0;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
 
-/* --- BLOCO PRINCIPAL (Branco) --- */
+.header h1 i {
+    color: var(--azul-tecnologico);
+}
+
+/* Botão de Voltar (Estilo Pill) */
+.btn-secondary {
+    background-color: #edf2f7;
+    color: #4a5568;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-secondary:hover {
+    background-color: #cbd5e0;
+    transform: translateY(-2px);
+}
+
+/* --- ÁREA PRINCIPAL --- */
 .block {
-    background: var(--branco);
-    border-radius: var(--border-radius);
-    padding: 25px 30px;
-    margin-bottom: 30px;
-    box-shadow: var(--sombra);
+    background: transparent;
+    /* Removemos o fundo branco do container geral */
 }
 
-/* --- ABAS (TABS) - O DESTAQUE DA PÁGINA --- */
+/* --- ABAS (TABS MODERNAS) --- */
 .tabs {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     margin-bottom: 25px;
-    border-bottom: 2px solid var(--cinza-medio);
-    flex-wrap: wrap;
+    background: #fff;
+    padding: 10px;
+    border-radius: 16px;
+    box-shadow: var(--sombra);
+    overflow-x: auto;
+    /* Para telas pequenas */
 }
 
 .tab {
-    padding: 15px 25px;
-    background: transparent;
+    flex: 1;
+    padding: 12px 20px;
     border: none;
-    border-bottom: 4px solid transparent;
+    background: transparent;
     cursor: pointer;
     font-size: 1rem;
     font-weight: 600;
     color: var(--cinza-escuro);
+    border-radius: 10px;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
 }
 
 .tab:hover {
-    background: var(--cinza-claro);
+    background-color: #f7fafc;
     color: var(--azul-tecnologico);
 }
 
+/* Aba Ativa (Estilo Botão Sólido) */
 .tab.active {
-    color: var(--azul-tecnologico);
-    font-weight: 700;
-    /* O "TCHAM" da Solar Smart */
-    border-bottom-color: var(--amarelo-solar); 
+    background-color: var(--azul-tecnologico);
+    color: var(--branco);
+    box-shadow: 0 4px 6px rgba(0, 86, 179, 0.3);
 }
 
-/* Animação de fade-in para o conteúdo da aba */
+/* Conteúdo da Aba com Animação */
 .tab-content {
     display: none;
+    animation: fadeIn 0.4s ease-out forwards;
 }
 
 .tab-content.active {
     display: block;
-    animation: fadeIn 0.4s ease-out forwards;
 }
 
-/* --- TÍTULO DO PAINEL E FILTROS --- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- BARRA DE TÍTULO E FILTROS DA SEÇÃO --- */
 .block-title {
-    color: var(--azul-tecnologico);
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--cinza-medio);
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
     flex-wrap: wrap;
     gap: 15px;
-    /* Destaque consistente da marca */
-    border-left: 5px solid var(--amarelo-solar);
-    padding-left: 10px;
 }
 
 .block-title span {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2d3748;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -133,293 +177,279 @@ body {
 
 .filters {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .filter-input {
-    padding: 10px 15px;
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
+    padding: 10px 20px;
+    border: 1px solid #cbd5e0;
+    border-radius: 50px;
+    /* Input redondo moderno */
     font-size: 0.95rem;
-    min-width: 200px;
-    transition: var(--transition);
-    font-family: inherit;
+    outline: none;
+    min-width: 250px;
+    transition: border-color 0.2s;
 }
 
 .filter-input:focus {
-    outline: none;
     border-color: var(--azul-tecnologico);
-    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2); /* Sombra de foco */
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
 }
 
-/* --- BOTÕES --- */
-.btn {
-    padding: 10px 20px;
+/* Botão Primário (Novo Cadastro) */
+.btn-primary {
+    background-color: var(--verde-sustentavel);
+    color: white;
     border: none;
-    border-radius: var(--border-radius);
-    font-size: 0.9rem;
-    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-weight: 700;
     cursor: pointer;
-    transition: var(--transition);
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    text-decoration: none;
-    text-transform: uppercase;
-    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
 }
 
-.btn-primary {
-    background: var(--verde-sustentavel);
-    color: var(--branco);
-}
 .btn-primary:hover {
-    filter: brightness(1.1);
-    box-shadow: var(--sombra-hover);
-}
-
-.btn-secondary {
-    background: var(--cinza-medio);
-    color: #333;
-}
-.btn-secondary:hover {
-    background: var(--cinza-escuro);
-    color: var(--branco);
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(40, 167, 69, 0.3);
 }
 
 /* --- GRID DE CARDS --- */
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
 }
 
-/* Animação de pop-in para os cards */
-.cards-grid > * {
-    animation: popIn 0.4s ease-out forwards;
-}
-
-/* --- NOVO DESIGN DE CARD (MARCANTE) --- */
+/* --- CARD DE ATIVO (Estilo Solar Smart) --- */
 .card {
     background: var(--branco);
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
-    transition: var(--transition);
+    border-radius: 16px;
+    border: 1px solid #f0f0f0;
+    box-shadow: var(--sombra);
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    /* O "TCHAM" da marca */
-    border-left: 5px solid var(--azul-tecnologico);
-    box-shadow: var(--sombra);
+    display: flex;
+    flex-direction: column;
 }
 
 .card:hover {
-    border-color: var(--azul-tecnologico);
+    transform: translateY(-5px);
     box-shadow: var(--sombra-hover);
-    transform: translateY(-4px); /* Efeito de elevação mais forte */
+    border-color: #bee3f8;
 }
 
-/* CABEÇALHO DO CARD (Título + Ações) */
+/* Borda lateral colorida (marca registrada da dashboard) */
+.card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background-color: var(--azul-tecnologico);
+}
+
+/* Cabeçalho do Card */
 .card-header {
+    padding: 20px 20px 10px 25px;
+    /* padding-left maior por causa da borda */
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background: #f0f7ff; /* Fundo azul suave */
-    border-bottom: 1px solid var(--cinza-medio);
+    align-items: flex-start;
 }
 
 .card-title {
-    font-size: 1.1rem; 
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--azul-tecnologico);
     margin: 0;
-}
-.card-title strong {
-    color: var(--preto, #000); /* Destaca o nome */
+    line-height: 1.4;
 }
 
+.card-title strong {
+    color: #2d3748;
+    /* Nome em destaque escuro */
+    display: block;
+    font-size: 1.2rem;
+}
+
+/* Ações (Botões redondos) */
 .card-actions {
     display: flex;
     gap: 8px;
 }
 
-/* BOTÕES DE ÍCONE (Editar/Excluir) */
 .btn-icon {
-    background: var(--branco);
-    border: 1px solid var(--cinza-medio);
-    color: var(--cinza-escuro);
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #718096;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: var(--transition);
-    font-size: 0.85rem;
+    transition: all 0.2s;
 }
+
 .btn-icon:hover {
-    transform: scale(1.1);
+    background-color: #edf2f7;
+    color: var(--azul-tecnologico);
+    border-color: var(--azul-tecnologico);
 }
-.btn-edit:hover {
-    background: var(--verde-sustentavel);
-    border-color: var(--verde-sustentavel);
-    color: var(--branco);
-}
+
 .btn-delete:hover {
-    background: var(--vermelho-erro);
-    border-color: var(--vermelho-erro);
-    color: var(--branco);
+    color: #e53e3e;
+    border-color: #e53e3e;
+    background-color: #fff5f5;
 }
 
-/* CORPO DO CARD (Dados) */
+/* Corpo do Card */
 .card-body {
-    padding: 20px 25px;
+    padding: 10px 20px 20px 25px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* GRID DE INFORMAÇÕES (para "País", "Site", etc.) */
+/* Grid de Informações internas */
 .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 15px;
 }
+
 .info-item {
     display: flex;
     flex-direction: column;
 }
+
 .info-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--cinza-escuro);
+    font-size: 0.75rem;
     text-transform: uppercase;
+    color: #a0aec0;
+    font-weight: 700;
     margin-bottom: 4px;
 }
+
 .info-value {
     font-size: 0.95rem;
-    font-weight: 500;
-    color: #333;
-    word-break: break-all;
+    font-weight: 600;
+    color: #4a5568;
+    word-break: break-word;
 }
+
+/* Link dentro do card (ex: email) */
 .info-value a {
     color: var(--azul-tecnologico);
     text-decoration: none;
-    font-weight: 600;
 }
+
 .info-value a:hover {
     text-decoration: underline;
 }
 
-/* --- ESTILOS ESPECÍFICOS (Ex: Produto, Fornecedor) --- */
+/* Specs Específicas (para Produtos) */
 .placa-specs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 15px;
     margin-top: 15px;
+    background: #f7fafc;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
 }
+
 .spec-item {
     text-align: center;
-    padding: 10px;
-    background: #f0f7ff;
-    border-radius: var(--border-radius);
 }
+
 .spec-value {
+    display: block;
+    font-weight: 800;
+    color: var(--verde-sustentavel);
     font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--azul-tecnologico);
 }
+
 .spec-label {
-    font-size: 0.8rem;
-    color: var(--cinza-escuro);
-    margin-top: 5px;
+    font-size: 0.75rem;
+    color: #718096;
 }
 
-.fornecedor-regiao {
-    background: var(--amarelo-solar); /* Destaque amarelo */
-    color: #333;
-    padding: 4px 12px;
-    border-radius: 100px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    flex-shrink: 0;
-}
-
-/* --- MODAIS --- */
+/* --- MODAIS (Limpos e Centralizados) --- */
 .modal {
-    display: none; /* Controlado por JS (classe .active) */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(26, 32, 44, 0.6);
+    /* Backdrop escuro */
+    backdrop-filter: blur(4px);
+    /* Efeito moderno de blur */
     z-index: 1000;
-    display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.modal-content {
-    background: var(--branco);
-    border-radius: var(--border-radius);
-    padding: 30px 40px;
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    box-shadow: var(--sombra-intensa);
-    border-top: 5px solid var(--azul-tecnologico);
-}
-
-/* Animação do Modal */
-.modal {
-    display: none; /* Escondido por padrão */
     opacity: 0;
     transition: opacity 0.3s ease;
 }
+
 .modal.active {
-    display: flex; /* Mostra o modal */
+    display: flex;
     opacity: 1;
-    animation: fadeIn 0.3s ease;
 }
+
+.modal-content {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    width: 95%;
+    max-width: 600px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Efeito Pop */
+}
+
 .modal.active .modal-content {
-    animation: popIn 0.3s ease;
+    transform: scale(1);
 }
 
 .modal-close {
     position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 2rem;
-    color: var(--cinza-medio);
+    top: 20px;
+    right: 25px;
+    font-size: 1.8rem;
+    color: #cbd5e0;
     cursor: pointer;
-    transition: var(--transition);
+    line-height: 1;
 }
+
 .modal-close:hover {
-    color: var(--vermelho-erro);
+    color: #e53e3e;
 }
 
 .modal h3 {
-    color: var(--azul-tecnologico);
-    margin-bottom: 25px;
     font-size: 1.5rem;
+    color: var(--azul-tecnologico);
+    margin-bottom: 30px;
+    text-align: center;
 }
 
-.modal-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: flex-end;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid var(--cinza-medio);
-}
-
-/* --- FORMULÁRIOS (Dentro dos Modais) --- */
+/* Formulários no Modal */
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
+    gap: 20px;
 }
 
 .form-group {
@@ -428,158 +458,182 @@ body {
 }
 
 .form-label {
-    margin-bottom: 8px;
-    color: #333;
-    font-weight: 600;
     font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 8px;
 }
 
 .form-input {
-    width: 100%;
     padding: 12px 15px;
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
-    font-size: 0.95rem;
-    transition: var(--transition);
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s;
 }
+
 .form-input:focus {
-    outline: none;
     border-color: var(--azul-tecnologico);
-    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+    outline: none;
 }
 
-/* Grupo de Input (para Kit) */
-.input-group {
+.modal-actions {
+    margin-top: 30px;
     display: flex;
-}
-.input-group .form-input {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-}
-.input-group .btn-primary {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    flex-shrink: 0; /* Impede que o botão encolha */
+    justify-content: flex-end;
+    gap: 15px;
+    border-top: 1px solid #edf2f7;
+    padding-top: 20px;
 }
 
-/* Lista de Produtos do Kit */
+/* Estilos para lista de produtos no kit */
 .lista-produtos-container {
-    margin-top: 20px;
+    background: #f8fafc;
+    border: 1px solid #edf2f7;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
 }
-.lista-produtos-container h4 {
-    font-weight: 600;
-    color: var(--azul-tecnologico);
-    margin-bottom: 10px;
-}
+
 .lista_produto_selecionado {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
+
 .list_produto_item {
-    background-color: #f0f7ff; /* Fundo azul suave */
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
-    padding: 10px 15px;
-    font-size: 0.95rem;
-    color: #333;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: #fff;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #e2e8f0;
 }
 
-/* ==== INÍCIO - NOVOS ESTILOS PARA O FORMULÁRIO DE KIT ==== */
-.controles-produto {
+.btn-remover {
+    background: none;
+    border: none;
+    color: #e53e3e;
+    cursor: pointer;
+}
+/* --- PAGINAÇÃO (Padrão do Sistema) --- */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding-bottom: 20px;
+}
+
+.pagination-btn {
+    min-width: 40px;      /* Largura mínima para ficar quadrado/retangular bonito */
+    height: 40px;         /* Altura fixa */
+    padding: 0 12px;      /* Espaçamento interno */
+    border: 1px solid #dae1e7;
+    background-color: #ffffff;
+    color: #4a5568;       /* Cinza texto */
+    border-radius: 8px;   /* Cantos arredondados (o segredo do visual) */
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    gap: 15px;
-}
-.controle-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-.controle-item label {
-    font-size: 0.8rem;
-    color: var(--cinza-escuro);
-    font-weight: 600;
-}
-.input_number, .input_valor {
-    width: 80px;
-    padding: 8px;
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
-    font-size: 0.9rem;
-}
-.input_valor {
-    width: 100px;
-}
-.btn-remover {
-    background: transparent;
-    border: none;
-    color: var(--vermelho-erro);
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 5px;
-    transition: var(--transition);
-}
-.btn-remover:hover {
-    transform: scale(1.1);
-    color: darkred;
-}
-/* ==== FIM - NOVOS ESTILOS PARA O FORMULÁRIO DE KIT ==== */
-
-
-/* --- ESTADO VAZIO --- */
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--cinza-escuro);
-    background: #f0f7ff;
-    border-radius: var(--border-radius);
-    border: 1px dashed var(--cinza-medio);
-}
-.empty-state h3 {
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-    color: var(--azul-tecnologico);
+    justify-content: center;
+    font-family: inherit; /* Garante a mesma fonte do resto */
 }
 
-/* --- RESPONSIVIDADE --- */
+/* Hover nos botões normais */
+.pagination-btn:hover:not(:disabled) {
+    border-color: #0056b3; /* Azul primário */
+    color: #0056b3;
+    background-color: #f0f7ff;
+    transform: translateY(-1px);
+}
+
+/* Botão ATIVO (Página Atual) */
+.pagination-btn.active {
+    background-color: #0056b3; /* Azul primário sólido */
+    color: #ffffff;
+    border-color: #0056b3;
+    box-shadow: 0 4px 6px rgba(0, 86, 179, 0.2);
+}
+
+/* Botão Ativo Hover */
+.pagination-btn.active:hover {
+    background-color: #004494; /* Azul um pouco mais escuro */
+    border-color: #004494;
+}
+
+/* Estado Desabilitado (Setas no começo/fim) */
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f7fafc;
+    border-color: #edf2f7;
+    color: #a0aec0;
+}
+
+/* RESPONSIVIDADE */
 @media (max-width: 768px) {
     .header {
         flex-direction: column;
+        gap: 15px;
         text-align: center;
     }
-    .header-actions {
-        justify-content: center;
+
+    .block-title {
+        flex-direction: column;
+        align-items: flex-start;
     }
-    .form-grid, .cards-grid {
+
+    .filters {
+        width: 100%;
+    }
+
+    .filter-input {
+        width: 100%;
+    }
+
+    .tabs {
+        flex-direction: column;
+    }
+
+    .tab {
+        width: 100%;
+        justify-content: start;
+    }
+
+    .cards-grid {
         grid-template-columns: 1fr;
     }
-    .tabs {
-        gap: 0;
-    }
-    .tab {
-        flex-grow: 1; /* Faz as abas ocuparem o espaço */
-        font-size: 0.9rem;
-        padding: 12px 10px;
-        justify-content: center;
-    }
-    .placa-specs {
-        grid-template-columns: 1fr 1fr;
-    }
-    .modal-content {
-        margin: 5% 10px;
-        padding: 20px;
-    }
-    .info-grid {
-        grid-template-columns: 1fr; /* Coluna única em telas pequenas */
-    }
-    .controles-produto {
-        flex-wrap: wrap; /* Permite que os controles do kit quebrem a linha */
-    }
+}
+
+/* --- CORREÇÃO DE ÍCONES (Font Awesome Fix) --- */
+.fas,
+.fa-solid {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+}
+
+.far,
+.fa-regular {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 400 !important;
+}
+
+.fab,
+.fa-brands {
+    font-family: "Font Awesome 6 Brands" !important;
+    font-weight: 400 !important;
+}
+
+/* Garante que o ícone não herde a fonte de texto do corpo */
+i[class^="fa-"],
+i[class*=" fa-"] {
+    font-style: normal;
 }

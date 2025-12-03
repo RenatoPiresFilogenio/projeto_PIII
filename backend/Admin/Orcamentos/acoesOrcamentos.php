@@ -53,11 +53,48 @@ try {
 
 exit;
 
-
-
 function getOrcamentos($pdo)
 {
+    $limit = 5;
+    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+    $offset = ($page - 1) * $limit;
 
+    $whereClauses = ["O.IS_DELETE = FALSE"];
+    $params = [];
+
+    if (!empty($_GET['status'])) {
+        if ($_GET['status'] === 'recusado') {
+            $whereClauses[] = "(O.STATUS = 'recusado' OR O.STATUS = 'rejeitado')";
+        } else {
+            $whereClauses[] = "O.STATUS = ?";
+            $params[] = $_GET['status'];
+        }
+    }
+
+    if (!empty($_GET['regiao'])) {
+        $whereClauses[] = "LOWER(R.NOME) = ?";
+        $params[] = strtolower($_GET['regiao']);
+    }
+
+    $whereSql = " WHERE " . implode(" AND ", $whereClauses);
+
+    // 1. Contagem Total
+    $sqlCount = "
+        SELECT COUNT(*) as total
+        FROM ORCAMENTO O
+        JOIN IMOVEIS I ON O.FK_IMOVEIS_ID = I.ID
+        JOIN BAIRROS B ON I.FK_BAIRROS_ID_BAIRRO = B.ID_BAIRRO
+        JOIN CIDADES C ON B.FK_CIDADES_ID_CIDADE = C.ID_CIDADE
+        JOIN ESTADOS E ON C.FK_ESTADOS_ID_ESTADO = E.ID_ESTADO
+        JOIN REGIAO R ON E.FK_REGIAO_ID_REGIAO = R.ID_REGIAO
+        $whereSql
+    ";
+
+    $stmtCount = $pdo->prepare($sqlCount);
+    $stmtCount->execute($params);
+    $totalRegistros = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
+
+    // 2. Query Principal OTIMIZADA
     $baseSql = "
         SELECT
             O.ID_ORCAMENTO AS id,
@@ -66,7 +103,19 @@ function getOrcamentos($pdo)
             O.VALOR_TOTAL AS valor,
             O.DATA AS data,
             O.STATUS AS status,
-            R.NOME AS regiao
+            R.NOME AS regiao,
+            COALESCE(K.POTENCIA_IDEAL, 0) AS potencia_real,
+            
+            -- AQUI ESTÁ A MÁGICA: Buscamos a quantidade exata de painéis
+            (
+                SELECT COALESCE(SUM(KP.quantidade), 0)
+                FROM KIT_PRODUTOS KP
+                JOIN PRODUTOS P ON KP.fk_produto_id = P.id_produto
+                WHERE KP.fk_kit_id = K.id_kit
+                -- Filtra tudo que tem nome de placa solar
+                AND (LOWER(P.nome) LIKE '%placa%' OR LOWER(P.nome) LIKE '%painel%' OR LOWER(P.nome) LIKE '%modulo%')
+            ) AS qtd_paineis_reais
+
         FROM ORCAMENTO O
         JOIN IMOVEIS I ON O.FK_IMOVEIS_ID = I.ID
         JOIN USUARIOS U ON I.FK_USUARIOS_ID_USUARIO = U.ID_USUARIO
@@ -75,31 +124,27 @@ function getOrcamentos($pdo)
         JOIN ESTADOS E ON C.FK_ESTADOS_ID_ESTADO = E.ID_ESTADO
         JOIN REGIAO R ON E.FK_REGIAO_ID_REGIAO = R.ID_REGIAO
         LEFT JOIN FORNECEDORES F ON O.FK_FORNECEDOR_ID = F.ID_FORNECEDOR
+        LEFT JOIN KIT_ORCAMENTO KO ON O.ID_ORCAMENTO = KO.FK_ORCAMENTO_ID
+        LEFT JOIN KITS K ON KO.FK_KIT_ID = K.ID_KIT
+        
+        $whereSql
+        ORDER BY O.DATA DESC
+        LIMIT $limit OFFSET $offset
     ";
 
-    $conditions = ["O.IS_DELETE = FALSE"];
-    $params = [];
-
-    if (!empty($_GET['status'])) {
-        if ($_GET['status'] === 'recusado') {
-            // --- CORREÇÃO AQUI ---
-            // Se o filtro for "recusado", busca AMBOS os status
-            $conditions[] = "(O.STATUS = 'recusado' OR O.STATUS = 'rejeitado')";
-        } else {
-            $conditions[] = "O.STATUS = ?";
-            $params[] = $_GET['status'];
-        }
-    }
-    if (!empty($_GET['regiao'])) {
-        $conditions[] = "LOWER(R.NOME) = ?";
-        $params[] = strtolower($_GET['regiao']);
-    }
-
-    $sql = $baseSql . " WHERE " . implode(" AND ", $conditions) . " ORDER BY O.DATA DESC";
-
-    $stmt = $pdo->prepare($sql);
+    $stmt = $pdo->prepare($baseSql);
     $stmt->execute($params);
-    return $stmt->fetchAll();
+    $dados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return [
+        'data' => $dados,
+        'paginacao' => [
+            'total_registros' => $totalRegistros,
+            'pagina_atual' => $page,
+            'total_paginas' => ceil($totalRegistros / $limit),
+            'itens_por_pagina' => $limit
+        ]
+    ];
 }
 
 function getEstatisticasGerais($pdo)
@@ -176,8 +221,6 @@ function getFornecedoresPorRegiao($pdo)
             R.NOME AS regiao,
             COUNT(DISTINCT O.FK_FORNECEDOR_ID) AS contagem
         FROM ORCAMENTO O
-        
-        -- Precisamos da Região, então fazemos o join desde o Imóvel
         JOIN IMOVEIS I ON O.FK_IMOVEIS_ID = I.ID
         JOIN BAIRROS B ON I.FK_BAIRROS_ID_BAIRRO = B.ID_BAIRRO
         JOIN CIDADES C ON B.FK_CIDADES_ID_CIDADE = C.ID_CIDADE
@@ -185,7 +228,6 @@ function getFornecedoresPorRegiao($pdo)
         JOIN REGIAO R ON E.FK_REGIAO_ID_REGIAO = R.ID_REGIAO
         
         WHERE O.IS_DELETE = FALSE 
-          -- Importante: Só contar orçamentos que JÁ têm um fornecedor
           AND O.FK_FORNECEDOR_ID IS NOT NULL 
           
         GROUP BY R.NOME
@@ -195,18 +237,16 @@ function getFornecedoresPorRegiao($pdo)
     $stmt = $pdo->query($sql);
     return $stmt->fetchAll();
 }
-
 function getRegiaoMaiorAprovacao($pdo)
 {
     $sql = "
         SELECT
             R.NOME AS regiao,
             COUNT(O.ID_ORCAMENTO) AS total,
-            SUM(CASE WHEN O.STATUS = 'aprovado' THEN 1 ELSE 0 END) AS aprovados,
+            SUM(CASE WHEN LOWER(O.STATUS) IN ('aprovado', 'confirmado') THEN 1 ELSE 0 END) AS aprovados,
             CASE 
                 WHEN COUNT(O.ID_ORCAMENTO) = 0 THEN 0
-                -- Multiplicar por 1.0 força a divisão decimal
-                ELSE (SUM(CASE WHEN O.STATUS = 'aprovado' THEN 1 ELSE 0 END) * 1.0 / COUNT(O.ID_ORCAMENTO))
+                ELSE (SUM(CASE WHEN LOWER(O.STATUS) IN ('aprovado', 'confirmado') THEN 1 ELSE 0 END)::float / COUNT(O.ID_ORCAMENTO))
             END AS taxa
         FROM REGIAO R
         LEFT JOIN ESTADOS E ON E.FK_REGIAO_ID_REGIAO = R.ID_REGIAO
@@ -215,7 +255,7 @@ function getRegiaoMaiorAprovacao($pdo)
         LEFT JOIN IMOVEIS I ON I.FK_BAIRROS_ID_BAIRRO = B.ID_BAIRRO
         LEFT JOIN ORCAMENTO O ON O.FK_IMOVEIS_ID = I.ID AND O.IS_DELETE = FALSE
         GROUP BY R.NOME
-        ORDER BY taxa DESC
+        ORDER BY taxa DESC, total DESC
     ";
     $stmt = $pdo->query($sql);
     return $stmt->fetchAll();
@@ -223,16 +263,15 @@ function getRegiaoMaiorAprovacao($pdo)
 
 function getFornecedoresTop($pdo)
 {
-
     $sql = "
         SELECT
             F.NOME AS fornecedor,
             R.NOME AS regiao,
             COUNT(O.ID_ORCAMENTO) AS total,
-            SUM(CASE WHEN O.STATUS = 'aprovado' THEN 1 ELSE 0 END) AS aprovados,
+            SUM(CASE WHEN LOWER(O.STATUS) IN ('aprovado', 'confirmado') THEN 1 ELSE 0 END) AS aprovados,
             CASE 
                 WHEN COUNT(O.ID_ORCAMENTO) = 0 THEN 0
-                ELSE (SUM(CASE WHEN O.STATUS = 'aprovado' THEN 1 ELSE 0 END) * 1.0 / COUNT(O.ID_ORCAMENTO))
+                ELSE (SUM(CASE WHEN LOWER(O.STATUS) IN ('aprovado', 'confirmado') THEN 1 ELSE 0 END)::float / COUNT(O.ID_ORCAMENTO))
             END AS taxa
         FROM ORCAMENTO O
         JOIN FORNECEDORES F ON O.FK_FORNECEDOR_ID = F.ID_FORNECEDOR
@@ -243,7 +282,7 @@ function getFornecedoresTop($pdo)
         JOIN REGIAO R ON E.FK_REGIAO_ID_REGIAO = R.ID_REGIAO
         WHERE O.IS_DELETE = FALSE
         GROUP BY F.NOME, R.NOME
-        ORDER BY taxa DESC, aprovados DESC
+        ORDER BY taxa DESC, aprovados DESC, total DESC
         LIMIT 5
     ";
     $stmt = $pdo->query($sql);

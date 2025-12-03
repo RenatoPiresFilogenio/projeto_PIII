@@ -16,8 +16,6 @@
         <div class="header">
             <h1>Solar Smart Dashboard</h1>
             <nav class="header-nav">
-                <a href="aprovar_orcamento.html" class="btn-novo">
-                    <i class="fas fa-check-circle"></i> Orçamentos em Aprovação </a>
                 <a href="./cadastro_fornecedores/cadastroFornecedores.html" class="btn-fornecedor">
                     <i class="fas fa-industry"></i> Cadastrar Fornecedores </a>
                 <a href="../../index.html" class="btn-sair">
@@ -33,9 +31,8 @@
             <div class="filters">
                 <select class="filter-select" id="filtroStatus">
                     <option value="">Todos os Status</option>
-                    <option value="aprovado">Aprovados</option>
-                    <option value="recusado">Recusados (Cliente ou Admin)</option>
-                    <option value="AGUARDA_ADM">Aguardando Admin decidir</option>
+                    <option value="aprovado" selected>Aprovados</option>
+                    <option value="recusado">Recusados</option>
                 </select>
                 <select class="filter-select" id="filtroRegiao">
                     <option value="">Todas as Regiões</option>
@@ -46,8 +43,12 @@
                     <option value="norte">Norte</option>
                 </select>
             </div>
-            <div id="orcamentosEscolhidos">
+            <div class="block">
+                <div id="orcamentosEscolhidos">
+                </div>
 
+                <div id="paginacaoContainer" class="pagination-controls">
+                </div>
             </div>
         </div>
 
@@ -60,17 +61,6 @@
 
             </div>
         </div>
-
-
-        <div class="block">
-            <div class="block-title">
-                <i class="fas fa-users"></i> Clientes por Região
-            </div>
-            <div class="clientes-grid" id="clientesPorRegiao">
-
-            </div>
-        </div>
-
 
         <div class="block">
             <div class="block-title">

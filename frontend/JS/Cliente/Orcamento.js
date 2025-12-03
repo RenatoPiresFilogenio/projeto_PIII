@@ -1,595 +1,559 @@
-// Estado da aplicação
-let properties = [];
-let selectedProperty = null;
-let budgets = [];
-let approvedBudget = null;
-let currentStep = 1;
+// ===========================================
+// JS - PÁGINA ORÇAMENTOS (Lógica do Wizard)
+// ===========================================
 
-// Elementos do DOM
-const toast = document.getElementById('toast');
-const modal = document.getElementById('modal-overlay');
-const propertiesSelector = document.getElementById('properties-selector');
-const emptyProperties = document.getElementById('empty-properties');
-const lowConsumptionWarning = document.getElementById('low-consumption-warning');
-const budgetsGrid = document.getElementById('budgets-grid');
-const selectedPropertyInfo = document.getElementById('selected-property-info');
+// --- Estado Global ---
+let appState = {
+    properties: [],
+    selectedProperty: null,
+    budgets: [],
+    approvedBudget: null,
+    currentStep: 1,
+    paginaAtual: 1
+};
 
+// --- Elementos do DOM ---
+const DOM = {
+    toast: document.getElementById('toast'),
+    modal: {
+        overlay: document.getElementById('modal-overlay'),
+        title: document.getElementById('modal-title'),
+        body: document.getElementById('modal-body-content'),
+        actions: document.getElementById('modal-footer-actions'),
+        closeBtn: document.getElementById('modal-close')
+    },
+    steps: {
+        indicators: document.querySelectorAll('.step'),
+        contents: document.querySelectorAll('.step-content')
+    },
+    step1: {
+        selector: document.getElementById('properties-selector'),
+        pagination: document.getElementById('paginacaoContainer'), // Onde os botões vão aparecer
+        emptyState: document.getElementById('empty-properties'),
+        warning: document.getElementById('low-consumption-warning'),
+        consumptionValue: document.getElementById('consumption-value')
+    },
+    step2: {
+        header: document.querySelector('#step-2 .section-header'),
+        grid: document.getElementById('budgets-grid'),
+        infoBanner: document.getElementById('selected-property-info')
+    },
+    step3: {
+        infoBox: document.getElementById('approved-budget-info')
+    }
+};
 
-
-// Inicialização
+// --- Inicialização ---
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
-    initializeStep();
+    initializeWizard();
 });
 
-
-// Event Listeners
 function setupEventListeners() {
-    // Navigation
-    document.getElementById('nav-imoveis').addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'CadastrarImoveis.php';
-    });
+    const navImoveis = document.getElementById('nav-imoveis');
+    if (navImoveis) {
+        navImoveis.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'CadastrarImoveis.php';
+        });
+    }
 
-    // Modal events
-    document.getElementById('modal-close').addEventListener('click', hideModal);
-    document.getElementById('modal-cancel').addEventListener('click', hideModal);
-    document.getElementById('modal-overlay').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) hideModal();
-    });
+    if (DOM.modal.closeBtn) DOM.modal.closeBtn.addEventListener('click', hideModal);
+    if (DOM.modal.overlay) {
+        DOM.modal.overlay.addEventListener('click', (e) => {
+            if (e.target === DOM.modal.overlay) hideModal();
+        });
+    }
 
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            if (modal.classList.contains('show')) {
-                hideModal();
-            }
-        }
-    });
+    if (DOM.modal.actions) {
+        DOM.modal.actions.addEventListener('click', (e) => {
+            if (e.target.id === 'modal-cancel') hideModal();
+        });
+    }
 }
 
-// Inicializar etapa atual
-function initializeStep() {
-   
-    renderPropertiesSelector(); 
-    goToStep(1); 
-
+function initializeWizard() {
+    renderPropertiesSelector();
+    goToStep(1);
 }
 
-// Mostrar estado vazio
+// --- ETAPA 1: SELETOR DE IMÓVEIS ---
 function showEmptyPropertiesState() {
-    propertiesSelector.style.display = 'none';
-    emptyProperties.style.display = 'block';
+    if (DOM.step1.selector) DOM.step1.selector.style.display = 'none';
+    if (DOM.step1.pagination) DOM.step1.pagination.innerHTML = '';
+    if (DOM.step1.emptyState) DOM.step1.emptyState.style.display = 'block';
 }
 
-// Renderizar seletor de propriedades
+// --- RENDERIZAÇÃO DE IMÓVEIS ---
 async function renderPropertiesSelector() {
-    
+    // Se não achar o elemento, para tudo para não dar erro
+    if (!DOM.step1.selector) return;
+
+    // Loading
+    DOM.step1.selector.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#aaa;"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Carregando...</div>';
+    if (DOM.step1.pagination) DOM.step1.pagination.innerHTML = ''; // Limpa botões
+
     try {
-        // 1. FAZ O FETCH REAL
-        const response = await fetch(`../../../backend/ClienteBackEnd/listaimoveis.php`);
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.erro || `Erro HTTP: ${response.status}`);
+        // Chama o PHP passando a página atual
+        const response = await fetch(`../../../backend/ClienteBackEnd/listaimoveis.php?page=${appState.paginaAtual}`);
+        const responseJson = await response.json();
+
+        // Verifica se veio no formato novo com paginação
+        if (responseJson.data && Array.isArray(responseJson.data)) {
+            appState.properties = responseJson.data;
+
+            // AQUI: Chama a renderização dos botões se houver dados de paginação
+            if (responseJson.paginacao) {
+                renderPagination(responseJson.paginacao);
+            }
+        } else if (Array.isArray(responseJson)) {
+            // Fallback para formato antigo
+            appState.properties = responseJson;
+        } else {
+            appState.properties = [];
         }
-        
-        const imoveisDoBanco = await response.json();
-        
-        properties = imoveisDoBanco;
-        
-        if (properties.length === 0) {
+
+        // Se vazio
+        if (appState.properties.length === 0) {
             showEmptyPropertiesState();
             return;
         }
 
-        propertiesSelector.style.display = 'grid';
-        emptyProperties.style.display = 'none';
+        // Exibe
+        DOM.step1.selector.style.display = 'grid';
+        if (DOM.step1.emptyState) DOM.step1.emptyState.style.display = 'none';
 
-       
-        propertiesSelector.innerHTML = properties.map(property => `
-            <div class="property-option" onclick="selectProperty('${property.id}')">
-                <div class="property-name">
-                    🏠 ${property.nome}
-                </div>
-                <div class="property-address">
-                    ${property.rua}, ${property.bairro} - ${property.cidade}/${property.estado}
-                </div>
-                <div class="property-details">
-                    <div class="detail-item">
-                        <span class="detail-icon">🌍</span>
-                        <div>
-                            <div class="detail-label">Região</div>
-                            <div class="detail-value">${property.regiao}</div>
-                        </div>
+        DOM.step1.selector.innerHTML = appState.properties.map(prop => `
+            <div class="property-option" id="prop-${prop.id}" onclick="selectProperty('${prop.id}')">
+                <div class="prop-icon-bg"><i class="fas fa-home"></i></div>
+                <div class="property-content">
+                    <div class="prop-name">${prop.nome || 'Sem Nome'}</div>
+                    <div class="property-address">
+                        ${prop.rua || ''}, ${prop.numero || ''} <br>
+                        ${prop.bairro || ''} - ${prop.cidade || ''}/${prop.estado || ''}
                     </div>
-                    <div class="detail-item">
-                        <span class="detail-icon">⚡</span>
-                        <div>
-                            <div class="detail-label">Consumo</div>
-                            <div class="detail-value">${property.consumo} kWh</div>
-                        </div>
+                    <div class="property-badges">
+                        <span class="prop-badge"><i class="fas fa-map-marker-alt"></i> ${prop.regiao || 'N/D'}</span>
+                        <span style="font-weight:700; color:#2d3748; margin-left:10px;">
+                            <i class="fas fa-bolt" style="color:#f6ad55;"></i> ${prop.consumo || 0} kWh
+                        </span>
                     </div>
                 </div>
             </div>
         `).join('');
 
     } catch (error) {
-        console.error('Falha em renderPropertiesSelector:', error);
-        showToast(error.message, 'error');
-        showEmptyPropertiesState();
+        console.error(error);
+        DOM.step1.selector.innerHTML = '<p style="color:red; text-align:center;">Erro ao carregar imóveis.</p>';
     }
 }
 
-function selectProperty(propertyId) {
-    
-    selectedProperty = properties.find(p => p.id.toString() === propertyId.toString());
+// --- FUNÇÃO DE PAGINAÇÃO (DEBUG + CORREÇÃO DE TIPO) ---
+function renderPagination(info) {
+    if (!DOM.step1.pagination) return;
 
-    if (!selectedProperty) {
-        console.error('Imóvel não encontrado no estado global:', propertyId);
+    // Garante numéricos
+    const pgAtual = parseInt(info.pagina_atual);
+    const totalPaginas = parseInt(info.total_paginas);
+
+    if (totalPaginas <= 1) {
+        DOM.step1.pagination.innerHTML = '';
         return;
     }
 
-    document.querySelectorAll('.property-option').forEach(option => {
-        option.classList.remove('selected');
-    });
-    
-    const selectedElement = document.querySelector(`div[onclick="selectProperty('${propertyId}')"]`);
-    if(selectedElement) {
-        selectedElement.classList.add('selected');
-    } else {
-        console.warn('Elemento visual não encontrado para selecionar');
+    let html = '';
+
+    // Anterior
+    html += `<button class="pagination-btn" onclick="mudarPagina(${pgAtual - 1})" ${pgAtual === 1 ? 'disabled' : ''}>&laquo;</button>`;
+
+    // Números
+    for (let i = 1; i <= totalPaginas; i++) {
+        // Aqui a mágica acontece
+        const activeClass = (i === pgAtual) ? 'active' : '';
+        html += `<button class="pagination-btn ${activeClass}" onclick="mudarPagina(${i})">${i}</button>`;
     }
 
-    showToast(`Imóvel "${selectedProperty.nome}" selecionado`, 'success');
+    // Próximo
+    html += `<button class="pagination-btn" onclick="mudarPagina(${pgAtual + 1})" ${pgAtual >= totalPaginas ? 'disabled' : ''}>&raquo;</button>`;
 
-    if (selectedProperty.consumo < 200) {
-        showLowConsumptionWarning();
-    } else {
-        proceedToBudgets();
-    }
+    DOM.step1.pagination.innerHTML = html;
+}
+// Ação de clicar na página
+window.mudarPagina = function (novaPagina) {
+    appState.paginaAtual = novaPagina;
+    renderPropertiesSelector(); // Recarrega a lista com a nova página
 }
 
-// Mostrar aviso de consumo baixo
-function showLowConsumptionWarning() {
-    lowConsumptionWarning.style.display = 'block';
-    document.getElementById('consumption-value').textContent = selectedProperty.consumo;
+function selectProperty(propId) {
+    appState.selectedProperty = appState.properties.find(p => String(p.id) === String(propId));
+    if (!appState.selectedProperty) return;
 
-    // Scroll para o aviso
-    lowConsumptionWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.querySelectorAll('.property-option').forEach(el => el.classList.remove('selected'));
+    const card = document.getElementById(`prop-${propId}`);
+    if (card) card.classList.add('selected');
+
+    showToast(`Imóvel "${appState.selectedProperty.nome}" selecionado`, 'success');
+
+    proceedToBudgets();
 }
 
-// Voltar à seleção de propriedade
 function backToPropertySelection() {
-    lowConsumptionWarning.style.display = 'none';
-    selectedProperty = null;
-
-    document.querySelectorAll('.property-option').forEach(option => {
-        option.classList.remove('selected');
-    });
-
-    showToast('Seleção cancelada', 'success');
+    if (DOM.step1.warning) DOM.step1.warning.style.display = 'none';
+    appState.selectedProperty = null;
+    document.querySelectorAll('.property-option').forEach(el => el.classList.remove('selected'));
 }
 
-// Prosseguir com consumo baixo
 function proceedWithLowConsumption() {
-    lowConsumptionWarning.style.display = 'none';
-    showToast('Continuando com a simulação...', 'warning');
-
-    setTimeout(() => {
-        proceedToBudgets();
-    }, 1000);
+    if (DOM.step1.warning) DOM.step1.warning.style.display = 'none';
+    proceedToBudgets();
 }
 
-// Prosseguir para orçamentos
+// --- ETAPA 2: ORÇAMENTOS ---
 async function proceedToBudgets() {
-    
-    showToast('Buscando propostas...', 'success'); 
+    showToast('Buscando propostas...', 'success');
+    goToStep(2);
+
+    if (DOM.step2.header) DOM.step2.header.style.display = 'none';
+    if (DOM.step2.infoBanner) DOM.step2.infoBanner.innerHTML = '';
+
+    if (DOM.step2.grid) {
+        DOM.step2.grid.innerHTML = `
+            <div style="grid-column: 1/-1; padding: 50px; text-align: center; color: var(--cinza-claro);">
+                <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--azul-primario);"></i>
+                <p style="margin-top: 15px; font-weight: 600;">Calculando ofertas...</p>
+            </div>`;
+    }
 
     try {
-       
-        const response = await fetch(`../../../backend/ClienteBackEnd/orcamentos/buscar_orcamentos.php?id_imovel=${selectedProperty.id}`);
+        const response = await fetch(`../../../backend/ClienteBackEnd/orcamentos/buscar_orcamentos.php?id_imovel=${appState.selectedProperty.id}`);
+        const data = await response.json();
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.erro || `Erro HTTP: ${response.status}`);
-        }
-        
-        const budgetsDoBanco = await response.json();
-        
-        budgets = budgetsDoBanco;
-        
-        if (budgets.length === 0) {
-            showToast('Nenhuma proposta encontrada para este imóvel.', 'warning');
-             goToStep(1); 
-             return; 
+        appState.budgets = Array.isArray(data) ? data : [];
+
+        if (appState.budgets.length === 0) {
+            if (DOM.step2.header) DOM.step2.header.style.display = 'none';
+            DOM.step2.grid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                    <i class="fas fa-search fa-3x" style="color: #cbd5e0; margin-bottom: 20px;"></i>
+                    <h4>Nenhuma proposta encontrada.</h4>
+                    <p style="color: #718096;">Não encontramos kits compatíveis no momento.</p>
+                </div>`;
+        } else {
+            if (DOM.step2.header) DOM.step2.header.style.display = 'block';
+            renderBudgets();
         }
 
-        goToStep(2);
+        if (DOM.step2.infoBanner) {
+            DOM.step2.infoBanner.innerHTML = `
+            <div class="selected-property-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="selected-property-details">
+                <h4>${appState.selectedProperty.nome}</h4>
+                <span>
+                    ${appState.selectedProperty.cidade}/${appState.selectedProperty.estado} • 
+                    <strong>${appState.selectedProperty.consumo} kWh</strong>
+                </span>
+            </div>
+        `;
+        }
 
     } catch (error) {
-        console.error('Falha ao buscar orçamentos:', error);
-        showToast(error.message, 'error');
+        console.error(error);
+        showToast('Erro ao buscar orçamentos', 'error');
+        goToStep(1);
     }
 }
 
 function renderBudgets() {
-    selectedPropertyInfo.innerHTML = `
-        <h4>🏠 ${selectedProperty.nome}</h4>
-        <p>${selectedProperty.rua}, ${selectedProperty.bairro} - ${selectedProperty.cidade}/${selectedProperty.estado} | Consumo: ${selectedProperty.consumo} kWh/mês</p>
-    `;
+    DOM.step2.grid.innerHTML = appState.budgets.map((budget, index) => {
+        const isBestValue = index === 0;
+        const cardClass = isBestValue ? 'budget-card best-value' : 'budget-card';
+        const banner = isBestValue ? '<div class="best-value-banner"><i class="fas fa-star"></i> Melhor Escolha</div>' : '';
 
-    
-    
-    budgetsGrid.innerHTML = budgets.map((budget, index) => {
-        
-        
-        let bestValueBanner = '';
-        let bestValueClass = '';  
+        const total = formatCurrency(budget.totalPrice);
+        const installment = formatCurrency(budget.monthlyInstallment);
+        const savings = formatCurrency(budget.estimatedSavings);
 
-      
-        if (index === 0) {
-            bestValueBanner = '<div class="best-value-banner">⭐ MELHOR CUSTO-BENEFÍCIO</div>';
-            bestValueClass = 'best-value'; 
+        let panelQty = budget.panelQuantity;
+        if (!panelQty) {
+            const pot = parseFloat(budget.systemPower);
+            const watts = pot > 100 ? pot : pot * 1000;
+            panelQty = Math.ceil(watts / 550);
         }
-        
-        
+        budget.panelQuantity = panelQty;
+
         return `
-            <div class="budget-card 
-                ${budget.isPremium ? 'premium' : ''} 
-                ${bestValueClass} 
-            ">
-                
-                ${bestValueBanner}  <div class="budget-header">
+            <div class="${cardClass}">
+                ${banner}
+                <div class="budget-header">
                     <div class="supplier-name">${budget.name}</div>
                     <div class="supplier-rating">
-                        <span>⭐ ${budget.rating}</span>
+                        ${generateStarRating(budget.rating)}
                     </div>
                 </div>
-                
                 <div class="budget-body">
-                    <div class="budget-price">
-                        <div class="price-label">Valor Total do Sistema</div>
-                        <div class="price-value">R$ ${budget.totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
-                        <div class="price-installments">ou 60x de R$ ${budget.monthlyInstallment.toLocaleString('pt-BR')}</div>
+                    <div class="price-box">
+                        <div class="price-value">${total}</div>
+                        <div class="price-installments">ou 60x de ${installment}</div>
                     </div>
-                    
-                    <div class="products-list">
-                        <h5>📦 Produtos Inclusos</h5>
-                        <div class="product-item">
-                            <span>🔋</span> ${budget.products}
-                        </div>
+                    <ul class="specs-list">
+                        <li><span>Potência</span> <strong>${budget.systemPower} kHw</strong></li>
+                        <li><span>Painéis</span> <strong>${panelQty} unidades</strong></li>
+                        <li><span>Economia</span> <strong class="highlight">${savings}</strong></li>
+                    </ul>
+                    <div class="products-box">
+                        <h5><i class="fas fa-box-open"></i> Itens Inclusos</h5>
+                        <div class="product-item">${budget.products}</div>
                     </div>
-                    
-                    <div class="budget-details">
-                        <div class="detail-row">
-                            <span class="label">Potência do Sistema</span>
-                            <span class="value">${budget.systemPower} kWp</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="label">Economia Mensal Estimada</span>
-                            <span class="value">R$ ${budget.estimatedSavings.toLocaleString('pt-BR')}</span>
-                        </div>
-                    </div>
-                    
                     <div class="budget-actions">
-                        <button class="btn btn-danger" onclick="rejectBudget(${budget.id})">
-                            ❌ Recusar
-                        </button>
-                        <button class="btn btn-success" onclick="confirmApproval(${budget.id})">
-                            ✅ Aprovar
-                        </button>
+                        <button class="btn btn-reject" onclick="handleReject(${budget.id})">Recusar</button>
+                        <button class="btn btn-approve" onclick="confirmApproval(${budget.id})">Aprovar</button>
                     </div>
                 </div>
             </div>
         `;
     }).join('');
 }
+
 function confirmApproval(budgetId) {
-    const budget = budgets.find(b => b.id === budgetId);
+    const budget = appState.budgets.find(b => b.id === budgetId);
     if (!budget) return;
 
-    document.getElementById('modal-title').textContent = 'Confirmar Aprovação';
-    document.getElementById('modal-budget-summary').innerHTML = `
-        <h5>${budget.name}</h5>
-        <p><strong>Valor:</strong> R$ ${budget.totalPrice.toLocaleString('pt-BR')} ou 60x de R$ ${budget.monthlyInstallment.toLocaleString('pt-BR')}</p>
-        <p><strong>Sistema:</strong> ${budget.systemPower} kWp com ${budget.panelQuantity} painéis</p>
-        <p><strong>Economia mensal:</strong> R$ ${budget.estimatedSavings.toLocaleString('pt-BR')}</p>
+    // ⇩⇩ 1. TÍTULO DO MODAL
+    DOM.modal.title.innerHTML = `
+        <i class="fas fa-check-circle" style="color:var(--verde-sucesso)"></i>
+        Confirmar Aprovação
     `;
 
-    document.getElementById('modal-confirm').onclick = () => approveBudget(budgetId);
+    // ⇩⇩ 2. CONTEÚDO DO MODAL (BODY)
+    DOM.modal.body.innerHTML = `
+        <p style="font-size: 1.1rem; margin-bottom: 20px; text-align: center;">
+            Você está aprovando a proposta da <strong>${budget.name}</strong>.
+        </p>
+
+        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:10px;">
+                <span style="color:var(--cinza-texto);">Valor Final:</span>
+                <strong style="font-size:1.2rem; color:var(--azul-primario);">
+                    ${formatCurrency(budget.totalPrice)}
+                </strong>
+            </div>
+
+            <div style="display:flex; justify-content:space-between;">
+                <span style="color:var(--cinza-texto);">Sistema:</span>
+                <strong>${budget.systemPower} kWh (${budget.panelQuantity} painéis)</strong>
+            </div>
+        </div>
+
+        <p style="margin-top: 20px; font-size: 0.9rem; color: var(--cinza-claro); text-align: center;">
+            Ao confirmar, o orçamento será registrado como <strong>Aprovado</strong>.
+        </p>
+    `;
+
+    // ⇩⇩ 3. BOTÕES DO RODAPÉ (RECONSTRUÍDOS)
+    DOM.modal.actions.innerHTML = `
+        <button id="modal-cancel" class="btn btn-secondary">Cancelar</button>
+        <button id="modal-confirm" class="btn btn-success">
+            Confirmar Aprovação <i class="fas fa-arrow-right"></i>
+        </button>
+    `;
+
+    // ⇩⇩ 4. SALVA O BOTÃO CONFIRMAR (IMPORTANTE!)
+    DOM.modal.confirmBtn = document.getElementById('modal-confirm');
+
+    // ⇩⇩ 5. EVENTOS DOS BOTÕES
+    document.getElementById('modal-cancel').onclick = hideModal;
+    DOM.modal.confirmBtn.onclick = () => submitApproval(budget);
+
+    // ⇩⇩ 6. ABRE O MODAL
     showModal();
+}
+document.getElementById("modal-confirm").onclick = () => submitApproval(budget);
+
+
+async function submitApproval(budget) {
+    // Evita duplo clique
+    DOM.modal.confirmBtn.disabled = true;
+    DOM.modal.confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+
+    try {
+        const payload = {
+            id_kit_aprovado: budget.id,
+            id_imovel: appState.selectedProperty.id,
+            valor_total_aprovado: budget.totalPrice,
+            potencia_aprovada: budget.systemPower,
+            id_fornecedor: budget.supplierId
+        };
+
+        const response = await fetch('../../../backend/ClienteBackEnd/orcamentos/aprovar_orcamento.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        // Tenta converter para JSON com fallback pra evitar crash
+        let result;
+        try {
+            result = await response.json();
+        } catch (e) {
+            throw new Error("Resposta inválida do servidor.");
+        }
+
+        // Caso o PHP retorne erro customizado
+        if (!response.ok || result.erro || result.sucesso === false) {
+            throw new Error(result.erro || 'Falha ao aprovar orçamento.');
+        }
+
+        // Sucesso!
+        appState.approvedBudget = {
+            ...budget,
+            approvedAt: new Date()
+        };
+
+        hideModal();
+        showToast('Proposta aprovada com sucesso!', 'success');
+
+        setTimeout(() => goToStep(3), 800);
+
+    } catch (error) {
+        console.error('Erro na aprovação:', error);
+        showToast(error.message || 'Erro inesperado', 'error');
+    } finally {
+        DOM.modal.confirmBtn.disabled = false;
+        DOM.modal.confirmBtn.innerHTML = 'Confirmar Aprovação';
+    }
 }
 
 
-async function approveBudget(budgetId) {
-    const budget = budgets.find(b => b.id === budgetId); 
+async function handleReject(budgetId) {
+    const budget = appState.budgets.find(b => b.id === budgetId);
     if (!budget) return;
 
-    showToast('Processando aprovação...', 'success');
+    const btn = document.querySelector(`button[onclick="handleReject(${budgetId})"]`);
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    }
 
     try {
-        const response = await fetch(`../../../backend/ClienteBackEnd/orcamentos/aprovar_orcamento.php`, {
+        // Chama o PHP para criar o registro de recusa
+        const response = await fetch('../../../backend/ClienteBackEnd/orcamentos/recusar_orcamento.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            
-            body: JSON.stringify({ 
-                id_kit_aprovado: budgetId,
-                id_imovel: selectedProperty.id,
-                valor_total_aprovado: budget.totalPrice, 
-                potencia_aprovada: budget.systemPower, 
-                id_fornecedor: budget.supplierId 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id_kit_recusado: budget.id,
+                id_imovel: appState.selectedProperty.id,
+                valor_total: budget.totalPrice,
+                id_fornecedor: budget.supplierId
             })
         });
 
         const result = await response.json();
 
-        if (!response.ok) {
-            throw new Error(result.erro || 'Falha ao aprovar orçamento');
+        if (result.sucesso) {
+            showToast('Proposta recusada e arquivada.', 'warning');
+
+            // Atualiza visualmente o card
+            if (btn) {
+                const card = btn.closest('.budget-card');
+                card.style.opacity = '0.5';
+                card.style.pointerEvents = 'none';
+                btn.parentElement.innerHTML = '<span style="color:#e53e3e; font-weight:bold;">❌ Recusado</span>';
+            }
+        } else {
+            throw new Error(result.erro || 'Erro ao recusar');
         }
-
-        approvedBudget = {
-            ...budget,
-            approvedAt: new Date().toISOString(),
-            propertyId: selectedProperty.id,
-            propertyName: selectedProperty.nome
-        };
-
-        hideModal();
-        showToast('Proposta enviada para validação!', 'success'); 
-
-        setTimeout(() => {
-            goToStep(3);
-        }, 1500);
 
     } catch (error) {
-        console.error('Erro ao aprovar orçamento:', error);
-        hideModal();
-        showToast(error.message, 'error');
+        console.error(error);
+        showToast('Erro ao registrar recusa.', 'error');
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = 'Recusar';
+        }
     }
 }
+// --- ETAPA 3 ---
+function renderConfirmation() {
+    if (!appState.approvedBudget) return;
+    const dateStr = appState.approvedBudget.approvedAt.toLocaleDateString('pt-BR');
 
-function rejectBudget(budgetId) {
-    const budget = budgets.find(b => b.id === budgetId);
-    if (!budget) return;
-
-    showToast(`Orçamento da ${budget.name} recusado`, 'warning');
-
-    const budgetCards = document.querySelectorAll('.budget-card');
-    budgetCards.forEach(card => {
-        if (card.querySelector('.supplier-name').textContent === budget.name) {
-            card.style.opacity = '0.3';
-            card.style.pointerEvents = 'none';
-            card.querySelector('.budget-actions').innerHTML = '<span style="color: var(--vermelho-erro); font-weight: bold;">❌ Recusado</span>';
-        }
-    });
+    DOM.step3.infoBox.innerHTML = `
+        <div class="approved-summary">
+            <h4 style="color:var(--verde-sucesso); margin-top:0; border-bottom:1px solid #e6f4ea; padding-bottom:15px; margin-bottom:15px;">
+                <i class="fas fa-check-circle"></i> Resumo do Pedido
+            </h4>
+            <div class="summary-row"><span>Imóvel:</span> <strong>${appState.selectedProperty.nome}</strong></div>
+            <div class="summary-row"><span>Fornecedor:</span> <strong>${appState.approvedBudget.name}</strong></div>
+            <div class="summary-row"><span>Valor Total:</span> <strong>${formatCurrency(appState.approvedBudget.totalPrice)}</strong></div>
+            <div class="summary-row"><span>Data:</span> <strong>${dateStr}</strong></div>
+            <div class="summary-row" style="border-top:2px solid #e6f4ea; margin-top:15px; padding-top:15px; border-bottom:none;">
+                <span>Status:</span>
+                <strong style="color: var(--verde-sucesso); display:flex; align-items:center; gap:5px;">
+                    <i class="fas fa-thumbs-up"></i> Aprovado
+                </strong>
+            </div>
+        </div>
+    `;
 }
 
+// --- UTILITÁRIOS ---
 function goToStep(stepNumber) {
-    currentStep = stepNumber;
-
-    document.querySelectorAll('.step').forEach((step, index) => {
+    appState.currentStep = stepNumber;
+    DOM.steps.indicators.forEach((step, index) => {
         step.classList.remove('active', 'completed');
-        if (index + 1 < stepNumber) {
-            step.classList.add('completed');
-        } else if (index + 1 === stepNumber) {
-            step.classList.add('active');
-        }
+        if (index + 1 < stepNumber) step.classList.add('completed');
+        else if (index + 1 === stepNumber) step.classList.add('active');
     });
-
-    document.querySelectorAll('.step-content').forEach((content, index) => {
+    DOM.steps.contents.forEach((content, index) => {
         content.classList.remove('active');
-        if (index + 1 === stepNumber) {
-            content.classList.add('active');
-        }
+        if (index + 1 === stepNumber) content.classList.add('active');
     });
 
-    switch (stepNumber) {
-        case 1:
-            renderPropertiesSelector();
-            break;
-        case 2:
-            renderBudgets();
-            break;
-        case 3:
-            renderConfirmation();
-            break;
-    }
-
+    if (stepNumber === 1) renderPropertiesSelector();
+    if (stepNumber === 3) renderConfirmation();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function renderConfirmation() {
-    if (!approvedBudget) return;
-
-    const approvalDate = new Date(approvedBudget.approvedAt).toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-
-    document.getElementById('approved-budget-info').innerHTML = `
-        <h4>📋 Detalhes do Orçamento Aprovado</h4>
-        <div class="detail-row">
-            <span class="label">Fornecedor</span>
-            <span class="value">${approvedBudget.name}</span>
-        </div>
-        <div class="detail-row">
-            <span class="label">Imóvel</span>
-            <span class="value">${approvedBudget.propertyName}</span>
-        </div>
-        <div class="detail-row">
-            <span class="label">Valor Total</span>
-            <span class="value">R$ ${approvedBudget.totalPrice.toLocaleString('pt-BR')}</span>
-        </div>
-        <div class="detail-row">
-            <span class="label">Parcelas</span>
-            <span class="value">32x de R$ ${approvedBudget.monthlyInstallment.toLocaleString('pt-BR')}</span>
-        </div>
-        <div class="detail-row">
-            <span class="label">Sistema</span>
-            <span class="value">${approvedBudget.systemPower} kWp (${approvedBudget.panelQuantity} painéis)</span>
-        </div>
-    `;
-
-    document.getElementById('approval-date').textContent = approvalDate;
-}
-
 function startNewQuote() {
-    selectedProperty = null;
-    budgets = [];
-    approvedBudget = null;
-
-    document.querySelectorAll('.property-option').forEach(option => {
-        option.classList.remove('selected');
-    });
-
-    lowConsumptionWarning.style.display = 'none';
-
-    showToast('Iniciando novo orçamento...', 'success');
-
-    setTimeout(() => {
-        goToStep(1);
-    }, 1000);
+    appState.selectedProperty = null;
+    appState.budgets = [];
+    appState.approvedBudget = null;
+    goToStep(1);
 }
+
+function showModal() { if (DOM.modal.overlay) DOM.modal.overlay.classList.add('show'); }
+function hideModal() { if (DOM.modal.overlay) DOM.modal.overlay.classList.remove('show'); }
 
 function showToast(message, type = 'success') {
-    toast.textContent = message;
-    toast.className = `toast ${type}`;
-    toast.classList.add('show');
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 4000);
-}
-
-function showModal() {
-    modal.classList.add('show');
-    document.body.style.overflow = 'hidden';
-}
-
-function hideModal() {
-    modal.classList.remove('show');
-    document.body.style.overflow = 'auto';
-}
-
-function createDemoProperties() {
-    if (properties.length === 0) {
-        properties = [
-            {
-                id: 'demo1',
-                nome: 'Casa Principal',
-                rua: 'Rua das Flores, 123',
-                bairro: 'Centro',
-                cidade: 'São Paulo',
-                estado: 'SP',
-                regiao: 'Sudeste',
-                consumo: 450,
-                observacoes: 'Casa com piscina',
-                createdAt: new Date().toISOString()
-            },
-            {
-                id: 'demo2',
-                nome: 'Apartamento',
-                rua: 'Av. Paulista, 1000',
-                bairro: 'Bela Vista',
-                cidade: 'São Paulo',
-                estado: 'SP',
-                regiao: 'Sudeste',
-                consumo: 180,
-                observacoes: '',
-                createdAt: new Date().toISOString()
-            }
-        ];
-
-        showToast('Propriedades de demonstração carregadas', 'success');
-    }
-}
-
-function simulateLoading(element, duration = 2000) {
-    element.classList.add('loading');
-
-    setTimeout(() => {
-        element.classList.remove('loading');
-    }, duration);
-}
-
-function validatePropertySelection() {
-    if (!selectedProperty) {
-        showToast('Selecione um imóvel antes de continuar', 'error');
-        return false;
-    }
-    return true;
-}
-
-function calculateROI(budget, property) {
-    const monthlyConsumption = property.consumo;
-    const averageEnergyPrice = 0.75; // R$ 0,75 por kWh
-    const monthlySavings = monthlyConsumption * averageEnergyPrice * 0.85; // 85% de economia
-    const paybackYears = budget.totalPrice / (monthlySavings * 12);
-
-    return {
-        monthlySavings: Math.round(monthlySavings),
-        paybackYears: Math.round(paybackYears * 10) / 10,
-        totalSavings25Years: Math.round(monthlySavings * 12 * 25 - budget.totalPrice)
-    };
+    DOM.toast.textContent = message;
+    DOM.toast.className = `toast ${type} show`;
+    setTimeout(() => DOM.toast.classList.remove('show'), 3000);
 }
 
 function formatCurrency(value) {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-    }).format(value);
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 }
 
-function formatNumber(value) {
-    return new Intl.NumberFormat('pt-BR').format(value);
+function generateStarRating(rating) {
+    const r = parseFloat(rating);
+    const fullStars = Math.floor(r);
+    const halfStar = r % 1 >= 0.5 ? 1 : 0;
+    const emptyStars = 5 - fullStars - halfStar;
+    let html = '';
+    for (let i = 0; i < fullStars; i++) html += '<i class="fas fa-star"></i>';
+    if (halfStar) html += '<i class="fas fa-star-half-alt"></i>';
+    for (let i = 0; i < emptyStars; i++) html += '<i class="far fa-star"></i>';
+    return html;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (properties.length === 0) {
-        setTimeout(() => {
-            if (properties.length === 0) {
-                createDemoProperties();
-                initializeStep();
-            }
-        }, 1000);
-    }
-});
-
-window.debugApp = {
-    properties,
-    selectedProperty,
-    budgets,
-    approvedBudget,
-    currentStep,
-    goToStep,
-    selectProperty: (id) => {
-        const property = properties.find(p => p.id === id);
-        if (property) {
-            selectedProperty = property;
-            console.log('Property selected:', property);
-        }
-    },
-    generateBudgets: () => {
-        if (selectedProperty) {
-            generateBudgets();
-            console.log('Generated budgets:', budgets);
-        } else {
-            console.log('No property selected');
-        }
-    }
-};
-
-window.addEventListener('error', (e) => {
-    console.error('Erro na aplicação:', e.error);
-    showToast('Ocorreu um erro inesperado. Tente novamente.', 'error');
-});
-
+function renderLoading(container, message) {
+    if (!container) return;
+    container.innerHTML = `
+        <div style="grid-column: 1/-1; padding: 50px; text-align: center; color: var(--cinza-claro);">
+            <i class="fas fa-circle-notch fa-spin fa-3x" style="color: var(--azul-primario);"></i>
+            <p style="margin-top: 15px; font-weight: 600;">${message}</p>
+        </div>
+    `;
+}

@@ -1,65 +1,76 @@
 <?php
 require_once '../../DB/database.php';
 session_start();
+header('Content-Type: application/json');
 
 if (!isset($_SESSION['id_usuario'])) {
     http_response_code(401); 
-    echo json_encode(['success' => false, 'message' => 'Usuário não autenticado.']);
-    exit(); 
+    echo json_encode(['sucesso' => false, 'erro' => 'Usuário não autenticado.']);
+    exit();
 }
 
-header('Content-Type: application/json');
+$input = json_decode(file_get_contents('php://input'), true);
 
-$data = json_decode(file_get_contents('php://input'), true);
-
-$id_orcamento = $data['id_orcamento'] ?? 0;
-$observacoes = trim($data['observacoes'] ?? 'Recusado pelo cliente.');
-$id_cliente_logado = $_SESSION['id_usuario'];
-
-if ($id_orcamento <= 0) {
+// Validação dos dados que vêm do JS (agora precisamos dos dados do kit para criar o registro)
+if (!isset($input['id_kit_recusado']) || !isset($input['id_imovel']) || !isset($input['valor_total'])) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'ID do orçamento inválido.']);
-    exit;
+    echo json_encode(['sucesso' => false, 'erro' => 'Dados incompletos para recusa.']);
+    exit();
 }
 
-if (empty($observacoes)) {
-    $observacoes = 'Recusado pelo cliente.';
-}
+$id_kit = $input['id_kit_recusado'];
+$id_imovel = $input['id_imovel'];
+$id_usuario = $_SESSION['id_usuario'];
+$valor_total = $input['valor_total'];
+$id_fornecedor = $input['id_fornecedor'];
+$observacoes = "Recusado pelo cliente na tela de seleção.";
+
+$pdo->beginTransaction();
 
 try {
+    // 1. Verifica se o imóvel pertence ao usuário
+    $sql_check = "SELECT 1 FROM IMOVEIS WHERE ID = ? AND FK_USUARIOS_ID_USUARIO = ?";
+    $stmt_check = $pdo->prepare($sql_check);
+    $stmt_check->execute([$id_imovel, $id_usuario]);
     
-    $sql_check_owner = "
-        SELECT O.ID_ORCAMENTO 
-        FROM ORCAMENTO O
-        JOIN IMOVEIS I ON O.FK_IMOVEIS_ID = I.ID
-        WHERE O.ID_ORCAMENTO = ? AND I.FK_USUARIOS_ID_USUARIO = ?
-    ";
-    $stmt_check = $pdo->prepare($sql_check_owner);
-    $stmt_check->execute([$id_orcamento, $id_cliente_logado]);
-    $orcamento_valido = $stmt_check->fetch();
-
-    if (!$orcamento_valido) {
-        http_response_code(403); // Forbidden
-        echo json_encode(['success' => false, 'message' => 'Você não tem permissão para alterar este orçamento.']);
-        exit;
+    if ($stmt_check->fetchColumn() === false) {
+         http_response_code(403); 
+         throw new Exception('Acesso ao imóvel negado.');
     }
+    
+    // 2. CRIA O ORÇAMENTO JÁ COMO 'RECUSADO'
+    $sql_orcamento = "
+        INSERT INTO ORCAMENTO 
+            (DATA, VALOR_TOTAL, FK_IMOVEIS_ID, STATUS, IS_DELETE, FK_FORNECEDOR_ID, OBSERVACOES_ADMIN) 
+        VALUES 
+            (NOW(), ?, ?, 'recusado', FALSE, ?, ?) 
+        RETURNING ID_ORCAMENTO"; 
+        
+    $stmt_orcamento = $pdo->prepare($sql_orcamento);
+    $stmt_orcamento->execute([$valor_total, $id_imovel, $id_fornecedor, $observacoes]);
+    
+    $id_orcamento_criado = $stmt_orcamento->fetchColumn();
+   
+    // 3. Vincula o Kit ao orçamento recusado (para histórico)
+    $sql_kit_orcamento = "
+        INSERT INTO KIT_ORCAMENTO
+            (FK_KIT_ID, FK_ORCAMENTO_ID, QUANTIDADE, VALOR_TOTAL, POTENCIA_IDEAL)
+        VALUES
+            (?, ?, 1, ?, 0)"; // Potência 0 ou envie do JS se quiser
+            
+    $stmt_kit_orc = $pdo->prepare($sql_kit_orcamento);
+    $stmt_kit_orc->execute([$id_kit, $id_orcamento_criado, $valor_total]);
 
-    $sql_update = "UPDATE ORCAMENTO 
-                   SET STATUS = 'recusado', OBSERVACOES = ? 
-                   WHERE ID_ORCAMENTO = ? 
-                   AND STATUS = 'AGUARDA_ADM'"; 
-                   
-    $stmt_update = $pdo->prepare($sql_update);
-    $stmt_update->execute([$observacoes, $id_orcamento]);
+    $pdo->commit();
 
-    if ($stmt_update->rowCount() > 0) {
-        echo json_encode(['success' => true, 'message' => 'Orçamento recusado.']);
-    } else {
-        throw new Exception('O orçamento não pôde ser recusado (pode já ter sido processado).');
-    }
+    echo json_encode([
+        'sucesso' => true, 
+        'mensagem' => 'Orçamento recusado e registrado com sucesso.'
+    ]);
 
-} catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Falha no banco de dados: ' . $e->getMessage()]);
+} catch (Exception $e) {
+    $pdo->rollBack();
+    http_response_code(500); 
+    echo json_encode(['sucesso' => false, 'erro' => 'Erro ao recusar: ' . $e->getMessage()]);
 }
 ?>

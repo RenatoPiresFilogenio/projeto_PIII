@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Orçamento - Solar Smart</title>
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/Dashboards/cssAdmin.css">
+    <style>
+        /* Estilos específicos para esta página de detalhes */
+        .detail-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
+            background: #fff; padding: 20px 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid var(--azul-tecnologico, #0056b3);
+        }
+        .detail-grid {
+            display: grid; grid-template-columns: 2fr 1fr; gap: 25px;
+        }
+        .info-card {
+            background: #fff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px;
+        }
+        .info-card h3 {
+            color: var(--azul-tecnologico, #0056b3); margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px; font-size: 1.2rem;
+        }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; }
+        .info-row strong { color: #333; }
+        .info-row span { color: #555; }
+        
+        .item-list { list-style: none; padding: 0; margin: 0; }
+        .item-li {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 10px; border: 1px solid #edf2f7;
+        }
+        .item-name { font-weight: 600; color: #2d3748; }
+        .item-meta { font-size: 0.85rem; color: #718096; }
+        
+        .status-badge-lg {
+            padding: 8px 20px; border-radius: 50px; font-weight: 700; text-transform: uppercase; font-size: 0.9rem; color: #fff;
+        }
+        .back-btn {
+            text-decoration: none; color: #718096; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        .back-btn:hover { color: var(--azul-tecnologico, #0056b3); }
+
+        @media(max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="detail-header">
+            <div>
+                <a href="dashboardAdmin.html" class="back-btn"><i class="fas fa-arrow-left"></i> Voltar</a>
+                <h1 style="margin: 10px 0 0 0; font-size: 1.8rem;">Orçamento #<span id="orc-id">...</span></h1>
+            </div>
+            <div id="status-container"></div>
+        </div>
+
+        <div class="detail-grid">
+            <div class="left-col">
+                <div class="info-card">
+                    <h3><i class="fas fa-box-open"></i> Detalhes do Sistema</h3>
+                    <div class="info-row">
+                        <strong>Kit Ofertado:</strong> <span id="kit-nome">-</span>
+                    </div>
+                    <div class="info-row">
+                        <strong>Potência Total:</strong> <span id="kit-potencia" style="font-weight: 700; color: #28a745;">-</span>
+                    </div>
+                    
+                    <h4 style="margin-top: 25px; color: #4a5568; font-size: 1rem;">Itens Inclusos:</h4>
+                    <ul id="lista-produtos" class="item-list">
+                        </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-home"></i> Dados do Imóvel</h3>
+                    <div class="info-row"><strong>Identificação:</strong> <span id="imo-nome">-</span></div>
+                    <div class="info-row"><strong>Endereço:</strong> <span id="imo-end">-</span></div>
+                    <div class="info-row"><strong>Bairro/Cidade:</strong> <span id="imo-cidade">-</span></div>
+                    <div class="info-row"><strong>Região:</strong> <span id="imo-regiao">-</span></div>
+                    <div class="info-row">
+                        <strong>Consumo Médio:</strong> 
+                        <span style="background: #ebf8ff; color: #2b6cb0; padding: 2px 8px; border-radius: 4px; font-weight: 600;">
+                            <i class="fas fa-bolt"></i> <span id="imo-consumo">-</span> kWh
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-col">
+                <div class="info-card" style="text-align: center;">
+                    <h3>Valor Total</h3>
+                    <div style="font-size: 2.5rem; font-weight: 800; color: #2d3748; margin: 10px 0;" id="valor-total">R$ 0,00</div>
+                    <p style="color: #718096; font-size: 0.9rem;">Data do Pedido: <span id="data-pedido">-</span></p>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-user"></i> Cliente</h3>
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: 700; font-size: 1.1rem;" id="cli-nome">-</div>
+                        <div style="color: #718096; font-size: 0.9rem;"><i class="far fa-envelope"></i> <span id="cli-email">-</span></div>
+                        <div style="color: #718096; font-size: 0.9rem;"><i class="fas fa-phone"></i> <span id="cli-tel">-</span></div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-truck"></i> Fornecedor</h3>
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: 700; font-size: 1.1rem;" id="forn-nome">-</div>
+                        <div style="color: #718096; font-size: 0.9rem;"><i class="far fa-envelope"></i> <span id="forn-email">-</span></div>
+                        <div style="color: #718096; font-size: 0.9rem;"><i class="fas fa-phone"></i> <span id="forn-tel">-</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../../JS/Admin/verOrcamento.js"></script>
+</body>
+</html>

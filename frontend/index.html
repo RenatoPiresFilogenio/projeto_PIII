@@ -1,398 +1,611 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="css/LandPage/app.css" />
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <title>Solar Smart — Plataforma de Cálculo e Simulação de Energia Solar</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta
+        content="Sistema profissional para análise de consumo, simulação fotovoltaica, cálculo de economia e planejamento energético."
+        name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-    />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Solar Smart</title>
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap"
+        rel="stylesheet">
 
-    <style>
-      /* ======== SEÇÃO LINHA DO TEMPO ======== */
-      .timeline-section {
-        background: #fff;
-        padding: 80px 5%;
-        text-align: center;
-        overflow: hidden;
-      }
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-      .timeline-section h2 {
-        color: #004d73;
-        font-size: 2rem;
-        margin-bottom: 8px;
-        text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.308);
-      }
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
 
-      .timeline-section p {
-        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-        font-weight: bold;
-        color: #3a5468;
-        font-size: 1.1rem;
-      }
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/refat/bootstrap.min.css" rel="stylesheet">
 
-      /* ======== CONTAINER PRINCIPAL ======== */
-      .timeline {
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 80px;
-        gap: 40px;
-      }
+    <!-- Template Stylesheet -->
+    <link href="css/refat/style.css" rel="stylesheet">
+</head>
 
-      /* Faixa azul */
-      .timeline::before {
-        content: "";
-        position: absolute;
-        top: 62%;
-        left: 17%;
-        right: 17%;
-        height: 6px;
-        background: #007bb8;
-        border-radius: 6px;
-        z-index: 0;
-      }
+<body>
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-dark p-0">
+        <div class="row gx-0 d-none d-lg-flex">
+            <div class="col-lg-7 px-5 text-start">
+                <div class="h-100 d-inline-flex align-items-center me-4">
+                    <small class="fa fa-map-marker-alt text-primary me-2"></small>
+                    <small>Solar Smart — Plataforma Profissional de Energia Solar</small>
+                </div>
+                <div class="h-100 d-inline-flex align-items-center">
+                    <small class="far fa-clock text-primary me-2"></small>
+                    <small>Disponível 24h — Cálculos e Simulações em Tempo Real</small>
+                </div>
+            </div>
+            <div class="col-lg-5 px-5 text-end">
+                <div class="h-100 d-inline-flex align-items-center me-4">
+                    <small class="fa fa-phone-alt text-primary me-2"></small>
+                    <small>Atendimento: contato@solarsmart.com</small>
+                </div>
+                <div class="h-100 d-inline-flex align-items-center mx-n2">
+                    <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href="#"><i
+                            class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href="#"><i
+                            class="fab fa-twitter"></i></a>
+                    <a class="btn btn-square btn-link rounded-0 border-0 border-end border-secondary" href="#"><i
+                            class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-square btn-link rounded-0" href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
 
-      /* Cada etapa */
-      .milestone {
-        position: relative;
-        z-index: 2;
-        flex: 1;
-        text-align: center;
-      }
 
-      /* Bolinha laranja */
-      .dot {
-        width: 38px;
-        height: 38px;
-        background: #ff8a2b;
-        border-radius: 50%;
-        margin: 0 auto;
-        position: relative;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      }
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+        <a href="index.html" class="navbar-brand d-flex align-items-center border-end px-4 px-lg-5">
+            <h2 class="m-0 text-primary">Solar Smart</h2>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="#inicio" class="nav-item nav-link active">Início</a>
+                <a href="sobre.html" class="nav-item nav-link">Sobre</a>
+                <a href="contato.html" class="nav-item nav-link">Contato</a>
+            </div>
+            <a href="login.html" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Experimentar<i
+                    class="fa fa-arrow-right ms-3"></i></a>
+        </div>
+    </nav>
+    <!-- Navbar End -->
 
-      /* Balão de fala */
-      .bubble {
-        position: relative;
-        background: #e9f5fb;
-        border-radius: 12px;
-        padding: 16px 20px;
-        display: inline-block;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        margin-bottom: 25px;
-        transition: transform 0.2s ease;
-      }
 
-      .bubble:hover {
-        transform: translateY(-5px);
-      }
+    <!-- Carousel Start -->
+    <div id="inicio" class="container-fluid p-0 pb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="owl-carousel header-carousel position-relative">
 
-      /* Ponta do balão (para baixo) */
-      .bubble::after {
-        content: "";
-        position: absolute;
-        bottom: -12px;
-        left: 50%;
-        transform: translateX(-50%);
-        border-width: 12px 10px 0 10px;
-        border-style: solid;
-        border-color: #e9f5fb transparent transparent transparent;
-      }
+            <!-- Slide 1 -->
+            <div class="owl-carousel-item position-relative" data-dot="<img src='img/carousel-1.jpg'>">
+                <img class="img-fluid" src="img/carousel-1.jpg" alt="">
+                <div class="owl-carousel-inner">
+                    <div class="container">
+                        <div class="row justify-content-start">
+                            <div class="col-10 col-lg-8">
+                                <h1 class="display-2 text-white animated slideInDown">Simulação Inteligente de Energia
+                                    Solar</h1>
+                                <p class="fs-5 fw-medium text-white mb-4 pb-3">
+                                    Avalie consumo, dimensione sistemas fotovoltaicos e visualize projeções de economia
+                                    com precisão.
+                                    O Solar Smart auxilia na tomada de decisão com dados claros e confiáveis.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-      .bubble p {
-        color: #0e3b5a;
-        font-weight: 600;
-        margin: 0;
-        user-select: none;
-      }
+            <!-- Slide 2 -->
+            <div class="owl-carousel-item position-relative" data-dot="<img src='img/carousel-2.jpg'>">
+                <img class="img-fluid" src="img/carousel-2.jpg" alt="">
+                <div class="owl-carousel-inner">
+                    <div class="container">
+                        <div class="row justify-content-start">
+                            <div class="col-10 col-lg-8">
+                                <h1 class="display-2 text-white animated slideInDown">Cálculo, Análise e Economia</h1>
+                                <p class="fs-5 fw-medium text-white mb-4 pb-3">
+                                    A plataforma estima a potência necessária, módulos recomendados, retorno financeiro
+                                    e impacto no consumo energético.
+                                </p>
+                                <a href="sobre.html"
+                                    class="btn btn-primary rounded-pill py-3 px-5 animated slideInLeft">Saiba Mais</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-      .year {
-        font-weight: 700;
-        color: #0e3b5a;
-        margin-top: 12px;
-        font-size: 1.1rem;
-      }
+            <!-- Slide 3 -->
+            <div class="owl-carousel-item position-relative" data-dot="<img src='img/carousel-3.jpg'>">
+                <img class="img-fluid" src="img/carousel-3.jpg" alt="">
+                <div class="owl-carousel-inner">
+                    <div class="container">
+                        <div class="row justify-content-start">
+                            <div class="col-10 col-lg-8">
+                                <h1 class="display-2 text-white animated slideInDown">Energia Solar Acessível e
+                                    Estratégica</h1>
+                                <p class="fs-5 fw-medium text-white mb-4 pb-3">
+                                    Uma solução completa para consumidores e empresas que buscam planejamento energético
+                                    seguro e eficiente.
+                                </p>
+                                <a href="contato.html"
+                                    class="btn btn-primary rounded-pill py-3 px-5 animated slideInLeft">Contato</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-      /* ======== RESPONSIVIDADE ======== */
-      @media (max-width: 1288px) {
-        .bubble p {
-          font-size: 16px;
-        }
-      }
+        </div>
+    </div>
+    <!-- Carousel End -->
 
-      @media (max-width: 1192px) {
-        .bubble p {
-          font-size: 14px;
-        }
-      }
 
-      @media (max-width: 1071px) {
-        .bubble p {
-          font-size: 12px;
-        }
-      }
+    <!-- Feature Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
 
-      @media (max-width: 949px) {
-        .bubble p {
-          font-size: 11px;
-        }
-      }
+                <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-calculator text-white"></i>
+                        </div>
+                        <h4 class="mb-0">Cálculo Automatizado</h4>
+                    </div>
+                    <p>
+                        Dimensionamento preciso da potência necessária e número ideal de módulos com base no consumo
+                        informado.
+                    </p>
+                </div>
 
-      @media (max-width: 900px) {
-        .timeline {
-          flex-direction: column;
-          align-items: center;
-        }
+                <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-chart-line text-white"></i>
+                        </div>
+                        <h4 class="mb-0">Projeções Financeiras</h4>
+                    </div>
+                    <p>
+                        Estimativas de economia anual, retorno sobre investimento (payback) e impacto no custo total de
+                        energia.
+                    </p>
+                </div>
 
-        .timeline::before {
-          top: 10%;
-          left: 50%;
-          right: auto;
-          width: 6px;
-          height: 80%;
-          transform: translateX(-50%);
-        }
+                <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-recycle text-white"></i>
+                        </div>
+                        <h4 class="mb-0">Energia Sustentável</h4>
+                    </div>
+                    <p>
+                        Incentivo ao uso de energia limpa, reduzindo emissão de carbono e dependência da rede elétrica.
+                    </p>
+                </div>
 
-        .milestone {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          width: 100%;
-          position: relative;
-          margin: 40px 0;
-        }
+                <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.7s">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-user-shield text-white"></i>
+                        </div>
+                        <h4 class="mb-0">Segurança dos Dados</h4>
+                    </div>
+                    <p>
+                        Informações tratadas com confidencialidade e proteção, garantindo análise segura para todos os
+                        usuários.
+                    </p>
+                </div>
 
-        .dot {
-          margin: 0;
-          position: relative;
-          left: 50%;
-          transform: translateX(-50%);
-        }
+            </div>
+        </div>
+    </div>
+    <!-- Feature End -->
 
-        .bubble {
-          order: 3;
-          margin: 0;
-          width: 45%;
-        }
 
-        .bubble p {
-          font-size: 15px;
-        }
+    <!-- About Start -->
+    <div id="sobre" class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
+        <div class="container about px-lg-0">
+            <div class="row g-0 mx-lg-0">
 
-        .bubble::after {
-          top: 50%;
-          left: -11px;
-          bottom: auto;
-          transform: translateY(-50%) rotate(0deg);
-          border-width: 10px 12px 10px 0;
-          border-color: transparent #e9f5fb transparent transparent;
-        }
+                <div class="col-lg-6 ps-lg-0 wow fadeIn" data-wow-delay="0.1s" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="position-absolute img-fluid w-100 h-100" src="img/about.jpg"
+                            style="object-fit: cover;" alt="">
+                    </div>
+                </div>
 
-        .year {
-          order: 1;
-          width: 22%;
-          text-align: right;
-          font-size: 1rem;
-          margin-top: 2px;
-        }
-      }
-    </style>
-  </head>
+                <div class="col-lg-6 about-text py-5 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="p-lg-5 pe-lg-0">
+                        <h6 class="text-primary">Sobre o Solar Smart</h6>
+                        <h1 class="mb-4">Dimensionamento e Planejamento Fotovoltaico</h1>
+                        <p>
+                            O Solar Smart é uma plataforma completa para análise energética.
+                            Permite realizar Orçamentos precisos, identificar potência recomendada,
+                            calcular economia potencial e planejar investimentos em energia solar.
+                        </p>
 
-  <body>
-    <header>
-      <div class="logo">Solar Smart</div>
-      <nav id="menu">
-        <ul>
-          <li><a href="#">Início</a></li>
-          <li><a href="#como-funciona">Como funciona</a></li>
-          <li><a href="#beneficios">Benefícios</a></li>
-          <li><a href="#contato">Contato</a></li>
-          <li><a href="sobre.html">Sobre nós</a></li>
-          <li><a href="login.html" class="login-btn">Login</a></li>
-        </ul>
-      </nav>
-    </header>
+                        <p><i class="fa fa-check-circle text-primary me-3"></i>Análise baseada no consumo real do
+                            usuário.</p>
+                        <p><i class="fa fa-check-circle text-primary me-3"></i>Simulação clara, direta e acessível para
+                            todos.</p>
+                        <p><i class="fa fa-check-circle text-primary me-3"></i>Auxílio completo para decisões de
+                            investimento.</p>
 
-    <!-- HERO -->
-    <section class="hero" id="observer_section_orcamento">
-      <div class="hero-text">
-        <h1>
-          <span>Orçamento</span> personalizado<br />
-          para sua <span>energia solar</span>
-        </h1>
-        <p>
-          Receba um orçamento completo e personalizado com o Solar Smart!
-          <strong>Análise detalhada do seu consumo e localização</strong> para a
-          solução ideal.
-        </p>
-        <a href="login.html" class="cta-btn">Solicitar orçamento</a>
-      </div>
-      <div class="hero-img">
-        <img
-          class="forma_img"
-          id="img_session1"
-          src="video_gi/painel2.png"
-          alt="Painéis solares"
-        />
-      </div>
-    </section>
+                        <a href="dashboards/Cliente/CadastrarImoveis.php"
+                            class="btn btn-primary rounded-pill py-3 px-5 mt-3">Acessar Orçamento</a>
+                    </div>
+                </div>
 
-    <!-- ======== COMO FUNCIONA ======== -->
-    <section id="como-funciona" class="timeline-section">
-      <h2>Como funciona</h2>
-      <p>Veja como a Solar Smart simplifica sua jornada de economia de energia.</p>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
 
-      <div class="timeline">
-        <div class="milestone">
-          <div class="bubble">
-            <p>Informe seu consumo e região</p>
-          </div>
-          <div class="dot"></div>
-          <div class="year">⚡ 1° Passo</div>
+
+    <!-- Why Choose Us -->
+    <div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
+        <div class="container feature px-lg-0">
+            <div class="row g-0 mx-lg-0">
+
+                <div class="col-lg-6 feature-text py-5 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="p-lg-5 ps-lg-0">
+                        <h6 class="text-primary">Por que usar o Solar Smart</h6>
+                        <h1 class="mb-4">Solução Estratégica para Energia Solar</h1>
+                        <p class="mb-4 pb-2">
+                            A ferramenta combina tecnologia, precisão e facilidade de uso.
+                            Ideal para consumidores, empresas, consultores e integradores fotovoltaicos.
+                        </p>
+
+                        <div class="row g-4">
+
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="btn-lg-square bg-primary rounded-circle">
+                                        <i class="fa fa-cogs text-white"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="mb-0">Ferramenta</p>
+                                        <h5 class="mb-0">Completa</h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="btn-lg-square bg-primary rounded-circle">
+                                        <i class="fa fa-users text-white"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="mb-0">Interface</p>
+                                        <h5 class="mb-0">Intuitiva</h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="btn-lg-square bg-primary rounded-circle">
+                                        <i class="fa fa-lightbulb text-white"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="mb-0">Apoio</p>
+                                        <h5 class="mb-0">Analítico</h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <div class="btn-lg-square bg-primary rounded-circle">
+                                        <i class="fa fa-shield-alt text-white"></i>
+                                    </div>
+                                    <div class="ms-4">
+                                        <p class="mb-0">Dados</p>
+                                        <h5 class="mb-0">Protegidos</h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6 pe-lg-0 wow fadeIn" data-wow-delay="0.5s" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="position-absolute img-fluid w-100 h-100" src="img/feature.jpg"
+                            style="object-fit: cover;" alt="">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Why Choose Us End -->
+
+
+    <!-- Cases -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                <h6 class="text-primary">Exemplos</h6>
+                <h1 class="mb-4">Modelos e Simulações</h1>
+            </div>
+
+            <div class="row mt-n2 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="col-12 text-center">
+                    <ul class="list-inline mb-5" id="portfolio-flters">
+                        <li class="mx-2 active" data-filter="*">Todos</li>
+                        <li class="mx-2" data-filter=".first">Residencial</li>
+                        <li class="mx-2" data-filter=".second">Empresarial</li>
+                        <li class="mx-2" data-filter=".third">Projeções</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row g-4 portfolio-container wow fadeInUp" data-wow-delay="0.5s">
+
+                <!-- RESIDENCIAL -->
+                <div class="col-lg-6 col-md-12 portfolio-item first">
+                    <div class="row g-3 align-items-center rounded bg-white p-3 shadow-sm">
+                        <div class="col-12 col-md-6">
+                            <img class="img-fluid rounded" src="img/img-600x400-6.jpg" alt="">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <p class="text-primary mb-1">Residencial</p>
+                            <h4 class="fw-bold">Solução Solar Residencial</h4>
+                            <p>
+                                Avaliação do consumo mensal para determinar potência indicada,
+                                número de módulos e estimativa de economia.
+                            </p>
+                            <a href="dashboards/Cliente/CadastrarImoveis.php"
+                                class="btn btn-primary rounded-pill btn-sm px-4">Conferir</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMERCIAL -->
+                <div class="col-lg-6 col-md-12 portfolio-item second">
+                    <div class="row g-3 align-items-center rounded bg-white p-3 shadow-sm">
+                        <div class="col-12 col-md-6">
+                            <img class="img-fluid rounded" src="img/img-600x400-5.jpg" alt="">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <p class="text-primary mb-1">Empresarial</p>
+                            <h4 class="fw-bold">Solução Solar Empresarial</h4>
+                            <p>
+                                Dimensionamento voltado para empresas, considerando demanda.
+                            </p>
+                            <a href="dashboards/Cliente/CadastrarImoveis.php"
+                                class="btn btn-primary rounded-pill btn-sm px-4">Conferir</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROJEÇÕES -->
+                <div class="col-lg-6 col-md-12 portfolio-item third">
+                    <div class="row g-3 align-items-center rounded bg-white p-3 shadow-sm">
+                        <div class="col-12 col-md-6">
+                            <img class="img-fluid rounded" src="img/img-600x400-4.jpg" alt="">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <p class="text-primary mb-1">Projeções</p>
+                            <h4 class="fw-bold">Economia Solar Projetada</h4>
+                            <p>
+                                Orcamentos projetados para o seu consumo.
+                            </p>
+                            <a href="dashboards/Cliente/CadastrarImoveis.php"
+                                class="btn btn-primary rounded-pill btn-sm px-4">Conferir</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CÁLCULO DE PLACAS -->
+                <div class="col-lg-6 col-md-12 portfolio-item first">
+                    <div class="row g-3 align-items-center rounded bg-white p-3 shadow-sm">
+                        <div class="col-12 col-md-6">
+                            <img class="img-fluid rounded" src="img/img-600x400-3.jpg" alt="">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <p class="text-primary mb-1">Residencial</p>
+                            <h4 class="fw-bold">Planejamento de Placas Solares</h4>
+                            <p>
+                                Definição automática da quantidade ideal de placas com base na potência necessária.
+                            </p>
+                            <a href="dashboards/Cliente/CadastrarImoveis.php"
+                                class="btn btn-primary rounded-pill btn-sm px-4">Conferir</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Cases End -->
+
+
+
+    <!-- Testimonials -->
+    <div class="container-xxl py-5">
+        <div class="container">
+
+            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+                <h6 class="text-primary">Feedback</h6>
+                <h1 class="mb-4">O que os usuários valorizam</h1>
+            </div>
+
+            <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
+
+                <div class="testimonial-item text-center">
+                    <div class="testimonial-img position-relative">
+                        <img class="img-fluid rounded-circle mx-auto mb-5" src="img/testimonial-1.jpg" alt="">
+                        <div class="btn-square bg-primary rounded-circle">
+                            <i class="fa fa-quote-left text-white"></i>
+                        </div>
+                    </div>
+                    <div class="testimonial-text text-center rounded p-4">
+                        <p>
+                            “As estimativas foram fundamentais para entender o consumo e planejar a instalação do
+                            sistema.”
+                        </p>
+                        <h5 class="mb-1">Usuário</h5>
+                        <span class="fst-italic">Perfil Residencial</span>
+                    </div>
+                </div>
+
+                <div class="testimonial-item text-center">
+                    <div class="testimonial-img position-relative">
+                        <img class="img-fluid rounded-circle mx-auto mb-5" src="img/testimonial-2.jpg" alt="">
+                        <div class="btn-square bg-primary rounded-circle">
+                            <i class="fa fa-quote-left text-white"></i>
+                        </div>
+                    </div>
+                    <div class="testimonial-text text-center rounded p-4">
+                        <p>
+                            “A ferramenta ajudou nossa empresa a prever o retorno do investimento e identificar a melhor
+                            capacidade instalada.”
+                        </p>
+                        <h5 class="mb-1">Empresário</h5>
+                        <span class="fst-italic">Comercial</span>
+                    </div>
+                </div>
+
+                <div class="testimonial-item text-center">
+                    <div class="testimonial-img position-relative">
+                        <img class="img-fluid rounded-circle mx-auto mb-5" src="img/et1155.png" alt="">
+                        <div class="btn-square bg-primary rounded-circle">
+                            <i class="fa fa-quote-left text-white"></i>
+                        </div>
+                    </div>
+                    <div class="testimonial-text text-center rounded p-4">
+                        <p>
+                            “Seco seco seco...”
+                        </p>
+                        <h5 class="mb-1">Usuário</h5>
+                        <span class="fst-italic">Perfil Residencial</span>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+    <!-- Testimonials End -->
+
+
+    <!-- Footer -->
+    <div id="contato" class="container-fluid bg-dark text-body footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+
+            <div class="row g-5">
+
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Contato</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Brasil</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>(XX) XXXXX-XXXX</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>contato@solarsmart.com</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-square btn-outline-light btn-social" href="#"><i
+                                class="fab fa-twitter"></i></a>
+                        <a class="btn btn-square btn-outline-light btn-social" href="#"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-square btn-outline-light btn-social" href="#"><i
+                                class="fab fa-youtube"></i></a>
+                        <a class="btn btn-square btn-outline-light btn-social" href="#"><i
+                                class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Links</h5>
+                    <a class="btn btn-link" href="#sobre">Sobre</a>
+                    <a class="btn btn-link" href="#servicos">Funcionalidades</a>
+                    <a class="btn btn-link" href="#">GitHub</a>
+                    <a class="btn btn-link" href="#">Documentação</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Informações</h5>
+                    <p class="mb-2">
+                        Inclui sistemas de cálculo, documentação técnica e estrutura completa da plataforma.
+                    </p>
+                    <a class="btn btn-link" href="#">Acessar Repositório</a>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Newsletter</h5>
+                    <p>Receba novidades e atualizações.</p>
+                    <div class="position-relative mx-auto" style="max-width: 400px;">
+                        <input class="form-control border-0 w-100 py-3 ps-4 pe-5" type="text" placeholder="Seu e-mail">
+                        <button type="button"
+                            class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">Assinar</button>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="milestone">
-          <div class="bubble">
-            <p>Indicamos os melhores equipamentos</p>
-          </div>
-          <div class="dot"></div>
-          <div class="year">🔍 2° Passo</div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0 text-white">
+                        &copy; Solar Smart — Todos os direitos reservados.
+                    </div>
+
+                    <div class="col-md-6 text-center text-md-end text-white">
+                        Desenvolvido por: Equipe Solar Smart
+                    </div>
+
+                </div>
+            </div>
         </div>
 
-        <div class="milestone">
-          <div class="bubble">
-            <p>Orçamento personalizado de energia</p>
-          </div>
-          <div class="dot"></div>
-          <div class="year">💡 3° Passo</div>
-        </div>
-      </div>
-    </section>
+    </div>
+    <!-- Footer End -->
 
-    <!-- Formulário de Orçamento -->
-    <!-- Demonstração Dashboard -->
-    <section class="dashboard-demo" id="dashboard_demo">
-      <div class="dashboard-container">
-        <div class="dashboard-image">
-          <img
-            src="video_gi/Economia_Energia_Cofrinho_Retangular.jpg"
-            alt="Sistema de Orçamento Solar Smart"
-          />
-        </div>
-        <div class="dashboard-text">
-          <h2>Sistema completo de orçamento</h2>
-          <p>
-            Nossa plataforma analisa todos os dados para criar o orçamento mais
-            preciso e adequado às suas necessidades.
-          </p>
-          <ul>
-            <li>💰 Cálculo preciso de economia e retorno</li>
-            <li>📋 Orçamento completo com especificações técnicas</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i
+            class="bi bi-arrow-up"></i></a>
 
-    <section class="beneficios" id="beneficios">
-      <h2>Por que escolher nosso orçamento personalizado</h2>
-      <div class="benefits-grid">
-        <div class="benefit">
-          <h3>Totalmente personalizado</h3>
-          <p>Cada projeto é único e adequado às suas necessidades</p>
-        </div>
-        <div class="benefit">
-          <h3>Transparência total</h3>
-          <p>Orçamento detalhado sem custos ocultos</p>
-        </div>
-      </div>
-    </section>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
 
-    <!-- Depoimentos -->
-    <section class="testimonials">
-      <h2>O que dizem nossos clientes</h2>
-      <div class="testimonials-container">
-        <div class="testimonial-card">
-          <p>
-            "O orçamento foi muito detalhado e preciso. O sistema instalado
-            superou minhas expectativas de economia!"
-          </p>
-          <h4>Maria Silva</h4>
-          <span>Residencial - São Paulo/SP</span>
-        </div>
-        <div class="testimonial-card">
-          <p>
-            "A análise considerou perfeitamente o consumo da minha empresa.
-            Projeto customizado e excelente custo-benefício!"
-          </p>
-          <h4>João Pereira</h4>
-          <span>Comercial - Campinas/SP</span>
-        </div>
-        <div class="testimonial-card">
-          <p>
-            "Transparência total no orçamento e suporte excepcional. Já estou
-            economizando 70% na conta de luz!"
-          </p>
-          <h4>Ana Costa</h4>
-          <span>Residencial - Ribeirão Preto/SP</span>
-        </div>
-      </div>
-    </section>
 
-    <!-- Rodapé -->
-    <footer class="rodape">
-      <div class="rodape-container">
-        <div class="rodape-col">
-          <h3>Solar Smart</h3>
-          <p>
-            Orçamentos personalizados para energia solar.<br />
-            Análise completa do seu consumo e localização.
-          </p>
-        </div>
-        <div class="rodape-col">
-          <h4>Links rápidos</h4>
-          <ul>
-            <li><a href="#inicio">Início</a></li>
-            <li><a href="#como-funciona">Como funciona</a></li>
-            <li><a href="#beneficios">Benefícios</a></li>
-            <li><a href="#orcamento">Solicitar orçamento</a></li>
-            <li><a href="#contato">Contato</a></li>
-          </ul>
-        </div>
-        <div class="rodape-col">
-          <h4>Contato</h4>
-          <p>Email: orcamento@solarsmart.com.br</p>
-          <p>Telefone: (19) 99999-9999</p>
-          <p>Araras - SP</p>
-        </div>
-        <div class="rodape-col">
-          <h4>Siga-nos</h4>
-          <div class="redes-sociais" id="contato">
-            <a href="#"><i id="icones_rodape" class="fa-brands fa-square-facebook"></i></a>
-            <a href="#"><i id="icones_rodape" class="fa-brands fa-square-instagram"></i></a>
-            <a href="#"><i id="icones_rodape" class="fa-brands fa-linkedin"></i></a>
-          </div>
-        </div>
-      </div>
-      <div class="rodape-bottom">
-        <p>&copy; 2025 Solar Smart - Todos os direitos reservados.</p>
-      </div>
-    </footer>
+    <script src="js/main.js"></script>
 
-    <script
-      src="https://kit.fontawesome.com/6c4a5a739f.js"
-      crossorigin="anonymous"
-    ></script>
-    <script src="../frontend/JS/LandPage/landepage.js"></script>
+</body>
 
-    <script>
-      document.querySelectorAll(".bubble p").forEach((p) => {
-        p.contentEditable = false;
-      });
-    </script>
-  </body>
 </html>

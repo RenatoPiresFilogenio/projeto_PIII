@@ -1,454 +1,523 @@
 @import url(../page-default.css);
 @import url(../variables.css);
 
+/* --- RESET E BASE --- */
+* {
+    box-sizing: border-box;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* Este é o novo fundo azulado suave */
-    background: #f0f7ff;
-    min-height: 100vh;
+    font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+    /* Fundo azulado bem suave (Identidade Solar Smart) */
+    background-color: #f4f7fa; 
+    color: #2d3748;
+    margin: 0;
     padding: 20px;
-    color: var(--cinza-escuro);
+    min-height: 100vh;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
+    padding-bottom: 40px;
 }
 
-/* --- HEADER SUPERIOR --- */
-
+/* --- HEADER --- */
 .header {
-    background: var(--branco);
-    border-radius: var(--border-radius);
+    background: #ffffff;
+    border-radius: 16px;
     padding: 20px 30px;
     margin-bottom: 30px;
-    box-shadow: var(--sombra);
+    /* Sombra suave idêntica à Landing Page */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 20px;
-    border-top: 5px solid var(--azul-tecnologico);
-    /* Destaque superior */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Detalhe decorativo no topo do header (Barra Verde) */
+.header::top {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--verde-sustentavel, #28a745) 0%, var(--azul-tecnologico, #0056b3) 100%);
 }
 
 .header h1 {
-    color: var(--azul-tecnologico);
-    font-size: 2rem;
-    font-weight: 700;
-    /* Destaque sutil com o amarelo da marca */
-    border-left: 5px solid var(--amarelo-solar);
-    padding-left: 15px;
+    color: #1a202c;
+    font-size: 1.8rem;
+    font-weight: 800;
     margin: 0;
-}
-
-/* Botões de Ação no Header */
-.btn-novo,
-.btn-fornecedor,
-.btn-sair {
-    color: var(--branco);
-    border: none;
-    padding: 12px 24px;
-    border-radius: var(--border-radius);
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    text-transform: uppercase;
-}
-
-.btn-novo {
-    background: var(--verde-sustentavel);
-    /* Cor de Ação Principal */
-}
-
-.btn-novo:hover,
-.btn-fornecedor:hover,
-.btn-sair:hover {
-    filter: brightness(1.1);
-    /* Efeito de hover sutil */
-    box-shadow: var(--sombra-hover);
-}
-
-.btn-fornecedor {
-    background: var(--azul-tecnologico);
-    /* Cor de Ação Secundária */
-}
-
-.btn-sair {
-    background: var(--vermelho-erro);
-    /* Cor de Perigo */
-}
-
-
-/* --- BLOCOS DE CONTEÚDO --- */
-
-.block {
-    background: var(--branco);
-    border-radius: var(--border-radius);
-    padding: 25px 30px;
-    margin-bottom: 30px;
-    box-shadow: var(--sombra);
-}
-
-.block-title {
-    color: var(--azul-tecnologico);
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--cinza-medio);
+    letter-spacing: -0.02em;
     display: flex;
     align-items: center;
     gap: 10px;
-    /* Destaque de acento amarelo */
-    border-left: 5px solid var(--amarelo-solar);
-    padding-left: 10px;
+}
+
+/* Ícone solar no título (pode ser via CSS ou HTML) */
+.header h1::before {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 30px;
+    background-color: var(--verde-sustentavel, #28a745);
+    border-radius: 4px;
+}
+
+.header-nav {
+    display: flex;
+    gap: 15px;
+}
+
+/* Botões do Header (Estilo Pill) */
+.btn-fornecedor,
+.btn-sair {
+    padding: 10px 20px;
+    border-radius: 50px; /* Redondinho */
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.btn-fornecedor {
+    background-color: #ebf8ff; /* Azul bem claro */
+    color: var(--azul-tecnologico, #0056b3);
+}
+
+.btn-fornecedor:hover {
+    background-color: var(--azul-tecnologico, #0056b3);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-sair {
+    background-color: #fff5f5; /* Vermelho bem claro */
+    color: #c53030;
+}
+
+.btn-sair:hover {
+    background-color: #c53030;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* --- BLOCOS DE CONTEÚDO --- */
+.block {
+    margin-bottom: 40px;
+}
+
+.block-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.block-title i {
+    color: var(--azul-tecnologico, #0056b3);
+    background: #e6fffa;
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 1.1rem;
 }
 
 /* --- FILTROS --- */
-
 .filters {
     display: flex;
     gap: 15px;
     margin-bottom: 25px;
-    flex-wrap: wrap;
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    border: 1px solid #eef2f6;
 }
 
 .filter-select {
-    padding: 10px 15px;
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
-    background: var(--branco);
+    padding: 10px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #4a5568;
     font-size: 0.95rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: var(--transition);
-    min-width: 150px;
-}
-
-.filter-select:focus,
-.filter-select:hover {
+    transition: all 0.2s;
     outline: none;
-    border-color: var(--azul-tecnologico);
+    min-width: 200px;
 }
 
-/* --- LISTA DE ORÇAMENTOS --- */
+.filter-select:hover,
+.filter-select:focus {
+    border-color: var(--azul-tecnologico, #0056b3);
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+}
 
-.orcamento-item {
-    background: var(--branco);
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
-    padding: 20px;
-    margin-bottom: 15px;
-    transition: var(--transition);
+/* --- LISTA DE ORÇAMENTOS (Modern Cards) --- */
+#orcamentosEscolhidos {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.orcamento-card-moderno {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
-.orcamento-item:hover {
-    border-color: var(--azul-tecnologico);
-    box-shadow: var(--sombra-hover);
-    transform: translateY(-2px);
+.orcamento-card-moderno:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #e2e8f0;
 }
 
-.orcamento-header {
+/* Barra lateral indicadora de Status */
+.orcamento-card-moderno::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+}
+
+/* Cores da Barra Lateral e Variáveis Locais */
+.status-border-approved::before { background-color: #48bb78; } /* Verde */
+.status-border-denied::before { background-color: #f56565; } /* Vermelho */
+.status-border-pending::before { background-color: #ed8936; } /* Laranja */
+.status-border-rejeitado::before { background-color: #9b2c2c; } /* Vermelho Escuro */
+
+/* Coluna Info */
+.card-info-main {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 15px;
 }
 
-.cliente-nome {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #333;
-}
-
-.orcamento-valor {
-    font-size: 1.3rem;
+.client-header .client-name {
+    font-size: 1.1rem;
     font-weight: 700;
-    color: var(--azul-tecnologico);
-    /* Cor primária da marca */
+    color: #2d3748;
 }
 
-.orcamento-info {
+/* Specs Técnicas */
+.tech-specs {
     display: flex;
-    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #4a5568;
+    background-color: #f7fafc;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #edf2f7;
+    width: fit-content;
+}
+
+.spec-item {
+    display: flex;
     align-items: center;
-    font-size: 0.9rem;
-    color: var(--cinza-escuro);
-}
-
-/* Badges de Status (Impactantes) */
-.status {
-    padding: 5px 12px;
-    border-radius: 100px;
-    /* Formato "pill" */
+    gap: 6px;
     font-weight: 600;
+}
+
+.spec-item i { color: #48bb78; } /* Ícone Verde */
+
+.fornecedor-info {
     font-size: 0.8rem;
-    color: var(--branco);
+    color: #718096;
+}
+
+/* Coluna Financeira */
+.card-financial {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+}
+
+.price-tag {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #1a202c;
+    letter-spacing: -0.03em;
+}
+
+.status-badge-mini {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 700;
     text-transform: uppercase;
-    border: 1px solid transparent;
+    align-self: flex-end;
 }
 
-/* MODIFICADORES DE COR */
-.status.approved {
-    background: var(--verde-sucesso);
-    color: var(--branco);
+.date-tag {
+    font-size: 0.8rem;
+    color: #a0aec0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
 }
 
-/* Este foi corrigido de "outline" para "solid" */
-.status.denied {
-    background: var(--vermelho-erro);
-    color: var(--branco);
-}
-
-.status.rejeitado {
-    background: #a00000;
-    /* Vermelho mais escuro para diferenciar */
-    color: var(--branco);
-}
-
-.status.pending {
-    background: var(--laranja-aviso);
-    color: var(--branco);
-}
-
-.status.other {
-    background: var(--cinza-medio);
-    color: #333;
-}
-
-/* --- GRID DE ESTATÍSTICAS --- */
-
+/* --- ESTATÍSTICAS (Resumo Geral) --- */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
 }
 
 .stat-card {
-    background: var(--branco);
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
-    padding: 20px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 25px;
     text-align: center;
-    min-height: 110px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    transition: var(--transition);
+    align-items: center;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+    position: relative;
+    overflow: hidden;
 }
 
 .stat-card:hover {
-    box-shadow: var(--sombra-hover);
-    transform: translateY(-2px);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
 }
 
+/* Borda colorida no topo de cada card de estatística */
+.stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #e2e8f0; /* Default */
+}
+
+/* Você pode adicionar classes específicas no JS ou usar nth-child para cores */
+.stat-card:nth-child(1)::after { background: var(--azul-tecnologico, #0056b3); }
+.stat-card:nth-child(2)::after { background: var(--verde-sustentavel, #28a745); }
+.stat-card:nth-child(3)::after { background: #f56565; }
+.stat-card:nth-child(4)::after { background: #ed8936; }
+
 .stat-number {
-    font-size: 2.1rem;
-    font-weight: 700;
-    color: var(--azul-tecnologico);
-    /* Cor primária da marca */
-    margin-bottom: 8px;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #2d3748;
+    margin-bottom: 5px;
+    letter-spacing: -1px;
 }
 
 .stat-label {
-    color: var(--cinza-escuro);
+    color: #718096;
     font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.stat-card .stat-sublabel {
-    font-size: 0.85rem;
-    color: var(--cinza-escuro);
-    margin-top: 4px;
-    font-weight: 500;
-}
-
-
-/* --- GRID DE CLIENTES --- */
-
-.clientes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.regiao-block {
-    background: var(--branco);
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
-    padding: 20px;
-}
-
-.regiao-title {
-    font-size: 1.1rem;
     font-weight: 600;
-    color: var(--azul-tecnologico);
-    /* Cor primária da marca */
-    margin-bottom: 15px;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-.cliente-item {
-    background: var(--branco);
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
-    padding: 15px;
-    margin-bottom: 12px;
+.stat-sublabel {
+    font-size: 0.8rem;
+    background: #edf2f7;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 8px;
+    color: #4a5568;
 }
 
-.cliente-header {
-    font-weight: 600;
-    font-size: 1rem;
-    color: #333;
-    margin-bottom: 8px;
-}
-
-.cliente-stats {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-/* Badges de Status Menores */
-.stat-badge {
-    padding: 4px 10px;
-    border-radius: 100px;
-    /* Formato "pill" */
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--branco);
-    text-transform: uppercase;
-}
-
-.stat-badge.aprovados {
-    background: var(--verde-sucesso);
-}
-
-.stat-badge.recusados {
-    background: var(--vermelho-erro);
-}
-
-.stat-badge.nao-liberados {
-    background: var(--laranja-aviso);
-}
-
-
-/* --- GRID DE INSIGHTS --- */
-
+/* --- INSIGHTS E RANKINGS --- */
 .insights-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
 }
 
 .insight-block {
-    background: var(--branco);
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
-    padding: 20px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-/* Título de cada card de Insight */
 .insight-block h3 {
-    color: var(--azul-tecnologico);
-    margin-bottom: 15px;
-    font-weight: 700;
     font-size: 1.1rem;
-    border-bottom: 1px solid var(--cinza-medio);
-    padding-bottom: 10px;
-    text-transform: uppercase;
+    color: #2d3748;
+    margin: 0 0 10px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f7fafc;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .insight-item {
-    background: var(--cinza-claro);
-    /* Contraste com o fundo branco */
-    border: 1px solid var(--cinza-medio);
-    border-radius: var(--border-radius);
+    background: #f8fafc;
+    border-radius: 12px;
     padding: 15px;
-    margin-bottom: 12px;
+    border: 1px solid #edf2f7;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.2s;
+}
+
+.insight-item:hover {
+    background: #f0f7ff;
+    border-color: #bee3f8;
 }
 
 .insight-title {
-    font-weight: 600;
-    color: var(--cinza-escuro);
-    font-size: 0.85rem;
-    margin-bottom: 5px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #718096;
     text-transform: uppercase;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .insight-value {
     font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--azul-tecnologico);
-    /* Cor primária da marca */
-    margin-bottom: 5px;
+    font-weight: 800;
+    color: var(--azul-tecnologico, #2b6cb0);
 }
 
 .insight-desc {
     font-size: 0.85rem;
-    color: var(--cinza-escuro);
+    color: #4a5568;
+    margin-top: 5px;
 }
 
-/* --- ESTADOS VAZIOS --- */
-
-.empty-state {
+/* Estados Vazios */
+.empty-state, .insight-item-empty {
     text-align: center;
-    padding: 40px 20px;
-    color: var(--cinza-escuro);
-    background: var(--branco);
-    border-radius: var(--border-radius);
-    border: 1px dashed var(--cinza-medio);
+    padding: 30px;
+    color: #a0aec0;
+    background: #f9fafb;
+    border-radius: 12px;
+    border: 2px dashed #e2e8f0;
 }
 
-.empty-state h3 {
-    color: var(--azul-tecnologico);
+/* --- PAGINAÇÃO --- */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
 }
 
+.pagination-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e2e8f0;
+    background-color: #fff;
+    color: #4a5568;
+    cursor: pointer;
+    border-radius: 10px; /* Quadrado arredondado moderno */
+    font-weight: 600;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-/* --- RESPONSIVIDADE --- */
+.pagination-btn:hover:not(:disabled) {
+    background-color: #ebf8ff;
+    border-color: var(--azul-tecnologico, #4299e1);
+    color: var(--azul-tecnologico, #2b6cb0);
+}
 
+.pagination-btn.active {
+    background-color: var(--azul-tecnologico, #3182ce);
+    color: #fff;
+    border-color: var(--azul-tecnologico, #3182ce);
+    box-shadow: 0 4px 6px rgba(49, 130, 206, 0.3);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #edf2f7;
+}
+
+/* Responsividade */
 @media (max-width: 768px) {
     .header {
         flex-direction: column;
+        align-items: stretch;
         text-align: center;
-        gap: 15px;
+    }
+    
+    .header h1 {
+        justify-content: center;
+        margin-bottom: 15px;
     }
 
-    .header h1 {
-        border-left: none;
-        padding-left: 0;
-        border-bottom: 3px solid var(--amarelo-solar);
-        padding-bottom: 10px;
+    .header-nav {
+        justify-content: center;
     }
 
     .filters {
         flex-direction: column;
     }
-
-    .filter-select {
-        min-width: unset;
-    }
-
-    .orcamento-header {
+    
+    .orcamento-card-moderno {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+        align-items: stretch;
     }
-
-    .orcamento-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+    
+    .card-info-main {
+        padding-left: 0;
+        margin-bottom: 15px;
+        padding-left: 10px; /* Compensa a barra lateral */
     }
-
-    .clientes-grid,
-    .insights-grid {
-        grid-template-columns: 1fr;
+    
+    .card-financial {
+        text-align: left;
+        align-items: flex-start;
+        padding-top: 15px;
+        border-top: 1px solid #f0f0f0;
+    }
+    
+    .status-badge-mini {
+        align-self: flex-start;
     }
 }

@@ -1,4 +1,6 @@
 @import url(../../variables.css);
+
+/* --- RESET & BASE --- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,238 +8,371 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--cinza-claro);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--cinza-claro, #f4f7fa);
     color: #333;
     line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* --- BOTÕES PADRONIZADOS (Igual Produto) --- */
+.btn-secondary {
+    background-color: #6c757d;
+    /* Cinza */
+    color: #fff;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    /* Vermelho */
+    color: #fff;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-primary {
+    background-color: #0056b3;
+    /* Azul */
+    color: #fff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #004494;
+}
+
+/* --- PAINEL LATERAL (Estilo Produto) --- */
+/* Removemos o estilo antigo de card flutuante e aplicamos este: */
+.info-panel {
+    background-color: #f8f9fa;
+    /* Fundo cinza bem claro */
+    border-left: 5px solid #0056b3;
+    /* Faixa azul na esquerda */
+    padding: 25px;
+    border-radius: 6px;
+    height: fit-content;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.info-panel h3 {
+    color: #343a40;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 10px;
+}
+
+.info-panel-row {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: #495057;
+}
+
+.info-panel-row strong {
+    color: #0056b3;
+    /* Chaves em azul */
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+.info-panel-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #0056b3;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.info-panel-link:hover {
+    text-decoration: underline;
+}
+
+/* Ajuste do container da direita */
+#Marca_view {
+    background: transparent !important;
+    /* Remove gradiente antigo */
+    border: none !important;
+    padding: 40px 20px;
 }
 
 .container {
-    max-width: 1100px;
-    margin: 2rem auto;
-    background: var(--branco);
-    border-radius: var(--border-radius);
-    box-shadow: var(--sombra);
+    width: 100%;
+    max-width: 1000px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
     overflow: hidden;
+    animation: fadeIn 0.4s ease-out;
 }
 
+/* --- LAYOUT GRID --- */
+.edit-layout-wrapper {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    /* Esquerda maior, Direita menor */
+    min-height: 500px;
+}
+
+/* --- COLUNA DO FORMULÁRIO (ESQUERDA) --- */
 .container-form {
-    padding: 2rem;
+    padding: 40px;
 }
 
 h1 {
     font-size: 1.8rem;
-    color: var(--preto);
-    margin-bottom: 1.5rem;
-    font-weight: 600;
+    color: var(--azul-tecnologico, #0056b3);
+    margin-bottom: 2rem;
+    font-weight: 700;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
 }
 
 .container-input {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    display: grid;
+    gap: 20px;
 }
 
-.container-input.grid-cols-2 {
-    display: grid;
+.grid-cols-2 {
     grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
 }
 
 .div_input {
     display: flex;
     flex-direction: column;
-    width: 100%;
 }
 
 .div_input span {
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--cinza-escuro);
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #555;
     font-size: 0.9rem;
 }
 
-.input,
-input[type="text"],
-input[type="number"] {
+.input {
     width: 100%;
-    padding: 0.8rem;
-    border: 1px solid var(--cinza-medio);
-    border-radius: 4px;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
 }
 
-input:disabled {
-    background-color: #f1f1f1;
-    cursor: not-allowed;
+.input:focus {
+    border-color: var(--azul-tecnologico, #0056b3);
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
 }
 
+/* --- BOTÕES --- */
 .btns {
     display: flex;
     justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
+    gap: 12px;
+    margin-top: 30px;
+    padding-top: 20px;
     border-top: 1px solid #f0f0f0;
 }
 
-.btn-primary,
-.btn-danger {
+button {
     border: none;
-    padding: 0.7rem 1.5rem;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 6px;
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--branco);
     cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: var(--transition);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.btn-primary:hover,
-.btn-danger:hover {
-    box-shadow: var(--sombra-hover);
+button:hover {
     transform: translateY(-2px);
+    filter: brightness(1.1);
 }
 
 .btn-primary {
-    background-color: var(--azul-tecnologico);
+    background-color: var(--azul-tecnologico, #0056b3);
+    color: #fff;
 }
 
 .btn-danger {
-    background-color: var(--vermelho-erro);
+    background-color: #e2e8f0;
+    color: #4a5568;
 }
 
-#Marca_view,
-#kit_view {
-    padding: 2rem;
-    background-color: #fbfbfb;
-    border-top: 1px solid #eee;
-}
-
-.card-marca-titulo {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-.card-marca-info {
-    margin-bottom: 0.5rem;
-    color: #333;
-}
-.card-marca-link {
-    color: var(--azul-tecnologico);
-    font-weight: 600;
-    text-decoration: none;
-}
-
-#produtos_container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    background-color: #fdfdfd;
-}
-
-.produto_item {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.produto_item input {
-    flex: 1;
-}
-
-#add_produto {
-    background-color: var(--verde-sucesso);
-    color: var(--branco);
-    border: none;
-    padding: 0.6rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 0.5rem;
-    font-weight: 500;
-    transition: var(--transition);
-}
-
-#add_produto:hover {
-    box-shadow: var(--sombra-hover);
-    transform: translateY(-2px);
-}
-
-.remove_produto {
-    background-color: var(--vermelho-erro);
-    color: var(--branco);
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-}
-
-.edit-layout-wrapper {
-    display: flex;
-    width: 100%;
-}
-
-.edit-layout-wrapper > .container-form {
-    flex: 0 0 60%;
-}
-
-.edit-layout-wrapper > #Marca_view {
-    flex: 0 0 40%;
-    border-top: none;
-    border-left: 1px solid #eee;
+/* Fechar agora é cinza */
+.btn-danger:hover {
+    background-color: #cbd5e0;
 }
 
 .btn-warning {
-    border: none;
-    padding: 0.7rem 1.5rem;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--branco);
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: var(--transition);
-    background-color: var(--laranja-aviso); 
+    background-color: #fff5f5;
+    color: #e53e3e;
+    border: 1px solid #feb2b2;
 }
 
+/* Excluir é vermelho claro */
 .btn-warning:hover {
-    box-shadow: var(--sombra-hover);
-    transform: translateY(-2px);
+    background-color: #e53e3e;
+    color: #fff;
 }
 
+/* --- COLUNA DE PREVIEW (DIREITA) --- */
+#Marca_view {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid #eee;
+}
+
+/* Card Visual da Marca */
+.card-marca {
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    width: 100%;
+    /* Garante largura total na coluna */
+}
+
+/* Adicione esta classe se não tiver */
+.card-icon-top {
+    font-size: 3rem;
+    color: var(--azul-tecnologico, #0056b3);
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+.card-marca-titulo {
+    font-size: 1.8rem;
+    /* Ajustado para bater com fornecedor */
+    color: #2d3748;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.card-marca-info {
+    font-size: 0.95rem;
+    color: #718096;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 8px;
+    text-align: left;
+    /* Alinhamento do texto */
+}
+
+.card-marca-info strong {
+    color: #4a5568;
+    font-weight: 600;
+}
+
+.card-marca-link {
+    display: inline-flex;
+    /* Melhor alinhamento */
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 10px 24px;
+    background: #ebf8ff;
+    color: var(--azul-tecnologico, #0056b3);
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.card-marca-link:hover {
+    background: var(--azul-tecnologico, #0056b3);
+    color: #fff;
+}
+
+/* --- NOTIFICAÇÃO --- */
 #notification-area {
-    margin-bottom: 1.5rem;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
 }
 
 .notification {
-    padding: 1rem;
-    border-radius: 4px;
-    font-weight: 500;
-    display: none; 
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-bottom: 10px;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transform: translateX(100%);
+    transition: all 0.4s ease;
 }
 
 .notification.show {
-    display: block;
     opacity: 1;
+    transform: translateX(0);
 }
 
 .notification.success {
-    background-color: var(--cinza-claro); 
-    border-left: 5px solid var(--verde-sucesso);
-    color: #333;
+    background-color: #48bb78;
 }
 
 .notification.error {
-    background-color: #fff0f0; 
-    border-left: 5px solid var(--vermelho-erro);
-    color: #333;
+    background-color: #f56565;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 768px) {
+    .edit-layout-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    #Marca_view {
+        border-left: none;
+        border-top: 1px solid #eee;
+        padding: 20px;
+    }
+
+    .grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .btns {
+        flex-direction: column-reverse;
+    }
+
+    button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

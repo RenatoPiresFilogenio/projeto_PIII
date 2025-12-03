@@ -38,18 +38,17 @@ try {
          throw new Exception('Acesso ao imóvel negado.');
     }
     
-   $sql_orcamento = "
+    // --- ALTERAÇÃO AQUI: Status inicial agora é 'aprovado' ---
+    $sql_orcamento = "
         INSERT INTO ORCAMENTO 
             (DATA, VALOR_TOTAL, FK_IMOVEIS_ID, STATUS, IS_DELETE, FK_FORNECEDOR_ID) 
         VALUES 
-            (NOW(), ?, ?, 'AGUARDA_ADM', FALSE, ?)
+            (NOW(), ?, ?, 'aprovado', FALSE, ?) 
         RETURNING ID_ORCAMENTO"; 
         
-
     $stmt_orcamento = $pdo->prepare($sql_orcamento);
     $stmt_orcamento->execute([$valor_total, $id_imovel, $id_fornecedor]);
     
-   
     $id_orcamento_criado = $stmt_orcamento->fetchColumn();
    
     $sql_kit_orcamento = "
@@ -61,20 +60,16 @@ try {
     $stmt_kit_orc = $pdo->prepare($sql_kit_orcamento);
     $stmt_kit_orc->execute([$id_kit, $id_orcamento_criado, $valor_total, $potencia_ideal]);
 
-   
     $pdo->commit();
 
     echo json_encode([
         'sucesso' => true, 
         'id_orcamento_criado' => $id_orcamento_criado,
-        'mensagem' => 'Proposta enviada para validação!'
+        'mensagem' => 'Proposta aprovada com sucesso!'
     ]);
 
 } catch (Exception $e) {
-    
     $pdo->rollBack();
-    
-   
     if (http_response_code() == 200) {
         http_response_code(500); 
     }

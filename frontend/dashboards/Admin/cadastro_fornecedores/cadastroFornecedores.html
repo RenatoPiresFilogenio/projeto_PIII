@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Ativos - Solar Smart</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../../css/Dashboards/cadastro_fornecedores/cadastro_fornecedores.css">
-</head> 
+</head>
 
 <body>
     <div class="container">
@@ -43,15 +44,15 @@
                 <div class="block-title">
                     <span><i class="fas fa-truck"></i> Fornecedores Cadastrados</span>
                     <div class="filters">
-                        <input type="text" class="filter-input" placeholder="Buscar fornecedor..."
-                            id="buscaFornecedor">
+                        <input type="text" class="filter-input" placeholder="Buscar fornecedor..." id="buscaFornecedor">
                         <button class="btn btn-primary" type="button" onclick="abrirModalFornecedor()">
                             <i class="fas fa-plus"></i> Novo Fornecedor
                         </button>
                     </div>
                 </div>
-                <div id="fornecedoresList" class="cards-grid">
-                    </div>
+                <div id="fornecedoresList" class="cards-grid"></div>
+
+                <div id="paginacaoFornecedores" class="pagination-controls"></div>
             </section>
 
             <section id="tab-placas" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-placas">
@@ -61,14 +62,18 @@
                         <input type="text" class="filter-input" placeholder="Buscar produto..." id="buscaProduto">
                         <select class="filter-input" id="filtroTipoProduto">
                             <option value="">Todos os Tipos</option>
+                            <option value="1">Placa Solar</option>
+                            <option value="2">Inversor</option>
                         </select>
                         <button class="btn btn-primary" type="button" onclick="abrirModalProduto()">
                             <i class="fas fa-plus"></i> Novo Produto
                         </button>
                     </div>
                 </div>
-                <div id="produtosList" class="cards-grid">
-                    </div>
+
+                <div id="produtosList" class="cards-grid"></div>
+
+                <div id="paginacaoProdutos" class="pagination-controls"></div>
             </section>
 
             <section id="tab-marcas" class="tab-content active" role="tabpanel" aria-labelledby="tab-btn-marcas">
@@ -81,8 +86,10 @@
                         </button>
                     </div>
                 </div>
-                <div id="marcasList" class="cards-grid">
-                    </div>
+
+                <div id="marcasList" class="cards-grid"></div>
+
+                <div id="paginacaoMarcas" class="pagination-controls"></div>
             </section>
 
             <section id="tab-kits" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-kits">
@@ -90,13 +97,23 @@
                     <span><i class="fas fa-box-open"></i> Kits Cadastrados</span>
                     <div class="filters">
                         <input type="text" class="filter-input" placeholder="Buscar Kit..." id="buscaKit">
+
+                        <select class="filter-input" id="filtroConsumoKit" style="min-width: 180px;">
+                            <option value="">Qualquer Consumo</option>
+                            <option value="300">Até 300 kWh/mês</option>
+                            <option value="500">Até 500 kWh/mês</option>
+                            <option value="750">Até 750 kWh/mês</option>
+                            <option value="1250">Até 1250 kWh/mês</option>
+                            <option value="99999">+ de 1250 kWh/mês</option>
+                        </select>
+
                         <button class="btn btn-primary" type="button" onclick="abrirModalKit()">
                             <i class="fas fa-plus"></i> Novo Kit
                         </button>
                     </div>
                 </div>
-                <div id="kitList" class="cards-grid">
-                    </div>
+                <div id="kitList" class="cards-grid"></div>
+                <div id="paginacaoKits" class="pagination-controls"></div>
             </section>
         </main>
     </div>
@@ -105,7 +122,8 @@
         <div class="modal-content">
             <span class="modal-close" onclick="fecharModalFornecedor()">&times;</span>
             <h3 id="modalFornecedorTitle">Cadastrar Novo Fornecedor</h3>
-            <form id="formFornecedor" action="../../../../backend/Admin/Fornecedor/CadastroFornecedor.php" method="POST">
+            <form id="formFornecedor" action="../../../../backend/Admin/Fornecedor/CadastroFornecedor.php"
+                method="POST">
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label" for="fornecedor_nome">Nome do fornecedor *</label>
@@ -136,9 +154,10 @@
 
     <div id="modalProduto" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalProdutoTitle">
         <div class="modal-content">
-             <span class="modal-close" onclick="fecharModalProduto()">&times;</span>
+            <span class="modal-close" onclick="fecharModalProduto()">&times;</span>
             <h3 id="modalProdutoTitle">Cadastrar Novo Produto</h3>
-            <form id="formProduto" action="../../../../backend/Admin/CadastrarProduto/CadastrarProduto.php" method="POST">
+            <form id="formProduto" action="../../../../backend/Admin/CadastrarProduto/CadastrarProduto.php"
+                method="POST">
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label" for="produto_nome">Nome do Produto *</label>
@@ -150,7 +169,8 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="produto_valor">Valor Unitário *</label>
-                        <input type="number" class="form-input" name="valor_unitario" id="produto_valor" step="0.01" required>
+                        <input type="number" class="form-input" name="valor_unitario" id="produto_valor" step="0.01"
+                            required>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="potencia_kwh">Potencia em kW*</label>
@@ -179,7 +199,7 @@
 
     <div id="modalKit" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalKitTitle">
         <div class="modal-content">
-             <span class="modal-close" onclick="fecharModalKit()">&times;</span>
+            <span class="modal-close" onclick="fecharModalKit()">&times;</span>
             <h3 id="modalKitTitle">Cadastrar Novo Kit</h3>
             <form id="formKit" action="../../../../backend/Admin/Kits/CadastrarKits.php" method="POST">
                 <div class="form-grid">
@@ -206,7 +226,7 @@
                 <div class="lista-produtos-container">
                     <h4>Produtos selecionados</h4>
                     <ul id="lista_produto" class="lista_produto_selecionado">
-                        </ul>
+                    </ul>
                 </div>
 
                 <div class="modal-actions">
@@ -216,10 +236,10 @@
             </form>
         </div>
     </div>
-    
+
     <div id="modalMarca" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalMarcaTitle">
         <div class="modal-content">
-             <span class="modal-close" onclick="fecharModalMarca()">&times;</span>
+            <span class="modal-close" onclick="fecharModalMarca()">&times;</span>
             <h3 id="modalMarcaTitle">Cadastrar Nova Marca</h3>
             <form id="formMarca" action="../../../../backend/Admin/Marcas/CriarMarca.php" method="POST">
                 <div class="form-grid">
@@ -251,4 +271,5 @@
 
     <script src="../../../JS/Admin/cadastroFornecedores_app.js"></script>
 </body>
+
 </html>

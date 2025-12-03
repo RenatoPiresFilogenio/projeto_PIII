@@ -18,7 +18,7 @@ if (!$id_imovel) {
 }
 
 try {
-    // Confere se o imóvel realmente pertence ao usuário logado
+    // 1. Confere se o imóvel existe e pertence ao usuário
     $stmt = $pdo->prepare("SELECT ID FROM IMOVEIS WHERE ID = :id_imovel AND FK_USUARIOS_ID_USUARIO = :id_usuario");
     $stmt->execute(['id_imovel' => $id_imovel, 'id_usuario' => $id_usuario]);
     $existe = $stmt->fetchColumn();
@@ -28,16 +28,17 @@ try {
         exit;
     }
 
-    // Deleta o imóvel
-    $stmt = $pdo->prepare("DELETE FROM IMOVEIS WHERE ID = :id_imovel AND FK_USUARIOS_ID_USUARIO = :id_usuario");
+    // 2. SOFT DELETE (Atualiza para deletado em vez de apagar o registro)
+    // Isso evita o erro de chave estrangeira com orçamentos
+    $stmt = $pdo->prepare("UPDATE IMOVEIS SET is_delete = TRUE WHERE ID = :id_imovel AND FK_USUARIOS_ID_USUARIO = :id_usuario");
     $stmt->execute(['id_imovel' => $id_imovel, 'id_usuario' => $id_usuario]);
 
     echo json_encode(['success' => true, 'message' => 'Imóvel excluído com sucesso.']);
     exit;
 
 } catch (PDOException $e) {
+    // Em produção, guarde o erro no log, não mostre detalhes técnicos ao usuário
     error_log("Erro ao excluir imóvel: " . $e->getMessage());
-    echo json_encode(['success' => false, 'error' => 'Erro ao excluir imóvel.']);
+    echo json_encode(['success' => false, 'error' => 'Não foi possível excluir. O imóvel pode ter orçamentos vinculados.']);
     exit;
 }
-?>

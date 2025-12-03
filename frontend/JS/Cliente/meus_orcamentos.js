@@ -1,113 +1,112 @@
-const toast = document.getElementById('toast');
-const pendingList = document.getElementById('pending-budgets-list');
-const historyList = document.getElementById('history-budgets-list');
-const emptyPendingMessage = document.getElementById('empty-pending-message');
-const emptyHistoryMessage = document.getElementById('empty-history-message');
+// ===========================================
+// JS - MEUS ORÇAMENTOS (Cliente)
+// ===========================================
+
+const state = {
+    approved: [],
+    denied: [],
+    pageApproved: 1,
+    pageDenied: 1,
+    itemsPerPage: 6
+};
+
+const DOM = {
+    approvedList: document.getElementById('approved-list'),
+    deniedList: document.getElementById('denied-list'),
+    paginationApproved: document.getElementById('pagination-approved'),
+    paginationDenied: document.getElementById('pagination-denied'),
+    emptyApproved: document.getElementById('empty-approved'),
+    emptyDenied: document.getElementById('empty-denied'),
+    toast: document.getElementById('toast')
+};
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadMyBudgets();
-
-    const filtroHistorico = document.getElementById('filtro-historico');
-    if (filtroHistorico) {
-        filtroHistorico.addEventListener('change', () => {
-            filtrarHistorico(filtroHistorico.value);
-        });
-    }
+    fetchMyBudgets();
 });
 
-async function loadMyBudgets() {
+async function fetchMyBudgets() {
     try {
         const response = await fetch('../../../backend/ClienteBackEnd/orcamentos/listar_meus_orcamentos.php?_cache=' + new Date().getTime());
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.erro || 'Falha ao carregar seus orçamentos');
-        }
-
         const data = await response.json();
-        
-        renderBudgetList(data.pending, pendingList, emptyPendingMessage);
-        renderBudgetList(data.history, historyList, emptyHistoryMessage);
+        const history = data.history || [];
+
+        // Separa o joio do trigo
+        state.approved = history.filter(b => b.status_class === 'approved');
+        state.denied = history.filter(b => b.status_class === 'denied' || b.status_class === 'rejeitado');
+
+        renderList('approved');
+        renderList('denied');
 
     } catch (error) {
-        console.error('Erro em loadMyBudgets:', error);
-        showToast(error.message, 'error');
+        console.error(error);
     }
 }
 
-function renderBudgetList(budgets, container, emptyMessage) {
-    container.innerHTML = ''; 
+function renderList(type) {
+    const list = type === 'approved' ? state.approved : state.denied;
+    const page = type === 'approved' ? state.pageApproved : state.pageDenied;
+    const container = type === 'approved' ? DOM.approvedList : DOM.deniedList;
+    const emptyMsg = type === 'approved' ? DOM.emptyApproved : DOM.emptyDenied;
+    const pagContainer = type === 'approved' ? DOM.paginationApproved : DOM.paginationDenied;
 
-    if (budgets.length === 0) {
-        emptyMessage.style.display = 'block';
+    if (list.length === 0) {
+        container.style.display = 'none';
+        emptyMsg.style.display = 'block';
+        pagContainer.innerHTML = '';
         return;
     }
 
-    emptyMessage.style.display = 'none';
+    emptyMsg.style.display = 'none';
+    container.style.display = 'grid';
 
-    budgets.forEach(budget => {
-        const card = createBudgetCard(budget);
-        container.appendChild(card);
-    });
+    // Paginação Local
+    const start = (page - 1) * state.itemsPerPage;
+    const end = start + state.itemsPerPage;
+    const items = list.slice(start, end);
+    const totalPages = Math.ceil(list.length / state.itemsPerPage);
+
+    container.innerHTML = items.map(b => createCardHTML(b)).join('');
+    renderPagination(pagContainer, page, totalPages, type);
 }
 
-function createBudgetCard(budget) {
-    const card = document.createElement('div');
-    card.className = `admin-budget-card ${budget.status_class}`; 
-    card.id = `budget-card-${budget.id_orcamento}`;
+function createCardHTML(budget) {
+    const date = new Date(budget.data + 'T00:00:00').toLocaleDateString('pt-BR');
+    const value = parseFloat(budget.valor_total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const icon = (budget.status_class === 'denied' || budget.status_class === 'rejeitado') ? 'ban' : 'check-circle';
 
-    const budgetDate = new Date(budget.data).toLocaleDateString('pt-BR');
-
-    card.innerHTML = `
-        <div class="card-header">
-            <span class="status-badge ${budget.status_class}">${budget.status_texto || 'Processado'}</span>
-            <strong>Pedido #${budget.id_orcamento}</strong>
-        </div>
-        <div class="card-body">
-            <p><strong>Imóvel:</strong> ${budget.imovel_nome} (Consumo: ${budget.imovel_consumo} kWh)</p>
-            <p><strong>Fornecedor:</strong> ${budget.fornecedor_nome}</p>
-            <p><strong>Produtos:</strong> ${budget.produtos}</p>
-            <p class="price">Valor: ${parseFloat(budget.valor_total).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
-            <p class="date">Enviado em: ${budgetDate}</p>
+    return `
+        <div class="budget-card">
+            <div class="card-header">
+                <span class="card-id">#${budget.id_orcamento}</span>
+                <span class="status-badge ${budget.status_class}"><i class="fas fa-${icon}"></i> ${budget.status_texto}</span>
+            </div>
+            <div class="card-body">
+                <p><strong>Imóvel:</strong> ${budget.imovel_nome}</p>
+                <p><strong>Fornecedor:</strong> ${budget.fornecedor_nome}</p>
+                <p><strong>Data:</strong> ${date}</p>
+                <span class="price-tag">${value}</span>
+            </div>
         </div>
     `;
-
-    return card;
 }
 
-function filtrarHistorico(filtro) {
-    const cards = historyList.querySelectorAll('.admin-budget-card');
-    let hasVisibleCards = false;
-
-    cards.forEach(card => {
-        if (filtro === 'todos') {
-            card.style.display = 'block';
-            hasVisibleCards = true;
-        } else if (card.classList.contains(filtro)) {
-            card.style.display = 'block';
-            hasVisibleCards = true;
-        } else {
-            card.style.display = 'none';
-        }
-    });
-
-    if (!hasVisibleCards && cards.length > 0) {
-        emptyHistoryMessage.innerHTML = '<h4>Nenhum orçamento encontrado para este filtro</h4>';
-        emptyHistoryMessage.style.display = 'block';
-    } else if (cards.length > 0) {
-        emptyHistoryMessage.style.display = 'none';
-    } else if (cards.length === 0) {
-        emptyHistoryMessage.innerHTML = '<h4>Nenhum histórico</h4><p>Você ainda não tem orçamentos aprovados ou negados.</p>';
+function renderPagination(container, currentPage, totalPages, type) {
+    if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
     }
+    let html = '';
+    html += `<button class="pagination-btn" onclick="changePage('${type}', ${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>&laquo;</button>`;
+    for (let i = 1; i <= totalPages; i++) {
+        const activeClass = i === currentPage ? 'active' : '';
+        html += `<button class="pagination-btn ${activeClass}" onclick="changePage('${type}', ${i})">${i}</button>`;
+    }
+    html += `<button class="pagination-btn" onclick="changePage('${type}', ${currentPage + 1})" ${currentPage >= totalPages ? 'disabled' : ''}>&raquo;</button>`;
+    container.innerHTML = html;
 }
 
-function showToast(message, type = 'success') {
-    toast.textContent = message;
-    toast.className = `toast ${type}`;
-    toast.classList.add('show');
-
-    if (type === 'loading') return;
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 4000);
+window.changePage = function (type, newPage) {
+    if (type === 'approved') state.pageApproved = newPage;
+    else state.pageDenied = newPage;
+    renderList(type);
 }
